@@ -13,7 +13,7 @@
     "webpack",
     "scss"
   ],
-  "author": "Grant Bartlett",
+  "author": "Adrien Agwali",
   "license": "MIT",
   "dependencies": {
     "@chakra-ui/react": "^1.6.5",

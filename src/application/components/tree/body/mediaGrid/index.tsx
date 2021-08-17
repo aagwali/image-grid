@@ -12,7 +12,7 @@ import SizeSlider from "../../../generic/dynamicGrid/sizeSlider"
 import ImageCard from "../../../generic/imageCard"
 import { CenteredTextBox } from "../home/styles"
 import { getImageServerUrl } from "./privates"
-import { useGetMediaByContextLabelQuery as getMedia } from "./services"
+import { useGetMediaByContextLabelQuery as useGetMedia } from "./services"
 import { GridBox } from "./styles"
 
 export const imageCardContentRender =
@@ -40,7 +40,7 @@ const getStateProps = () => ({
 const MediaGrid = (_: RouteComponentProps) => {
   const { display } = getStateProps()
 
-  const { data: media, isFetching } = getMedia("TODS6")
+  const { data: media, isFetching } = useGetMedia("TODS6")
 
   const { actions } = displaySlice
   const dispatch = useAppDispatch()

@@ -2,14 +2,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
 import { configureStore, isRejectedWithValue, Middleware, MiddlewareAPI } from "@reduxjs/toolkit"
 
-import { mediashareApi } from "./application/components/tree/body/mediaGrid/services"
-import { authSlice, displaySlice, errorSlice } from "./application/reducers"
+import { authSlice, baseMsApi, displaySlice, errorSlice } from "./application/reducers"
 
 const rootReducer = {
   [errorSlice.name]: errorSlice.reducer,
   [authSlice.name]: authSlice.reducer,
   [displaySlice.name]: displaySlice.reducer,
-  [mediashareApi.reducerPath]: mediashareApi.reducer,
+  [baseMsApi.reducerPath]: baseMsApi.reducer,
 }
 
 /*
@@ -37,7 +36,7 @@ const handleApiErrors: Middleware = (_api: MiddlewareAPI) => (next: any) => asyn
 const configureAppStore = () =>
   configureStore({
     reducer: rootReducer,
-    middleware: (getDefault: any) => getDefault().concat(mediashareApi.middleware).concat(handleApiErrors),
+    middleware: (getDefault: any) => getDefault().concat(baseMsApi.middleware).concat(handleApiErrors),
   })
 
 export const store = configureAppStore()

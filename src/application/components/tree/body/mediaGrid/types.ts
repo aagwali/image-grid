@@ -16,4 +16,5 @@ export enum MediaGridEndpoints {
 export type Display = {
   contentSize: number
   transparency: boolean
+  lightBoxMediaId: "none" | string
 }

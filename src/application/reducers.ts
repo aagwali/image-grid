@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-import { updateContentSize, updateTransparency } from "./components/tree/body/mediaGrid/privates"
+import { updateContentSize, updateLightBoxMediaId, updateTransparency } from "./components/tree/body/mediaGrid/privates"
 import { NeutralState } from "./types"
 
 export const authSlice = createSlice({
@@ -15,8 +15,9 @@ export const displaySlice = createSlice({
   initialState: {
     contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
     transparency: false,
+    lightBoxMediaId: "none",
   },
-  reducers: { updateContentSize, updateTransparency },
+  reducers: { updateContentSize, updateTransparency, updateLightBoxMediaId },
 })
 
 export const errorSlice = createSlice({

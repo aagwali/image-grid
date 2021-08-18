@@ -15,8 +15,10 @@ import { getImageServerUrl } from "./privates"
 import { useGetMediaByContextLabelQuery as useGetMedia } from "./services"
 import { GridBox } from "./styles"
 
+export const openLightBox = (mediumId: string) => {}
+
 export const imageCardContentRender =
-  (dataLayer: MediumItem[][], contentSize: number, transparency: boolean) =>
+  (dataLayer: MediumItem[][], contentSize: number, transparency: boolean, dispatch: any, actions: any) =>
   ({ rowIndex, columnIndex, key, style }: any) => {
     const mediumItem = dataLayer[rowIndex][columnIndex]
 
@@ -27,6 +29,7 @@ export const imageCardContentRender =
             urlSource={getImageServerUrl(mediumItem.id, contentSize)}
             imageSize={contentSize}
             transparency={transparency}
+            openLightBox={() => dispatch(actions.updateLightBoxMediaId(mediumItem.id))}
           />
         </Center>
       )
@@ -79,7 +82,7 @@ const MediaGrid = (_: RouteComponentProps) => {
           columnCount={cellMatrix.columnCount}
           rowCount={dataLayer.length}
           contentSize={display.contentSize}
-          cellRenderer={imageCardContentRender(dataLayer, display.contentSize, display.transparency)}
+          cellRenderer={imageCardContentRender(dataLayer, display.contentSize, display.transparency, dispatch, actions)}
           updateCellMatrix={updateCellMatrix}
           scrollHeight={scrollHeight}
           updateScrollHeight={updateScrollHeight}

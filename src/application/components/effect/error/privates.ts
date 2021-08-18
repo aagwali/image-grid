@@ -4,8 +4,7 @@ import { navigate } from "@reach/router"
 
 import { useAppDispatch } from "../../../../storeConfig"
 import { errorSlice } from "../../../reducers"
-import { ErrorAction, ExitType, NeutralState } from "../../../types"
-import { MediaGridEndpoints } from "../../tree/body/mediaGrid/types"
+import { ErrorAction, ExitType, MediaGridEndpoints, NeutralState } from "../../../types"
 
 const toastOptions: ToastOptions = {
   position: "bottom-center",

@@ -8,6 +8,7 @@ import { useAppSelector } from "../storeConfig"
 import Error from "./components/effect/error"
 import Body from "./components/tree/body"
 import Header from "./components/tree/header"
+import MediaLightBox from "./components/tree/MediaLightBox"
 import { ApplicationProps } from "./types"
 
 const getStateProps = (): ApplicationProps => ({
@@ -22,6 +23,7 @@ const Application = () => {
   return (
     <React.Fragment>
       <ToastContainer />
+      <MediaLightBox />
       <Error />
       <Header />
       <Body />

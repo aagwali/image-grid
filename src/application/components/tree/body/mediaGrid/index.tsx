@@ -5,14 +5,14 @@ import { Center, Checkbox, HStack, VStack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector } from "../../../../../storeConfig"
+import { getImageServerUrl } from "../../../../privates"
 import { displaySlice } from "../../../../reducers"
+import { useGetMediaByContextLabelQuery as useGetMedia } from "../../../../services"
 import { MediumItem } from "../../../../types"
 import DynamicGrid from "../../../generic/dynamicGrid"
 import SizeSlider from "../../../generic/dynamicGrid/sizeSlider"
 import ImageCard from "../../../generic/imageCard"
 import { CenteredTextBox } from "../home/styles"
-import { getImageServerUrl } from "./privates"
-import { useGetMediaByContextLabelQuery as useGetMedia } from "./services"
 import { GridBox } from "./styles"
 
 export const openLightBox = (mediumId: string) => {}

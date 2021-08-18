@@ -1,5 +1,3 @@
-import { MediaGridEndpoints } from "./components/tree/body/mediaGrid/types"
-
 export interface ApplicationProps {
   authenticated: boolean
 }
@@ -9,9 +7,18 @@ export enum ExitType {
   Error = "error",
 }
 
+export type RawMedium = {
+  id: string
+  mediaUid: string
+}
+
 export type MediumItem = {
   id: string
   mediaUid: string
+}
+
+export enum MediaGridEndpoints {
+  GetMediaByContextLabel = "getMediaByContextLabel",
 }
 
 export enum NeutralState {

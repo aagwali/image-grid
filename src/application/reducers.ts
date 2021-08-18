@@ -15,7 +15,7 @@ export const displaySlice = createSlice({
   initialState: {
     contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
     transparency: false,
-    lightBoxMediaId: "none",
+    lightBoxItemId: "none",
   },
   reducers: { updateContentSize, updateTransparency, updateLightBoxMediaId },
 })

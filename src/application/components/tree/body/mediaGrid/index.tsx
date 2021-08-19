@@ -74,6 +74,7 @@ const MediaGrid = (_: RouteComponentProps) => {
         />
         <Checkbox
           children="Transparency"
+          colorScheme="teal"
           isChecked={transparency}
           onChange={() => dispatch(actions.updateDisplay({ transparency: !transparency }))}
         />

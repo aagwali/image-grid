@@ -20,14 +20,17 @@ const SizeSlider = ({
       max={contentSizeRange[1]}
       step={(contentSizeRange[1] - contentSizeRange[0]) / sliderStepCount}
       defaultValue={contentSize}
+      colorScheme="teal"
       onChangeEnd={(selectedSize) => {
         updateContentSize(selectedSize)
         setCellMatrix(updateCellMatrix, updateScrollHeight, selectedSize)
       }}
+      focusThumbOnChange={false}
     >
       <SliderTrack>
         <SliderFilledTrack />
       </SliderTrack>
+
       <SliderThumb />
     </Slider>
   </SliderBox>

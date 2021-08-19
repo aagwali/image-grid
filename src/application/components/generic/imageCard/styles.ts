@@ -45,7 +45,7 @@ export const ImageBoxLoading = styled(Box)`
   background: url("${SpinnerSvg}") center no-repeat;
 `
 
-export const MaximizeBox = styled(Center)<{ size: number }>`
+export const EnlargeBox = styled(Center)<{ size: number }>`
   position: absolute;
 
   width: ${({ size }) => `${Math.round(size / 8 / 2) * 2}px`};
@@ -53,7 +53,7 @@ export const MaximizeBox = styled(Center)<{ size: number }>`
   top: ${({ size }) => `${size / 25}px`};
   right: ${({ size }) => `${size / 25}px`};
 
-  background-color: #c9c9c9;
+  background-color: ${theme.colors.gray[200]};
   border-radius: 3px;
   border-width: ${theme.sizes["0.5"]};
   border-color: ${theme.colors.white};

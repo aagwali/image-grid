@@ -32,7 +32,6 @@ const MediaLightBox = () => {
   const _getMediaIdByIndex = getMediaIdByIndex(media)
 
   const [previousIndex, index, nextIndex] = findIndexes(lightBoxItemId, media)
-  console.log(previousIndex, index, nextIndex)
 
   return (
     <Lightbox

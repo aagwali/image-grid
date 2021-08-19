@@ -1,8 +1,10 @@
 import React, { useState } from "react"
+import styled from "styled-components"
 
 import { Image } from "@chakra-ui/react"
 
-import { ImageBox, ImageBoxError, ImageBoxLoading } from "./styles"
+import MaximizeSvg from "../../../assets/images/maximize.svg"
+import { ImageBox, ImageBoxError, ImageBoxLoading, MaximizeBox } from "./styles"
 import { ImageCardProps } from "./types"
 
 const ImageCard = ({ urlSource, imageSize, transparency, openLightBox }: ImageCardProps) => {
@@ -12,7 +14,11 @@ const ImageCard = ({ urlSource, imageSize, transparency, openLightBox }: ImageCa
   if (error) return <ImageBoxError boxSize={imageSize} />
 
   return (
-    <ImageBox data-loaded={loaded} data-transparency={transparency} onClick={openLightBox}>
+    <ImageBox data-loaded={loaded} data-transparency={transparency}>
+      <MaximizeBox className="maximizeImage" onClick={openLightBox} size={imageSize}>
+        <Image src={MaximizeSvg} />
+      </MaximizeBox>
+
       <Image
         boxSize={`${imageSize}`}
         objectFit="contain"

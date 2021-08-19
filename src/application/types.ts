@@ -1,7 +1,3 @@
-export interface ApplicationProps {
-  authenticated: boolean
-}
-
 export enum ExitType {
   Warning = "warning",
   Error = "error",

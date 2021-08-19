@@ -5,26 +5,25 @@ import React from "react"
 import { ToastContainer } from "react-toastify"
 
 import { useAppSelector } from "../storeConfig"
-import Error from "./components/effect/error"
 import Body from "./components/tree/body"
 import Header from "./components/tree/header"
-import MediaLightBox from "./components/tree/MediaLightBox"
-import { ApplicationProps } from "./types"
+import Error from "./components/tree/root/error"
+import MediaLightBox from "./components/tree/root/mediaLightBox"
 
-const getStateProps = (): ApplicationProps => ({
+const getStateProps = () => ({
   authenticated: useAppSelector(prop("authenticated")),
 })
 
 const Application = () => {
   const { authenticated } = getStateProps()
 
-  // if (!authenticated) return <Box />
+  // if (!authenticated) return <React.Fragment />
 
   return (
     <React.Fragment>
-      <ToastContainer />
-      <MediaLightBox />
       <Error />
+      <MediaLightBox />
+      <ToastContainer />
       <Header />
       <Body />
     </React.Fragment>

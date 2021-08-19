@@ -1,7 +1,7 @@
 import { isEmpty, prop, splitEvery } from "rambda"
 import React, { useState } from "react"
 
-import { Center, Checkbox, HStack, VStack } from "@chakra-ui/react"
+import { Center, Checkbox } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector } from "../../../../../storeConfig"
@@ -13,12 +13,10 @@ import DynamicGrid from "../../../generic/dynamicGrid"
 import SizeSlider from "../../../generic/dynamicGrid/sizeSlider"
 import ImageCard from "../../../generic/imageCard"
 import { CenteredTextBox } from "../home/styles"
-import { GridBox } from "./styles"
-
-export const openLightBox = (mediumId: string) => {}
+import { GridBox, ItemsBox, SettingsBox } from "./styles"
 
 export const imageCardContentRender =
-  (dataLayer: MediumItem[][], contentSize: number, transparency: boolean, dispatch: any, actions: any) =>
+  (dataLayer: MediumItem[][], contentSize: number, transparency: boolean, openLightBox: (mediaId: string) => void) =>
   ({ rowIndex, columnIndex, key, style }: any) => {
     const mediumItem = dataLayer[rowIndex][columnIndex]
 
@@ -29,7 +27,7 @@ export const imageCardContentRender =
             urlSource={getImageServerUrl(mediumItem.id, contentSize)}
             imageSize={contentSize}
             transparency={transparency}
-            openLightBox={() => dispatch(actions.updateLightBoxMediaId(mediumItem.id))}
+            openLightBox={() => openLightBox(mediumItem.id)}
           />
         </Center>
       )
@@ -41,56 +39,60 @@ const getStateProps = () => ({
 })
 
 const MediaGrid = (_: RouteComponentProps) => {
-  const { display } = getStateProps()
+  const {
+    display: { contentSize, transparency },
+  } = getStateProps()
 
   const { data: media, isFetching } = useGetMedia("TODS6")
 
   const { actions } = displaySlice
   const dispatch = useAppDispatch()
 
+  const [scrollHeight, updateScrollHeight] = useState(0)
+  const [scrollRatio, updateScrollRatio] = useState(0)
   const [cellMatrix, updateCellMatrix] = useState({
     columnCount: 1,
     cellSize: 250,
   })
-  const [scrollHeight, updateScrollHeight] = useState(0)
-  const [scrollRatio, updateScrollRatio] = useState(0)
 
   if (isEmpty(media)) return <CenteredTextBox children={"No medias to display"} />
 
-  const dataLayer = splitEvery(cellMatrix.columnCount, media ?? []) as MediumItem[][]
+  const dataLayer = splitEvery(cellMatrix.columnCount, media ?? [])
+
+  const openLightBox = (lightBoxItemId: string) => dispatch(actions.updateDisplay({ lightBoxItemId }))
 
   return (
-    <VStack>
-      <HStack>
+    <GridBox>
+      <SettingsBox>
         <SizeSlider
           sliderStepCount={10}
-          contentSize={display.contentSize}
+          contentSize={contentSize}
           contentSizeRange={[150, 350]}
-          updateContentSize={(n: number) => dispatch(actions.updateContentSize(n))}
+          updateContentSize={(contentSize: number) => dispatch(actions.updateDisplay({ contentSize }))}
           updateCellMatrix={updateCellMatrix}
           updateScrollHeight={updateScrollHeight}
         />
         <Checkbox
           children="Transparency"
-          isChecked={display.transparency}
-          onChange={() => dispatch(actions.updateTransparency(!display.transparency))}
+          isChecked={transparency}
+          onChange={() => dispatch(actions.updateDisplay({ transparency: !transparency }))}
         />
-      </HStack>
-      <GridBox data-fetching={isFetching}>
+      </SettingsBox>
+      <ItemsBox data-fetching={isFetching}>
         <DynamicGrid
           cellSize={cellMatrix.cellSize}
           columnCount={cellMatrix.columnCount}
           rowCount={dataLayer.length}
-          contentSize={display.contentSize}
-          cellRenderer={imageCardContentRender(dataLayer, display.contentSize, display.transparency, dispatch, actions)}
+          contentSize={contentSize}
+          cellRenderer={imageCardContentRender(dataLayer, contentSize, transparency, openLightBox)}
           updateCellMatrix={updateCellMatrix}
           scrollHeight={scrollHeight}
           updateScrollHeight={updateScrollHeight}
           scrollRatio={scrollRatio}
           updateScrollRatio={updateScrollRatio}
         />
-      </GridBox>
-    </VStack>
+      </ItemsBox>
+    </GridBox>
   )
 }
 

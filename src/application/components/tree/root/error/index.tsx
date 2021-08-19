@@ -1,7 +1,7 @@
 import { prop } from "rambda"
 import React from "react"
 
-import { useAppSelector } from "../../../../storeConfig"
+import { useAppSelector } from "../../../../../storeConfig"
 import { handleFailedQueries } from "./privates"
 
 const getStateProps = () => ({

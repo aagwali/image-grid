@@ -4,6 +4,7 @@ export type DataLayer = {
 }
 
 export type DispatchAction<T> = React.Dispatch<React.SetStateAction<T>>
+
 export interface DynamicGridProps {
   cellSize: number
   columnCount: number

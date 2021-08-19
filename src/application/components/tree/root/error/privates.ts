@@ -2,9 +2,9 @@ import { toast, ToastOptions } from "react-toastify"
 
 import { navigate } from "@reach/router"
 
-import { useAppDispatch } from "../../../../storeConfig"
-import { errorSlice } from "../../../reducers"
-import { ErrorAction, ExitType, MediaGridEndpoints, NeutralState } from "../../../types"
+import { useAppDispatch } from "../../../../../storeConfig"
+import { errorSlice } from "../../../../reducers"
+import { ErrorAction, ExitType, MediaGridEndpoints, NeutralState } from "../../../../types"
 
 const toastOptions: ToastOptions = {
   position: "bottom-center",
@@ -38,7 +38,7 @@ export const handleFailedQueries = (errorAction: ErrorAction) => {
       break
 
     case MediaGridEndpoints.GetMediaByContextLabel:
-      description = "Could not retrieve medias"
+      description = "Unable to get medias"
       displayExit(ExitType.Warning, description, dispatch)
       break
 

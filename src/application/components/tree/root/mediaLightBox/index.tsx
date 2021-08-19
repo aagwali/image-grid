@@ -4,12 +4,10 @@ import { prop } from "rambda"
 import React from "react"
 import Lightbox from "react-image-lightbox"
 
-
-
-import { useAppDispatch, useAppSelector } from "../../../../storeConfig"
-import { getImageServerUrl } from "../../../privates"
-import { displaySlice } from "../../../reducers"
-import { useGetMediaByContextLabelQuery as useGetMedia } from "../../../services"
+import { useAppDispatch, useAppSelector } from "../../../../../storeConfig"
+import { getImageServerUrl } from "../../../../privates"
+import { displaySlice } from "../../../../reducers"
+import { useGetMediaByContextLabelQuery as useGetMedia } from "../../../../services"
 import { findIndexes, getMediaIdByIndex } from "./privates"
 
 const getStateProps = () => ({
@@ -34,6 +32,7 @@ const MediaLightBox = () => {
   const _getMediaIdByIndex = getMediaIdByIndex(media)
 
   const [previousIndex, index, nextIndex] = findIndexes(lightBoxItemId, media)
+  console.log(previousIndex, index, nextIndex)
 
   return (
     <Lightbox
@@ -46,9 +45,9 @@ const MediaLightBox = () => {
       enableZoom={true}
       animationDisabled={true} // avoid flashing render
       imagePadding={65}
-      onCloseRequest={() => dispatch(actions.updateLightBoxMediaId("none"))}
-      onMovePrevRequest={() => dispatch(actions.updateLightBoxMediaId(_getMediaIdByIndex(previousIndex)))}
-      onMoveNextRequest={() => dispatch(actions.updateLightBoxMediaId(_getMediaIdByIndex(nextIndex)))}
+      onCloseRequest={() => dispatch(actions.updateDisplay({ lightBoxItemId: "none" }))}
+      onMovePrevRequest={() => dispatch(actions.updateDisplay({ lightBoxItemId: _getMediaIdByIndex(previousIndex) }))}
+      onMoveNextRequest={() => dispatch(actions.updateDisplay({ lightBoxItemId: _getMediaIdByIndex(nextIndex) }))}
     />
   )
 }

@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 import { ChakraProvider } from "@chakra-ui/react"
 
 import Application from "./application"
-import Auth from "./application/components/effect/auth"
+import Auth from "./application/components/tree/root/auth"
 import { store } from "./storeConfig"
 import { theme } from "./theme"
 

@@ -1,13 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { updateContentSize, updateLightBoxMediaId, updateTransparency } from "./components/tree/body/mediaGrid/privates"
 import { NeutralState } from "./types"
 
 export const authSlice = createSlice({
   name: "authenticated",
   initialState: false,
-  reducers: { setAuthenticated: (_, _action) => true },
+  reducers: { setAuthenticated: (authenticated, action: PayloadAction<typeof authenticated>) => action.payload },
 })
 
 export const displaySlice = createSlice({
@@ -17,7 +15,12 @@ export const displaySlice = createSlice({
     transparency: false,
     lightBoxItemId: "none",
   },
-  reducers: { updateContentSize, updateTransparency, updateLightBoxMediaId },
+  reducers: {
+    updateDisplay: (display, action: PayloadAction<Partial<typeof display>>) => ({
+      ...display,
+      ...action.payload,
+    }),
+  },
 })
 
 export const errorSlice = createSlice({
@@ -27,12 +30,4 @@ export const errorSlice = createSlice({
     payload: { type: NeutralState.NoError, payload: {} },
   },
   reducers: { setErrorAction: (_, action) => action },
-})
-
-export const baseMsApi = createApi({
-  reducerPath: "msApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.MEDIASHARE_API_URL,
-  }),
-  endpoints: () => ({}),
 })

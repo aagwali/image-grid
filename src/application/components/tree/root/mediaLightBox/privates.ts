@@ -1,18 +1,20 @@
-import { findIndex, propEq } from "rambda"
+import { equals, findIndex } from "rambda"
 
 import { MediumItem } from "../../../../types"
 
-export const findIndexes = (lightBoxItemId: string, media: MediumItem[] = []): [number, number, number] => {
-  const index = findIndex(propEq("id", lightBoxItemId), media)
+export const pickAdjacentMedia = (mediaIds: string[], lightBoxMediumId: string): [string, string] => {
+  const firstIndex = 0
+  const lastIndex = mediaIds.length - 1
+  const currentIndex = findIndex(equals(lightBoxMediumId), mediaIds)
+
+  const previousMediumId = mediaIds[currentIndex - 1]
+  const nextMediumId = mediaIds[currentIndex + 1]
 
   // handle boundaries
-  const firstIndex = 0
-  const lastIndex = media.length - 1
-  if (index === firstIndex) return [lastIndex, index, index + 1]
-  if (index === lastIndex) return [index - 1, index, firstIndex]
+  if (currentIndex === firstIndex) return [mediaIds[lastIndex], nextMediumId]
+  if (currentIndex === lastIndex) return [previousMediumId, mediaIds[firstIndex]]
 
-  // previous, current, next
-  return [index - 1, index, index + 1]
+  return [previousMediumId, nextMediumId]
 }
 
 export const getMediaIdByIndex =

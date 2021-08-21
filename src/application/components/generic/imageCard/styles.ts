@@ -31,7 +31,7 @@ export const ImageBox = styled(Box)`
     `};
 
   :hover {
-    .maximizeImage {
+    .enlargeImage {
       opacity: 0.8;
     }
   }

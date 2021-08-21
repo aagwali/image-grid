@@ -4,49 +4,39 @@ import { prop } from "rambda"
 import React from "react"
 import Lightbox from "react-image-lightbox"
 
-import { useAppDispatch, useAppSelector } from "../../../../../storeConfig"
+import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import { getImageServerUrl } from "../../../../privates"
-import { displaySlice } from "../../../../reducers"
-import { useGetMediaByContextLabelQuery as useGetMedia } from "../../../../services"
-import { findIndexes, getMediaIdByIndex } from "./privates"
-
-const getStateProps = () => ({
-  display: useAppSelector(prop("display")),
-})
+import { displaySlice, mediaSelector } from "../../../../reducers"
+import { pickAdjacentMedia } from "./privates"
 
 const MediaLightBox = () => {
-  const {
-    display: { lightBoxItemId },
-  } = getStateProps()
-
-  const { data: media } = useGetMedia("TODS6")
-
-  const lightBoxItemSize = Number(process.env.LIGHTBOX_ITEM_SIZE) ?? 500
-  const lightBoxThumbnailSize = lightBoxItemSize / 10
+  const { lightBoxMediumId } = getState(prop("display"))
 
   const { actions } = displaySlice
   const dispatch = useAppDispatch()
 
-  if (lightBoxItemId === "none") return <React.Fragment />
+  const lightBoxItemSize = Number(process.env.LIGHTBOX_ITEM_SIZE) ?? 500
+  const lightBoxThumbnailSize = lightBoxItemSize / 10
 
-  const _getMediaIdByIndex = getMediaIdByIndex(media)
+  const mediaIds = getState(mediaSelector.selectIds) as string[]
+  const [previousMediumId, nextMediumId] = pickAdjacentMedia(mediaIds, lightBoxMediumId)
 
-  const [previousIndex, index, nextIndex] = findIndexes(lightBoxItemId, media)
+  if (lightBoxMediumId === "none") return <React.Fragment />
 
   return (
     <Lightbox
-      prevSrc={getImageServerUrl(_getMediaIdByIndex(previousIndex), lightBoxItemSize)}
-      mainSrc={getImageServerUrl(_getMediaIdByIndex(index), lightBoxItemSize)}
-      nextSrc={getImageServerUrl(_getMediaIdByIndex(nextIndex), lightBoxItemSize)}
-      prevSrcThumbnail={getImageServerUrl(_getMediaIdByIndex(previousIndex), lightBoxThumbnailSize)}
-      mainSrcThumbnail={getImageServerUrl(_getMediaIdByIndex(index), lightBoxThumbnailSize)}
-      nextSrcThumbnail={getImageServerUrl(_getMediaIdByIndex(nextIndex), lightBoxThumbnailSize)}
+      mainSrc={getImageServerUrl(lightBoxMediumId, lightBoxItemSize)}
+      prevSrc={getImageServerUrl(previousMediumId, lightBoxItemSize)}
+      nextSrc={getImageServerUrl(nextMediumId, lightBoxItemSize)}
+      mainSrcThumbnail={getImageServerUrl(lightBoxMediumId, lightBoxThumbnailSize)}
+      prevSrcThumbnail={getImageServerUrl(previousMediumId, lightBoxThumbnailSize)}
+      nextSrcThumbnail={getImageServerUrl(nextMediumId, lightBoxThumbnailSize)}
       enableZoom={true}
       animationDisabled={true} // avoid flashing render
       imagePadding={65}
-      onCloseRequest={() => dispatch(actions.updateDisplay({ lightBoxItemId: "none" }))}
-      onMovePrevRequest={() => dispatch(actions.updateDisplay({ lightBoxItemId: _getMediaIdByIndex(previousIndex) }))}
-      onMoveNextRequest={() => dispatch(actions.updateDisplay({ lightBoxItemId: _getMediaIdByIndex(nextIndex) }))}
+      onCloseRequest={() => dispatch(actions.updateDisplay({ lightBoxMediumId: "none" }))}
+      onMovePrevRequest={() => dispatch(actions.updateDisplay({ lightBoxMediumId: previousMediumId }))}
+      onMoveNextRequest={() => dispatch(actions.updateDisplay({ lightBoxMediumId: nextMediumId }))}
     />
   )
 }

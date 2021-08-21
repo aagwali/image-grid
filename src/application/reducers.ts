@@ -1,6 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { NeutralState } from "./types"
+import { State } from "../storeConfig"
+import { getMediaByContextLabel } from "./services"
+import { MediumItem, NeutralState } from "./types"
 
 export const authSlice = createSlice({
   name: "authenticated",
@@ -8,12 +10,28 @@ export const authSlice = createSlice({
   reducers: { setAuthenticated: (authenticated, action: PayloadAction<typeof authenticated>) => action.payload },
 })
 
+const mediaAdapter = createEntityAdapter<MediumItem>({
+  sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
+})
+export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
+
+export const mediaSlice = createSlice({
+  name: "media",
+  initialState: mediaAdapter.getInitialState(),
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addMatcher(getMediaByContextLabel.matchFulfilled, (state, action) => {
+      mediaAdapter.upsertMany(state, action.payload)
+    })
+  },
+})
+
 export const displaySlice = createSlice({
   name: "display",
   initialState: {
     contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
     transparency: false,
-    lightBoxItemId: "none",
+    lightBoxMediumId: "none",
   },
   reducers: {
     updateDisplay: (display, action: PayloadAction<Partial<typeof display>>) => ({

@@ -1,9 +1,8 @@
 import React, { useState } from "react"
-import styled from "styled-components"
 
 import { Image } from "@chakra-ui/react"
 
-import MaximizeSvg from "../../../assets/images/maximize.svg"
+import EnlargeSvg from "../../../assets/images/enlarge.svg"
 import { EnlargeBox, ImageBox, ImageBoxError, ImageBoxLoading } from "./styles"
 import { ImageCardProps } from "./types"
 
@@ -15,8 +14,8 @@ const ImageCard = ({ urlSource, imageSize, transparency, openLightBox }: ImageCa
 
   return (
     <ImageBox data-loaded={loaded} data-transparency={transparency}>
-      <EnlargeBox className="maximizeImage" onClick={openLightBox} size={imageSize}>
-        <Image src={MaximizeSvg} />
+      <EnlargeBox className="enlargeImage" onClick={openLightBox} size={imageSize}>
+        <Image src={EnlargeSvg} />
       </EnlargeBox>
 
       <Image

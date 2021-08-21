@@ -4,10 +4,9 @@ import React, { useState } from "react"
 import { Center, Checkbox } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
-import { useAppDispatch, useAppSelector } from "../../../../../storeConfig"
+import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import { getImageServerUrl } from "../../../../privates"
-import { displaySlice } from "../../../../reducers"
-import { useGetMediaByContextLabelQuery as useGetMedia } from "../../../../services"
+import { displaySlice, mediaSelector } from "../../../../reducers"
 import { MediumItem } from "../../../../types"
 import DynamicGrid from "../../../generic/dynamicGrid"
 import SizeSlider from "../../../generic/dynamicGrid/sizeSlider"
@@ -34,16 +33,9 @@ export const imageCardContentRender =
     )
   }
 
-const getStateProps = () => ({
-  display: useAppSelector(prop("display")),
-})
-
 const MediaGrid = (_: RouteComponentProps) => {
-  const {
-    display: { contentSize, transparency },
-  } = getStateProps()
-
-  const { data: media, isFetching } = useGetMedia("TODS6")
+  const { contentSize, transparency } = getState(prop("display"))
+  const media = getState(mediaSelector.selectAll)
 
   const { actions } = displaySlice
   const dispatch = useAppDispatch()
@@ -59,7 +51,7 @@ const MediaGrid = (_: RouteComponentProps) => {
 
   const dataLayer = splitEvery(cellMatrix.columnCount, media ?? [])
 
-  const openLightBox = (lightBoxItemId: string) => dispatch(actions.updateDisplay({ lightBoxItemId }))
+  const openLightBox = (lightBoxMediumId: string) => dispatch(actions.updateDisplay({ lightBoxMediumId }))
 
   return (
     <GridBox>
@@ -79,12 +71,14 @@ const MediaGrid = (_: RouteComponentProps) => {
           onChange={() => dispatch(actions.updateDisplay({ transparency: !transparency }))}
         />
       </SettingsBox>
-      <ItemsBox data-fetching={isFetching}>
+      <ItemsBox>
         <DynamicGrid
           cellSize={cellMatrix.cellSize}
           columnCount={cellMatrix.columnCount}
           rowCount={dataLayer.length}
           contentSize={contentSize}
+          // give prop "media" and use columnCount to calcul datalayer and remove it from card content renderer
+          // give prop "image card component"  with contentSize and transparency
           cellRenderer={imageCardContentRender(dataLayer, contentSize, transparency, openLightBox)}
           updateCellMatrix={updateCellMatrix}
           scrollHeight={scrollHeight}

@@ -3,8 +3,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { formatApiResult } from "./privates"
 import { MediaGridEndpoints, MediumItem } from "./types"
 
-import { isFulfilled } from "@reduxjs/toolkit"
-
 export const mediashareApi = createApi({
   reducerPath: "msApi",
   baseQuery: fetchBaseQuery({

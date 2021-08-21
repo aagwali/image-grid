@@ -10,6 +10,12 @@ export const authSlice = createSlice({
   reducers: { setAuthenticated: (authenticated, action: PayloadAction<typeof authenticated>) => action.payload },
 })
 
+export const contextSlice = createSlice({
+  name: "context",
+  initialState: "none",
+  reducers: { setAuthenticated: (authenticated, action: PayloadAction<typeof authenticated>) => action.payload },
+})
+
 const mediaAdapter = createEntityAdapter<MediumItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })
@@ -20,11 +26,26 @@ export const mediaSlice = createSlice({
   initialState: mediaAdapter.getInitialState(),
   reducers: {},
   extraReducers: (builder) => {
-    builder.addMatcher(getMediaByContextLabel.matchFulfilled, (state, action) => {
-      mediaAdapter.upsertMany(state, action.payload)
+    builder.addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
+      mediaAdapter.upsertMany(media, action.payload)
     })
   },
 })
+
+// TODO config check projection
+// last = no reducers, only extra reducers on interceptopn select event
+
+// export const mediaSelectedSelector = mediaAdapter.getSelectors((state: State) => state.mediaSelected)
+
+// export const mediaSelectedSlice = createSlice({
+//   name: "mediaSelected",
+//   initialState: mediaAdapter.getInitialState(),
+//   reducers: {
+//     updateSelectedMedia: (mediaSelected, action: PayloadAction<MediumItem[]>) => {
+//       mediaAdapter.setAll(mediaSelected, { ...action, payload: action.payload.filter((medium) => medium.checked) })
+//     },
+//   },
+// })
 
 export const displaySlice = createSlice({
   name: "display",

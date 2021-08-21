@@ -2,7 +2,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
 import { configureStore, isRejectedWithValue, Middleware, MiddlewareAPI } from "@reduxjs/toolkit"
 
-import { authSlice, displaySlice, errorSlice, mediaSlice } from "./application/reducers"
+import { authSlice, contextSlice, displaySlice, errorSlice, mediaSlice } from "./application/reducers"
 import { mediashareApi } from "./application/services"
 
 const rootReducer = {
@@ -10,6 +10,8 @@ const rootReducer = {
   [authSlice.name]: authSlice.reducer,
   [displaySlice.name]: displaySlice.reducer,
   [mediaSlice.name]: mediaSlice.reducer,
+  // [mediaSelectedSlice.name]: mediaSelectedSlice.reducer,
+  [contextSlice.name]: contextSlice.reducer,
   [mediashareApi.reducerPath]: mediashareApi.reducer,
 }
 

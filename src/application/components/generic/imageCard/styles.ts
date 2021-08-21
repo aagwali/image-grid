@@ -63,7 +63,7 @@ export const EnlargeBox = styled(Center)<{ size: number }>`
   transition: opacity ease 500ms;
 
   img {
-    -webkit-transition: all ease 300ms;
+    -webkit-transition: all ease 400ms;
     transition: all ease 400ms;
     transform: scale(0.5);
   }

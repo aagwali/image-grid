@@ -22,7 +22,6 @@ const ImageCard = ({ urlSource, imageSize, transparency, openLightBox }: ImageCa
         boxSize={`${imageSize}`}
         objectFit="contain"
         src={urlSource}
-        alt="ALT"
         fallback={<ImageBoxLoading boxSize={imageSize} />}
         onError={() => setError(true)}
         onLoad={() => setLoaded(true)}

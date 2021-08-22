@@ -2,7 +2,6 @@ import React from "react"
 
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@chakra-ui/react"
 
-import { setCellMatrix } from "../privates"
 import { SizeSliderProps } from "../types"
 import { SliderBox } from "./styles"
 
@@ -11,8 +10,7 @@ const SizeSlider = ({
   contentSize,
   contentSizeRange,
   updateContentSize,
-  updateCellMatrix,
-  updateScrollHeight,
+  setCellMatrix,
 }: SizeSliderProps) => (
   <SliderBox>
     <Slider
@@ -23,7 +21,7 @@ const SizeSlider = ({
       colorScheme="teal"
       onChangeEnd={(selectedSize) => {
         updateContentSize(selectedSize)
-        setCellMatrix(updateCellMatrix, updateScrollHeight, selectedSize)
+        setCellMatrix(selectedSize)
       }}
       focusThumbOnChange={false}
     >

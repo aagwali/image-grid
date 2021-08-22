@@ -1,25 +1,28 @@
-export type DataLayer = {
-  columnCount: number
-  cellSize: number
-}
+import { Draft } from "@reduxjs/toolkit"
 
-export type DispatchAction<T> = React.Dispatch<React.SetStateAction<T>>
+export type SetStateCellMatrix = React.Dispatch<
+  React.SetStateAction<{
+    columnCount: number
+    cellSize: number
+  }>
+>
 
 export interface DynamicGridProps {
+  transparency: boolean
+  toggleTransparency: () => { payload: Partial<Draft<any>>; type: string }
   contentSize: number
+  contentSizeRange: [number, number]
+  updateContentSize: any
+  scrollRatio: any
+  updateScrollRatio: any
   items: any
   renderItem: any
-  transparency: boolean
-  toggleTransparency: any
-  updateContentSize: any
-  contentSizeRange: [number, number]
 }
 
 export interface SizeSliderProps {
-  sliderStepCount: number
   contentSize: number
-  contentSizeRange: [number, number]
   updateContentSize: (n: number) => void
-  updateScrollHeight: DispatchAction<number>
-  updateCellMatrix: DispatchAction<DataLayer>
+  sliderStepCount: number
+  contentSizeRange: [number, number]
+  setCellMatrix: any
 }

@@ -17,11 +17,12 @@ const MediaGrid = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
   const { actions } = displaySlice
 
-  const { contentSize, transparency } = getState(prop("display"))
+  const { transparency, contentSize, scrollRatio } = getState(prop("display"))
 
-  const openLightBox = (mediumId: string) => () => dispatch(actions.updateDisplay({ lightBoxMediumId: mediumId }))
   const toggleTransparency = () => dispatch(actions.updateDisplay({ transparency: !transparency }))
   const updateContentSize = (contentSize: number) => dispatch(actions.updateDisplay({ contentSize }))
+  const updateScrollRatio = (scrollRatio: number) => dispatch(actions.updateDisplay({ scrollRatio }))
+  const openLightBox = (mediumId: string) => () => dispatch(actions.updateDisplay({ lightBoxMediumId: mediumId }))
 
   const media = getState(mediaSelector.selectAll)
 
@@ -31,18 +32,20 @@ const MediaGrid = (_: RouteComponentProps) => {
     <Center>
       <DynamicGridBox>
         <DynamicGrid
-          items={media}
-          contentSize={contentSize}
-          updateContentSize={updateContentSize}
-          contentSizeRange={[150, 350]}
           transparency={transparency}
           toggleTransparency={toggleTransparency}
+          contentSize={contentSize}
+          contentSizeRange={[150, 350]}
+          updateContentSize={updateContentSize}
+          scrollRatio={scrollRatio}
+          updateScrollRatio={updateScrollRatio}
+          items={media}
           renderItem={(medium: MediumItem) => (
             <ImageCard
-              urlSource={getImageServerUrl(medium.id, contentSize)}
-              imageSize={contentSize}
               transparency={transparency}
+              imageSize={contentSize}
               openLightBox={openLightBox(medium.id)}
+              urlSource={getImageServerUrl(medium.id, contentSize)}
             />
           )}
         />

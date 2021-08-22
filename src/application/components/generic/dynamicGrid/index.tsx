@@ -1,10 +1,11 @@
-import { splitEvery } from "rambda"
-import React, { useState } from "react"
+import debounce from "debounce"
+import { add, splitEvery } from "rambda"
+import React, { useReducer, useState } from "react"
 import { AutoSizer, Grid, WindowScroller } from "react-virtualized"
 
 import { Box, Center, Checkbox } from "@chakra-ui/react"
 
-import { _setCellMatrix, getScrollHeight, setHeight } from "./privates"
+import { setCellMatrix_, setHeight, setScrollRatio_, updateScrollTop } from "./privates"
 import SizeSlider from "./sizeSlider"
 import { GridBox, ItemsBox, SettingsBox } from "./stlyes"
 import { DynamicGridProps } from "./types"
@@ -21,22 +22,26 @@ export const cellRenderer =
     )
 
 const DynamicGrid = ({
-  items,
-  contentSize,
-  renderItem,
   transparency,
   toggleTransparency,
-  updateContentSize,
+  contentSize,
   contentSizeRange,
+  updateContentSize,
+  scrollRatio,
+  updateScrollRatio,
+  items,
+  renderItem,
 }: DynamicGridProps) => {
-  const [scrollHeight, updateScrollHeight] = useState(0)
-  const [scrollRatio, updateScrollRatio] = useState(0)
+  const [_, forceUpdate] = useReducer(add(1), 0)
+
   const [{ cellSize, columnCount }, updateCellMatrix] = useState({
     cellSize: contentSize,
     columnCount: 1,
   })
 
   const dataLayer = splitEvery(columnCount, items)
+
+  const _setCellMatrix_ = setCellMatrix_(updateCellMatrix, forceUpdate) // (contentSize)
 
   return (
     <GridBox>
@@ -46,8 +51,7 @@ const DynamicGrid = ({
           contentSize={contentSize}
           contentSizeRange={contentSizeRange}
           updateContentSize={updateContentSize}
-          updateCellMatrix={updateCellMatrix}
-          updateScrollHeight={updateScrollHeight}
+          setCellMatrix={_setCellMatrix_}
         />
         <Checkbox children="Transparency" colorScheme="teal" isChecked={transparency} onChange={toggleTransparency} />
       </SettingsBox>
@@ -55,12 +59,7 @@ const DynamicGrid = ({
         <Box id="grid-container">
           <WindowScroller key={"WindowScroller"}>
             {({ height }) => (
-              <AutoSizer
-                disableHeight
-                onResize={() => {
-                  _setCellMatrix(updateCellMatrix, updateScrollHeight, contentSize)
-                }}
-              >
+              <AutoSizer disableHeight onResize={() => debounce(_setCellMatrix_, 250)(contentSize)}>
                 {({ width }) => (
                   <Grid
                     id="grid"
@@ -72,14 +71,9 @@ const DynamicGrid = ({
                     rowCount={dataLayer.length}
                     overscanRowCount={2}
                     style={{ overflowX: "hidden", overflowY: "scroll" }}
-                    scrollTop={scrollRatio * scrollHeight}
+                    scrollTop={updateScrollTop(scrollRatio)}
                     height={setHeight(height)}
-                    onScroll={({ scrollTop }) => {
-                      const clientHeight = scrollHeight === 0 ? getScrollHeight() : scrollHeight
-                      const newScrollRatio = clientHeight === 0 ? 0 : scrollTop / clientHeight
-                      updateScrollRatio(newScrollRatio)
-                      updateScrollHeight(clientHeight)
-                    }}
+                    onScroll={setScrollRatio_(updateScrollRatio)}
                   />
                 )}
               </AutoSizer>

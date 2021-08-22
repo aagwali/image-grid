@@ -1,39 +1,46 @@
-import debounce from "debounce"
+import { ScrollParams } from "react-virtualized"
 
-import { DataLayer, DispatchAction } from "./types"
+import { SetStateCellMatrix } from "./types"
 
 export const getElementById = (id: string): HTMLElement => document.getElementById(id) ?? document.createElement("div")
-
-export const getScrollHeight = () => {
-  const { clientHeight } = getElementById("grid").children[0] ?? document.createElement("div")
-  return clientHeight
-}
+export const getElementFirstChild = (element: HTMLElement): Element =>
+  element.children[0] ?? document.createElement("div")
 
 export const setHeight = (totalHeight: number): number => {
   const gridHtmlElement = getElementById("grid-container")
-  const head = gridHtmlElement.offsetTop ?? 0
+
+  const head = gridHtmlElement.offsetTop
   const parentBorder = gridHtmlElement.parentElement?.clientTop ?? 0
+
   return totalHeight - head - parentBorder
 }
 
-export const setCellMatrix = (
-  updateCellMatrix: DispatchAction<DataLayer>,
-  updateScrollHeight: any,
-  contentSize: number,
-): void => {
-  const element = getElementById("grid")
+export const setCellMatrix_ =
+  (updateCellMatrix: SetStateCellMatrix, forceUpdate: React.DispatchWithoutAction) =>
+  (contentSize: number): void => {
+    const grid = getElementById("grid")
+    const scrollbarWidth = 15
+    const currentWidth = grid.offsetWidth - scrollbarWidth
 
-  const columnCount = Math.floor((element?.offsetWidth - 15) / contentSize)
-  const cellSize = (element?.offsetWidth - 15) / columnCount
+    const _columnCount = Math.floor(currentWidth / contentSize)
 
-  updateCellMatrix({
-    columnCount,
-    cellSize,
-  })
+    const columnCount = _columnCount < 1 ? 1 : _columnCount
+    const cellSize = currentWidth / columnCount
+    updateCellMatrix({ columnCount, cellSize })
 
-  const children2 = getElementById("grid").children[0] ?? document.createElement("div")
+    forceUpdate()
+  }
 
-  updateScrollHeight(children2.clientHeight)
-}
+export const updateScrollTop = (scrollRatio: number): number =>
+  scrollRatio * getElementFirstChild(getElementById("grid")).clientHeight
 
-export const _setCellMatrix = debounce(setCellMatrix, 250)
+export const setScrollRatio_ =
+  (updateScrollRatio: any) =>
+  (scrollParams: ScrollParams): void => {
+    const { clientHeight } = getElementFirstChild(getElementById("grid"))
+
+    if (clientHeight !== 0) {
+      const newScrollRatio = clientHeight === 0 ? 0 : scrollParams.scrollTop / clientHeight
+      updateScrollRatio(newScrollRatio)
+    }
+  }

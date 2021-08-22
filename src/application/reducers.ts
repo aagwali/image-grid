@@ -53,6 +53,7 @@ export const displaySlice = createSlice({
     contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
     transparency: false,
     lightBoxMediumId: "none",
+    scrollRatio: 0,
   },
   reducers: {
     updateDisplay: (display, action: PayloadAction<Partial<typeof display>>) => ({

@@ -25,30 +25,28 @@ export const mediaSlice = createSlice({
   name: "media",
   initialState: mediaAdapter.getInitialState({ loaded: false }),
   reducers: {
-    setLoaded: (media, action: PayloadAction<typeof media.loaded>) => {
-      media.loaded = action.payload
+    setLoaded: (media) => {
+      media.loaded = true
     },
   },
   extraReducers: (builder) => {
     builder.addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
       mediaAdapter.upsertMany(media, action.payload)
-      mediaSlice.caseReducers.setLoaded(media, { type: "", payload: true })
+      mediaSlice.caseReducers.setLoaded(media)
     })
   },
 })
 
 // TODO config check projection
-// last = no reducers, only extra reducers on interceptopn select event
+// last = no reducers, only extra reducers on interceptopn selection event ()
 
 // export const mediaSelectedSelector = mediaAdapter.getSelectors((state: State) => state.mediaSelected)
 
 // export const mediaSelectedSlice = createSlice({
 //   name: "mediaSelected",
 //   initialState: mediaAdapter.getInitialState(),
-//   reducers: {
-//     updateSelectedMedia: (mediaSelected, action: PayloadAction<MediumItem[]>) => {
-//       mediaAdapter.setAll(mediaSelected, { ...action, payload: action.payload.filter((medium) => medium.checked) })
-//     },
+//   reducers: {},
+//   extraReducers: {},
 //   },
 // })
 

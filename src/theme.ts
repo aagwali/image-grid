@@ -8,6 +8,9 @@ const Button = {
 }
 
 export const theme = extendTheme({
+  fonts: {
+    body: "Raleway",
+  },
   components: {
     Button,
   },

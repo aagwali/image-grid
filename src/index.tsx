@@ -1,3 +1,5 @@
+import "@fontsource/raleway/400.css"
+
 import React from "react"
 import ReactDOM from "react-dom"
 import { Provider } from "react-redux"

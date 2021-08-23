@@ -1,10 +1,10 @@
 import React from "react"
 
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@chakra-ui/react"
+import { Slider, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
 
 import { setCellMatrix_ } from "../privates"
 import { SizeSliderProps } from "../types"
-import { SliderBox } from "./styles"
+import { SliderBox, SliderTrackCustom } from "./styles"
 
 const SizeSlider = ({
   sliderStepCount,
@@ -30,9 +30,9 @@ const SizeSlider = ({
         }}
         focusThumbOnChange={false}
       >
-        <SliderTrack>
+        <SliderTrackCustom>
           <SliderFilledTrack />
-        </SliderTrack>
+        </SliderTrackCustom>
 
         <SliderThumb />
       </Slider>

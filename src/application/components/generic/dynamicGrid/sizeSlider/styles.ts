@@ -1,8 +1,10 @@
 import styled from "styled-components"
 
-import { Box, theme } from "@chakra-ui/react"
+import { Box, SliderTrack, theme } from "@chakra-ui/react"
 
 export const SliderBox = styled(Box)`
   width: ${theme.space["52"]};
-  margin: ${theme.space["2.5"]};
+`
+export const SliderTrackCustom = styled(SliderTrack)`
+  height: ${theme.space[0.5]};
 `

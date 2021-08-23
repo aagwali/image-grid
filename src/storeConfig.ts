@@ -31,7 +31,7 @@ const configureAppStore = () =>
   configureStore({
     reducer: rootReducer,
     middleware: (getDefault: any) => getDefault().concat(mediashareApi.middleware).concat(handleApiErrors),
-    devTools: false, // bad performances at true
+    devTools: false, // low performances at true
   })
 
 export const store = configureAppStore()

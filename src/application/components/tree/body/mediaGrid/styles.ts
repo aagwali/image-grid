@@ -4,9 +4,13 @@ import { Box, HStack, theme, VStack } from "@chakra-ui/react"
 
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
 
-export const DynamicGridBox = styled(VStack)``
+export const DynamicGridBox = styled(VStack)`
+  margin-top: ${theme.space[5]};
+`
 
-export const SettingsBox = styled(HStack)``
+export const SettingsBox = styled(HStack)`
+  margin-bottom: ${theme.space[0.5]};
+`
 
 export const ItemsBox = styled(Box)`
   width: 75%;

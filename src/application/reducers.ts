@@ -10,12 +10,6 @@ export const authSlice = createSlice({
   reducers: { setAuthenticated: (authenticated, action: PayloadAction<typeof authenticated>) => action.payload },
 })
 
-export const contextSlice = createSlice({
-  name: "context",
-  initialState: "none",
-  reducers: { setAuthenticated: (authenticated, action: PayloadAction<typeof authenticated>) => action.payload },
-})
-
 const mediaAdapter = createEntityAdapter<MediumItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })

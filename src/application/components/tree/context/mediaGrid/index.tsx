@@ -1,7 +1,7 @@
 import { add, isEmpty, prop } from "rambda"
 import React, { useReducer } from "react"
 
-import { Checkbox } from "@chakra-ui/react"
+import { Center, Checkbox } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
@@ -11,17 +11,15 @@ import { MediumItem } from "../../../../types"
 import DynamicGrid from "../../../generic/dynamicGrid"
 import SizeSlider from "../../../generic/dynamicGrid/sizeSlider"
 import ImageCard from "../../../generic/imageCard"
-import { CenteredTextBox } from "../home/styles"
 import { DynamicGridBox, ItemsBox, SettingsBox } from "./styles"
 
 const MediaGrid = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
   const { actions } = mediaGridDisplaySlice
 
-  const media = getState(mediaSelector.selectAll)
   const { loaded } = getState(prop("media"))
-
   const { transparency, contentSize, scrollRatio, cellMatrix } = getState(prop("mediaGridDisplay"))
+  const media = getState(mediaSelector.selectAll)
 
   const toggleTransparency = () => dispatch(actions.updateDisplay({ transparency: !transparency }))
   const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateDisplay({ contentSize: x }))
@@ -31,7 +29,7 @@ const MediaGrid = (_: RouteComponentProps) => {
 
   const [, forceUpdate] = useReducer(add(1), 0)
 
-  if (loaded && isEmpty(media)) return <CenteredTextBox children={"No medias to display"} />
+  if (loaded && isEmpty(media)) return <Center children={"No medias to display"} />
 
   return (
     <DynamicGridBox>

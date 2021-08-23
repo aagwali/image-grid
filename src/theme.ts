@@ -1,10 +1,7 @@
 import { extendTheme } from "@chakra-ui/react"
 
 const Button = {
-  defaultProps: {
-    size: "xs",
-    colorScheme: "red",
-  },
+  defaultProps: {},
 }
 
 export const theme = extendTheme({

@@ -4,28 +4,28 @@ import { prop } from "rambda"
 import React from "react"
 import { ToastContainer } from "react-toastify"
 
-import { useAppSelector } from "../storeConfig"
-import Body from "./components/tree/body"
-import Header from "./components/tree/header"
+import { RouteComponentProps, Router } from "@reach/router"
+
+import { useAppSelector as getState } from "../storeConfig"
+import Context from "./components/tree/context"
+import Home from "./components/tree/home"
 import Error from "./components/tree/root/error"
 import MediaLightBox from "./components/tree/root/mediaLightBox"
 
-const getStateProps = () => ({
-  authenticated: useAppSelector(prop("authenticated")),
-})
-
-const Application = () => {
-  const { authenticated } = getStateProps()
+const Application = (_: RouteComponentProps) => {
+  const authenticated = getState(prop("authenticated"))
 
   // if (!authenticated) return <React.Fragment />
 
   return (
     <React.Fragment>
-      <Error />
       <MediaLightBox />
+      <Error />
       <ToastContainer />
-      <Header />
-      <Body />
+      <Router>
+        <Home path="/" />
+        <Context path=":context/*" />
+      </Router>
     </React.Fragment>
   )
 }

@@ -13,6 +13,9 @@ module.exports = (_env, options) => {
       port: "3000",
       historyApiFallback: true, // needed for react routing
     },
+    output: {
+      publicPath: "/", // needed for react routing
+    },
     resolve: { extensions: [".tsx", ".ts", ".js"] },
     module: {
       rules: [

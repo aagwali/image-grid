@@ -6,13 +6,13 @@ import Lightbox from "react-image-lightbox"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import { getImageServerUrl } from "../../../../privates"
-import { displaySlice, mediaSelector } from "../../../../reducers"
+import { mediaGridDisplaySlice, mediaSelector } from "../../../../reducers"
 import { pickAdjacentMedia } from "./privates"
 
 const MediaLightBox = () => {
-  const { lightBoxMediumId } = getState(prop("display"))
+  const { lightBoxMediumId } = getState(prop("mediaGridDisplay"))
 
-  const { actions } = displaySlice
+  const { actions } = mediaGridDisplaySlice
   const dispatch = useAppDispatch()
 
   const lightBoxItemSize = Number(process.env.LIGHTBOX_ITEM_SIZE) ?? 500

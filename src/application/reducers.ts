@@ -23,11 +23,16 @@ export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.m
 
 export const mediaSlice = createSlice({
   name: "media",
-  initialState: mediaAdapter.getInitialState(),
-  reducers: {},
+  initialState: mediaAdapter.getInitialState({ loaded: false }),
+  reducers: {
+    setLoaded: (media, action: PayloadAction<typeof media.loaded>) => {
+      media.loaded = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder.addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
       mediaAdapter.upsertMany(media, action.payload)
+      mediaSlice.caseReducers.setLoaded(media, { type: "", payload: true })
     })
   },
 })
@@ -47,13 +52,17 @@ export const mediaSlice = createSlice({
 //   },
 // })
 
-export const displaySlice = createSlice({
-  name: "display",
+export const mediaGridDisplaySlice = createSlice({
+  name: "mediaGridDisplay",
   initialState: {
     contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
     transparency: false,
     lightBoxMediumId: "none",
     scrollRatio: 0,
+    cellMatrix: {
+      columnCount: 10,
+      cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
+    },
   },
   reducers: {
     updateDisplay: (display, action: PayloadAction<Partial<typeof display>>) => ({

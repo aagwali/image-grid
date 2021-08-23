@@ -1,13 +1,12 @@
 import debounce from "debounce"
-import { add, splitEvery } from "rambda"
-import React, { useReducer, useState } from "react"
+import { splitEvery } from "rambda"
+import React from "react"
 import { AutoSizer, Grid, WindowScroller } from "react-virtualized"
 
-import { Box, Center, Checkbox } from "@chakra-ui/react"
+import { Center } from "@chakra-ui/react"
 
 import { setCellMatrix_, setHeight, setScrollRatio_, updateScrollTop } from "./privates"
-import SizeSlider from "./sizeSlider"
-import { GridBox, ItemsBox, SettingsBox } from "./stlyes"
+import { GridBox } from "./stlyes"
 import { DynamicGridProps } from "./types"
 
 export const cellRenderer =
@@ -22,65 +21,45 @@ export const cellRenderer =
     )
 
 const DynamicGrid = ({
-  transparency,
-  toggleTransparency,
   contentSize,
-  contentSizeRange,
-  updateContentSize,
   scrollRatio,
   updateScrollRatio,
+  cellMatrix,
+  updateCellMatrix,
   items,
   renderItem,
+  forceUpdate,
 }: DynamicGridProps) => {
-  const [_, forceUpdate] = useReducer(add(1), 0)
-
-  const [{ cellSize, columnCount }, updateCellMatrix] = useState({
-    cellSize: contentSize,
-    columnCount: 1,
-  })
+  const { cellSize, columnCount } = cellMatrix
 
   const dataLayer = splitEvery(columnCount, items)
 
   const _setCellMatrix_ = setCellMatrix_(updateCellMatrix, forceUpdate) // (contentSize)
 
   return (
-    <GridBox>
-      <SettingsBox>
-        <SizeSlider
-          sliderStepCount={10}
-          contentSize={contentSize}
-          contentSizeRange={contentSizeRange}
-          updateContentSize={updateContentSize}
-          setCellMatrix={_setCellMatrix_}
-        />
-        <Checkbox children="Transparency" colorScheme="teal" isChecked={transparency} onChange={toggleTransparency} />
-      </SettingsBox>
-      <ItemsBox>
-        <Box id="grid-container">
-          <WindowScroller key={"WindowScroller"}>
-            {({ height }) => (
-              <AutoSizer disableHeight onResize={() => debounce(_setCellMatrix_, 250)(contentSize)}>
-                {({ width }) => (
-                  <Grid
-                    id="grid"
-                    cellRenderer={cellRenderer(dataLayer, renderItem)}
-                    width={width}
-                    columnWidth={cellSize}
-                    rowHeight={cellSize}
-                    columnCount={columnCount}
-                    rowCount={dataLayer.length}
-                    overscanRowCount={2}
-                    style={{ overflowX: "hidden", overflowY: "scroll" }}
-                    scrollTop={updateScrollTop(scrollRatio)}
-                    height={setHeight(height)}
-                    onScroll={setScrollRatio_(updateScrollRatio)}
-                  />
-                )}
-              </AutoSizer>
+    <GridBox id="grid-container">
+      <WindowScroller key={"WindowScroller"}>
+        {({ height }) => (
+          <AutoSizer disableHeight onResize={() => debounce(_setCellMatrix_, 250)(contentSize)}>
+            {({ width }) => (
+              <Grid
+                id="grid"
+                width={width}
+                columnWidth={cellSize}
+                rowHeight={cellSize}
+                rowCount={dataLayer.length}
+                columnCount={columnCount}
+                overscanRowCount={2}
+                style={{ overflowX: "hidden", overflowY: "scroll" }}
+                height={setHeight(height)}
+                onScroll={setScrollRatio_(updateScrollRatio)}
+                scrollTop={updateScrollTop(scrollRatio)}
+                cellRenderer={cellRenderer(dataLayer, renderItem)}
+              />
             )}
-          </WindowScroller>
-        </Box>
-      </ItemsBox>
+          </AutoSizer>
+        )}
+      </WindowScroller>
     </GridBox>
   )
 }

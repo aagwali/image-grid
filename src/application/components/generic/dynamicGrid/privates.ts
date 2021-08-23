@@ -1,7 +1,5 @@
 import { ScrollParams } from "react-virtualized"
 
-import { SetStateCellMatrix } from "./types"
-
 export const getElementById = (id: string): HTMLElement => document.getElementById(id) ?? document.createElement("div")
 export const getElementFirstChild = (element: HTMLElement): Element =>
   element.children[0] ?? document.createElement("div")
@@ -16,7 +14,7 @@ export const setHeight = (totalHeight: number): number => {
 }
 
 export const setCellMatrix_ =
-  (updateCellMatrix: SetStateCellMatrix, forceUpdate: React.DispatchWithoutAction) =>
+  (updateCellMatrix: any, forceUpdate: React.DispatchWithoutAction) =>
   (contentSize: number): void => {
     const grid = getElementById("grid")
     const scrollbarWidth = 15

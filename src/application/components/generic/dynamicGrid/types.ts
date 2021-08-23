@@ -1,28 +1,19 @@
-import { Draft } from "@reduxjs/toolkit"
-
-export type SetStateCellMatrix = React.Dispatch<
-  React.SetStateAction<{
-    columnCount: number
-    cellSize: number
-  }>
->
-
 export interface DynamicGridProps {
-  transparency: boolean
-  toggleTransparency: () => { payload: Partial<Draft<any>>; type: string }
   contentSize: number
-  contentSizeRange: [number, number]
-  updateContentSize: any
-  scrollRatio: any
-  updateScrollRatio: any
-  items: any
-  renderItem: any
+  scrollRatio: number
+  updateScrollRatio: (scrollRatio: number) => void
+  cellMatrix: { columnCount: number; cellSize: number }
+  updateCellMatrix: (cellMatrix: { columnCount: number; cellSize: number }) => void
+  items: any[]
+  renderItem: (item: any) => JSX.Element
+  forceUpdate: React.DispatchWithoutAction
 }
 
 export interface SizeSliderProps {
   contentSize: number
-  updateContentSize: (n: number) => void
-  sliderStepCount: number
+  updateContentSize: (contentSize: number) => void
   contentSizeRange: [number, number]
-  setCellMatrix: any
+  sliderStepCount: number
+  updateCellMatrix: (cellMatrix: { columnCount: number; cellSize: number }) => void
+  forceUpdate: React.DispatchWithoutAction
 }

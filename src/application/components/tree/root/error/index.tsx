@@ -4,12 +4,8 @@ import React from "react"
 import { useAppSelector } from "../../../../../storeConfig"
 import { handleFailedQueries } from "./privates"
 
-const getStateProps = () => ({
-  errorAction: useAppSelector(prop("errorAction")),
-})
-
 const Error = () => {
-  const { errorAction } = getStateProps()
+  const errorAction = useAppSelector(prop("errorAction"))
   handleFailedQueries(errorAction)
   return <React.Fragment />
 }

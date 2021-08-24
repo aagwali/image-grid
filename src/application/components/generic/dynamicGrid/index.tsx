@@ -6,7 +6,6 @@ import { AutoSizer, Grid, WindowScroller } from "react-virtualized"
 import { Center } from "@chakra-ui/react"
 
 import { setCellMatrix_, setHeight, setScrollRatio_, updateScrollTop } from "./privates"
-import { GridBox } from "./stlyes"
 import { DynamicGridProps } from "./types"
 
 export const cellRenderer =
@@ -37,7 +36,7 @@ const DynamicGrid = ({
   const _setCellMatrix_ = setCellMatrix_(updateCellMatrix, forceUpdate) // (contentSize)
 
   return (
-    <GridBox id="grid-container">
+    <div id="grid-container">
       <WindowScroller key={"WindowScroller"}>
         {({ height }) => (
           <AutoSizer disableHeight onResize={() => debounce(_setCellMatrix_, 250)(contentSize)}>
@@ -60,7 +59,7 @@ const DynamicGrid = ({
           </AutoSizer>
         )}
       </WindowScroller>
-    </GridBox>
+    </div>
   )
 }
 

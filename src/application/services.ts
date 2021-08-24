@@ -8,6 +8,7 @@ export const mediashareApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.MEDIASHARE_API_URL,
   }),
+  keepUnusedDataFor: 0, // limit data cache to Context lifecycle
   endpoints: (build) => ({
     [MediaGridEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
       query: (label) => `context/${label}/media`,

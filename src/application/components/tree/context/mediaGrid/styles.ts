@@ -12,7 +12,7 @@ export const SettingsBox = styled(HStack)`
   margin-bottom: ${theme.space[0.5]};
 `
 
-export const ItemsBox = styled(Box)`
+export const MediaBox = styled(Box)`
   width: 75%;
   border-width: 0.75px;
   border-color: ${theme.colors.teal[600]};

@@ -11,13 +11,13 @@ import { MediumItem } from "../../../../types"
 import DynamicGrid from "../../../generic/dynamicGrid"
 import SizeSlider from "../../../generic/dynamicGrid/sizeSlider"
 import ImageCard from "../../../generic/imageCard"
-import { DynamicGridBox, ItemsBox, SettingsBox } from "./styles"
+import { DynamicGridBox, MediaBox, SettingsBox } from "./styles"
 
 const MediaGrid = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
   const { actions } = mediaGridDisplaySlice
 
-  const { loaded } = getState(prop("media"))
+  const { loaded: mediaLoaded } = getState(prop("media"))
   const { transparency, contentSize, scrollRatio, cellMatrix } = getState(prop("mediaGridDisplay"))
   const media = getState(mediaSelector.selectAll)
 
@@ -29,15 +29,15 @@ const MediaGrid = (_: RouteComponentProps) => {
 
   const [, forceUpdate] = useReducer(add(1), 0)
 
-  if (loaded && isEmpty(media)) return <Center children={"No medias to display"} />
+  if (mediaLoaded && isEmpty(media)) return <Center children={"No medias to display"} />
 
   return (
     <DynamicGridBox>
       <SettingsBox>
         <SizeSlider
           sliderStepCount={10}
-          contentSize={contentSize}
           contentSizeRange={[150, 350]}
+          contentSize={contentSize}
           updateContentSize={updateContentSize}
           updateCellMatrix={updateCellMatrix}
           forceUpdate={forceUpdate}
@@ -45,7 +45,7 @@ const MediaGrid = (_: RouteComponentProps) => {
         <Checkbox children="Transparency" colorScheme="teal" isChecked={transparency} onChange={toggleTransparency} />
       </SettingsBox>
 
-      <ItemsBox data-loaded={loaded}>
+      <MediaBox data-loaded={mediaLoaded}>
         <DynamicGrid
           contentSize={contentSize}
           scrollRatio={scrollRatio}
@@ -63,7 +63,7 @@ const MediaGrid = (_: RouteComponentProps) => {
           )}
           forceUpdate={forceUpdate}
         />
-      </ItemsBox>
+      </MediaBox>
     </DynamicGridBox>
   )
 }

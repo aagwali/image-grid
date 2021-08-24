@@ -14,13 +14,16 @@ const mediaAdapter = createEntityAdapter<MediumItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })
 export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
-
 export const mediaSlice = createSlice({
   name: "media",
   initialState: mediaAdapter.getInitialState({ loaded: false }),
   reducers: {
     setLoaded: (media) => {
       media.loaded = true
+    },
+    removeAllMedia: (media) => {
+      mediaAdapter.removeAll(media)
+      media.loaded = false
     },
   },
   extraReducers: (builder) => {

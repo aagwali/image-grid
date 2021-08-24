@@ -16,8 +16,8 @@ const displayExit = (status: ExitType, description: string, dispatch: any) => {
   }
 
   if (status === ExitType.Error) {
+    navigate("/")
     toast.error(description, toastOptions)
-    navigate("/home")
   }
 
   dispatch(
@@ -39,7 +39,7 @@ export const handleFailedQueries = (errorAction: ErrorAction) => {
 
     case MediaGridEndpoints.GetMediaByContextLabel:
       description = "Unable to get medias"
-      displayExit(ExitType.Warning, description, dispatch)
+      displayExit(ExitType.Error, description, dispatch)
       break
 
     default: {

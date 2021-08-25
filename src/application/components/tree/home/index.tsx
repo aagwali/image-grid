@@ -4,16 +4,16 @@ import { Button, Center, Input, InputGroup, InputRightElement } from "@chakra-ui
 import { navigate, RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch } from "../../../../storeConfig"
-import { mediaSlice } from "../../../reducers"
+import { contextSlice } from "../../../reducers"
 import { HomeInputBox } from "./styles"
 
 const Home = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaSlice
+  const { actions } = contextSlice
 
   const [inputText, updateInputText] = useState("")
 
-  const resetMedia = () => dispatch(actions.removeAllMedia()) // TODO add loaded to false ?
+  const initiateContext = (input: string) => dispatch(actions.initiateContext(input))
 
   return (
     <Center>
@@ -24,7 +24,7 @@ const Home = (_: RouteComponentProps) => {
             <Button
               colorScheme="teal"
               onClick={() => {
-                resetMedia()
+                initiateContext(inputText)
                 navigate(inputText)
               }}
             >

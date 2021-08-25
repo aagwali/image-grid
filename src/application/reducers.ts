@@ -2,12 +2,18 @@ import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolki
 
 import { State } from "../storeConfig"
 import { getMediaByContextLabel } from "./services"
-import { MediumItem, NeutralState } from "./types"
+import { MediumItem } from "./types"
 
 export const authSlice = createSlice({
   name: "authenticated",
   initialState: false,
-  reducers: { setAuthenticated: (authenticated, action: PayloadAction<typeof authenticated>) => action.payload },
+  reducers: { setAuthenticated: (authenticated, { payload }: PayloadAction<typeof authenticated>) => payload },
+})
+
+export const contextSlice = createSlice({
+  name: "context",
+  initialState: "asdasd",
+  reducers: { initiateContext: (context, { payload }: PayloadAction<Partial<typeof context>>) => payload },
 })
 
 const mediaAdapter = createEntityAdapter<MediumItem>({
@@ -21,16 +27,17 @@ export const mediaSlice = createSlice({
     setLoaded: (media) => {
       media.loaded = true
     },
-    removeAllMedia: (media) => {
-      mediaAdapter.removeAll(media)
-      media.loaded = false
-    },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
-      mediaAdapter.upsertMany(media, action.payload)
-      mediaSlice.caseReducers.setLoaded(media)
-    })
+    builder
+      .addCase(contextSlice.actions.initiateContext, (media, _) => {
+        mediaAdapter.removeAll(media)
+        media.loaded = false
+      })
+      .addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
+        mediaAdapter.upsertMany(media, action.payload)
+        mediaSlice.caseReducers.setLoaded(media)
+      })
   },
 })
 
@@ -46,6 +53,17 @@ export const mediaSlice = createSlice({
 //   extraReducers: {},
 //   },
 // })
+
+const initialMediaGridDisplay = {
+  contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
+  transparency: false,
+  lightBoxMediumId: "none",
+  scrollRatio: 0,
+  cellMatrix: {
+    columnCount: 10,
+    cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
+  },
+}
 
 export const mediaGridDisplaySlice = createSlice({
   name: "mediaGridDisplay",
@@ -65,13 +83,7 @@ export const mediaGridDisplaySlice = createSlice({
       ...action.payload,
     }),
   },
-})
-
-export const errorSlice = createSlice({
-  name: "errorAction",
-  initialState: {
-    type: "initialErrorAction",
-    payload: { type: NeutralState.NoError, payload: {} },
+  extraReducers: (builder) => {
+    builder.addCase(contextSlice.actions.initiateContext, (__, _) => ({ ...initialMediaGridDisplay }))
   },
-  reducers: { setErrorAction: (_, action) => action },
 })

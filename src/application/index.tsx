@@ -4,7 +4,7 @@ import { prop } from "rambda"
 import React from "react"
 import { ToastContainer } from "react-toastify"
 
-import { RouteComponentProps } from "@reach/router"
+import { Redirect, RouteComponentProps } from "@reach/router"
 
 import { useAppSelector as getState } from "../storeConfig"
 import AppRouter from "./components/generic/appRouter"
@@ -22,8 +22,9 @@ const Application = (_: RouteComponentProps) => {
       <MediaLightBox />
       <ToastContainer />
       <AppRouter>
-        <Home path="/" />
-        <Context path=":contextLabel/*" />
+        <Redirect from="/" to="home" noThrow />
+        <Home path="/home" />
+        <Context path="/context/:contextLabel/*" />
       </AppRouter>
     </React.Fragment>
   )

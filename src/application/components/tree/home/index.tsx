@@ -25,7 +25,7 @@ const Home = (_: RouteComponentProps) => {
               colorScheme="teal"
               onClick={() => {
                 initiateContext(inputText)
-                navigate(inputText)
+                navigate(`context/${inputText}`)
               }}
             >
               Validate

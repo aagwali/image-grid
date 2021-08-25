@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components"
 
-import { Box, HStack, theme, VStack } from "@chakra-ui/react"
+import { Box, Center, HStack, theme, VStack } from "@chakra-ui/react"
 
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
 
@@ -21,4 +21,8 @@ export const MediaBox = styled(Box)`
     css`
       background: url("${SpinnerSvg}") center no-repeat;
     `};
+`
+
+export const NoMediaBox = styled(Center)`
+  padding-top: 350px;
 `

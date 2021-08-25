@@ -5,6 +5,7 @@ export interface DynamicGridProps {
   cellMatrix: { columnCount: number; cellSize: number }
   updateCellMatrix: (cellMatrix: { columnCount: number; cellSize: number }) => void
   items: any[]
+  itemsLoaded: boolean
   renderItem: (item: any) => JSX.Element
   forceUpdate: React.DispatchWithoutAction
 }

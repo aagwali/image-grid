@@ -1,7 +1,7 @@
-import { add, isEmpty, prop } from "rambda"
+import { add, prop } from "rambda"
 import React, { useReducer } from "react"
 
-import { Center, Checkbox } from "@chakra-ui/react"
+import { Checkbox } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
@@ -29,8 +29,6 @@ const MediaGrid = (_: RouteComponentProps) => {
 
   const [, forceUpdate] = useReducer(add(1), 0)
 
-  if (mediaLoaded && isEmpty(media)) return <Center children={"No medias to display"} />
-
   return (
     <DynamicGridBox>
       <SettingsBox>
@@ -53,6 +51,7 @@ const MediaGrid = (_: RouteComponentProps) => {
           cellMatrix={cellMatrix}
           updateCellMatrix={updateCellMatrix}
           items={media}
+          itemsLoaded={mediaLoaded}
           renderItem={(medium: MediumItem) => (
             <ImageCard
               transparency={transparency}

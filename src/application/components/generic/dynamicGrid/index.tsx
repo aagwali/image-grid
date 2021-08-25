@@ -1,5 +1,5 @@
 import debounce from "debounce"
-import { splitEvery } from "rambda"
+import { isEmpty, splitEvery } from "rambda"
 import React from "react"
 import { AutoSizer, Grid, WindowScroller } from "react-virtualized"
 
@@ -26,6 +26,7 @@ const DynamicGrid = ({
   cellMatrix,
   updateCellMatrix,
   items,
+  itemsLoaded,
   renderItem,
   forceUpdate,
 }: DynamicGridProps) => {
@@ -40,22 +41,26 @@ const DynamicGrid = ({
       <WindowScroller key={"WindowScroller"}>
         {({ height }) => (
           <AutoSizer disableHeight onResize={() => debounce(_setCellMatrix_, 250)(contentSize)}>
-            {({ width }) => (
-              <Grid
-                id="grid"
-                width={width}
-                columnWidth={cellSize}
-                rowHeight={cellSize}
-                rowCount={dataLayer.length}
-                columnCount={columnCount}
-                overscanRowCount={2}
-                style={{ overflowX: "hidden", overflowY: "scroll" }}
-                height={setHeight(height)}
-                onScroll={setScrollRatio_(updateScrollRatio)}
-                scrollTop={updateScrollTop(scrollRatio)}
-                cellRenderer={cellRenderer(dataLayer, renderItem)}
-              />
-            )}
+            {({ width }) =>
+              isEmpty(items) && itemsLoaded ? (
+                <Center style={{ height: setHeight(height), width: width }} children={"No items to display"} />
+              ) : (
+                <Grid
+                  id="grid"
+                  width={width}
+                  columnWidth={cellSize}
+                  rowHeight={cellSize}
+                  rowCount={dataLayer.length}
+                  columnCount={columnCount}
+                  overscanRowCount={2}
+                  style={{ overflowX: "hidden", overflowY: "scroll" }}
+                  height={setHeight(height)}
+                  onScroll={setScrollRatio_(updateScrollRatio)}
+                  scrollTop={updateScrollTop(scrollRatio)}
+                  cellRenderer={cellRenderer(dataLayer, renderItem)}
+                />
+              )
+            }
           </AutoSizer>
         )}
       </WindowScroller>

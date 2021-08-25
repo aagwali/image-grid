@@ -22,7 +22,7 @@ const Application = (_: RouteComponentProps) => {
       <ToastContainer />
       <Router>
         <Home path="/" />
-        <Context path=":context/*" />
+        <Context path=":contextLabel/*" />
       </Router>
     </React.Fragment>
   )

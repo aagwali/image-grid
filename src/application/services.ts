@@ -10,6 +10,9 @@ export const mediashareApi = createApi({
   }),
   keepUnusedDataFor: 0, // limit data cache to Context lifecycle
   endpoints: (build) => ({
+    [MediaGridEndpoints.GetContextByLabel]: build.query<MediumItem[], string>({
+      query: (label) => `context/${label}`,
+    }),
     [MediaGridEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
       query: (label) => `context/${label}/media`,
       transformResponse: formatApiResult,
@@ -18,3 +21,4 @@ export const mediashareApi = createApi({
 })
 
 export const getMediaByContextLabel = mediashareApi.endpoints[MediaGridEndpoints.GetMediaByContextLabel]
+export const getContextByLabel = mediashareApi.endpoints[MediaGridEndpoints.GetContextByLabel]

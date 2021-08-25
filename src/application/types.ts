@@ -18,6 +18,7 @@ export type MediumItem = {
 
 export enum MediaGridEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
+  GetContextByLabel = "getContextByLabel",
 }
 
 export enum NeutralState {

@@ -9,7 +9,6 @@ import { RouteComponentProps, Router } from "@reach/router"
 import { useAppSelector as getState } from "../storeConfig"
 import Context from "./components/tree/context"
 import Home from "./components/tree/home"
-import Error from "./components/tree/root/error"
 import MediaLightBox from "./components/tree/root/mediaLightBox"
 
 const Application = (_: RouteComponentProps) => {
@@ -20,7 +19,6 @@ const Application = (_: RouteComponentProps) => {
   return (
     <React.Fragment>
       <MediaLightBox />
-      <Error />
       <ToastContainer />
       <Router>
         <Home path="/" />

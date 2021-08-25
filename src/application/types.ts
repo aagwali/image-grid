@@ -23,10 +23,3 @@ export enum MediaGridEndpoints {
 export enum NeutralState {
   NoError = "no error to handle",
 }
-
-export type ApiEndpoints = NeutralState | MediaGridEndpoints
-
-export type ErrorAction = {
-  type: string
-  payload: { type: ApiEndpoints; payload: any }
-}

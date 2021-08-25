@@ -1,10 +1,10 @@
 import React from "react"
 
-import { Redirect, RouteComponentProps, Router } from "@reach/router"
+import { Redirect, RouteComponentProps } from "@reach/router"
 import { skipToken } from "@reduxjs/toolkit/dist/query"
 
 import { getContextByLabel, getMediaByContextLabel } from "../../../services"
-import NotFound from "../root/notFound"
+import AppRouter from "../../generic/appRouter"
 import MediaGrid from "./mediaGrid"
 import NavBar from "./navBar"
 
@@ -19,10 +19,10 @@ const Context = ({ contextLabel }: RouteComponentProps & { contextLabel?: string
   return (
     <React.Fragment>
       <NavBar />
-      <Router>
+      <AppRouter>
         <Redirect from="/" to="medias" noThrow />
         <MediaGrid path="medias" />
-      </Router>
+      </AppRouter>
     </React.Fragment>
   )
 }

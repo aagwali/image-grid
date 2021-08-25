@@ -4,9 +4,10 @@ import { prop } from "rambda"
 import React from "react"
 import { ToastContainer } from "react-toastify"
 
-import { RouteComponentProps, Router } from "@reach/router"
+import { RouteComponentProps } from "@reach/router"
 
 import { useAppSelector as getState } from "../storeConfig"
+import AppRouter from "./components/generic/appRouter"
 import Context from "./components/tree/context"
 import Home from "./components/tree/home"
 import MediaLightBox from "./components/tree/root/mediaLightBox"
@@ -20,10 +21,10 @@ const Application = (_: RouteComponentProps) => {
     <React.Fragment>
       <MediaLightBox />
       <ToastContainer />
-      <Router>
+      <AppRouter>
         <Home path="/" />
         <Context path=":contextLabel/*" />
-      </Router>
+      </AppRouter>
     </React.Fragment>
   )
 }

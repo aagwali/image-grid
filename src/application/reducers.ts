@@ -12,7 +12,7 @@ export const authSlice = createSlice({
 
 export const contextSlice = createSlice({
   name: "context",
-  initialState: "asdasd",
+  initialState: "",
   reducers: { initiateContext: (context, { payload }: PayloadAction<Partial<typeof context>>) => payload },
 })
 
@@ -41,19 +41,6 @@ export const mediaSlice = createSlice({
   },
 })
 
-// TODO config check projection
-// last = no reducers, only extra reducers on interceptopn selection event ()
-
-// export const mediaSelectedSelector = mediaAdapter.getSelectors((state: State) => state.mediaSelected)
-
-// export const mediaSelectedSlice = createSlice({
-//   name: "mediaSelected",
-//   initialState: mediaAdapter.getInitialState(),
-//   reducers: {},
-//   extraReducers: {},
-//   },
-// })
-
 const initialMediaGridDisplay = {
   contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
   transparency: false,
@@ -67,16 +54,7 @@ const initialMediaGridDisplay = {
 
 export const mediaGridDisplaySlice = createSlice({
   name: "mediaGridDisplay",
-  initialState: {
-    contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
-    transparency: false,
-    lightBoxMediumId: "none",
-    scrollRatio: 0,
-    cellMatrix: {
-      columnCount: 10,
-      cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
-    },
-  },
+  initialState: initialMediaGridDisplay,
   reducers: {
     updateDisplay: (display, action: PayloadAction<Partial<typeof display>>) => ({
       ...display,
@@ -84,6 +62,9 @@ export const mediaGridDisplaySlice = createSlice({
     }),
   },
   extraReducers: (builder) => {
-    builder.addCase(contextSlice.actions.initiateContext, (__, _) => ({ ...initialMediaGridDisplay }))
+    builder.addCase(contextSlice.actions.initiateContext, () => ({ ...initialMediaGridDisplay }))
   },
 })
+
+// TODO config check projection
+// last = no reducers, only extra reducers on interceptipn selection event ()

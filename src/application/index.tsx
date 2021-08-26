@@ -7,10 +7,10 @@ import { ToastContainer } from "react-toastify"
 import { Redirect, RouteComponentProps } from "@reach/router"
 
 import { useAppSelector as getState } from "../storeConfig"
-import AppRouter from "./components/generic/appRouter"
-import Context from "./components/tree/context"
-import Home from "./components/tree/home"
-import MediaLightBox from "./components/tree/root/mediaLightBox"
+import AppRouter from "./appRouter"
+import Context from "./tree/context"
+import Home from "./tree/home"
+import LightBoxContainer from "./tree/mediaLightBox"
 
 const Application = (_: RouteComponentProps) => {
   const authenticated = getState(prop("authenticated"))
@@ -19,7 +19,7 @@ const Application = (_: RouteComponentProps) => {
 
   return (
     <React.Fragment>
-      <MediaLightBox />
+      <LightBoxContainer />
       <ToastContainer />
       <AppRouter>
         <Redirect from="/" to="home" noThrow />

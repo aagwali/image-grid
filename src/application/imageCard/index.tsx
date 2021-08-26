@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 import { Image } from "@chakra-ui/react"
 
-import EnlargeSvg from "../../../assets/images/enlarge.svg"
+import EnlargeSvg from "../../assets/images/enlarge.svg"
 import { EnlargeBox, ImageBox, ImageBoxError, ImageBoxLoading } from "./styles"
 import { ImageCardProps } from "./types"
 

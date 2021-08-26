@@ -2,9 +2,9 @@ import styled, { css, keyframes } from "styled-components"
 
 import { Box, Center, theme } from "@chakra-ui/react"
 
-import CheckerBoardSvg from "../../../assets/images/checkerboard.svg"
-import DocErrorSvg from "../../../assets/images/docError.svg"
-import SpinnerSvg from "../../../assets/images/spinner.svg"
+import CheckerBoardSvg from "../../assets/images/checkerboard.svg"
+import DocErrorSvg from "../../assets/images/docError.svg"
+import SpinnerSvg from "../../assets/images/spinner.svg"
 
 const fadeIn = keyframes`
   from {

@@ -3,8 +3,8 @@ import React from "react"
 import { Redirect, RouteComponentProps } from "@reach/router"
 import { skipToken } from "@reduxjs/toolkit/dist/query"
 
-import { getContextByLabel, getMediaByContextLabel } from "../../../services"
-import AppRouter from "../../generic/appRouter"
+import AppRouter from "../../appRouter"
+import { getContextByLabel, getMediaByContextLabel } from "../../services"
 import MediaGrid from "./mediaGrid"
 import NavBar from "./navBar"
 

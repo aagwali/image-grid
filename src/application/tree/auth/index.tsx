@@ -1,6 +1,6 @@
 import React from "react"
 
-import { useAppDispatch } from "../../../../../storeConfig"
+import { useAppDispatch } from "../../../storeConfig"
 import { triggerAuth } from "./privates"
 
 const Auth = () => {

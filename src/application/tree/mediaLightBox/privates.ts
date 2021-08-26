@@ -1,6 +1,6 @@
 import { equals, findIndex } from "rambda"
 
-import { MediumItem } from "../../../../types"
+import { MediumItem } from "../../types"
 
 export const pickAdjacentMedia = (mediaIds: string[], lightBoxMediumId: string): [string, string] => {
   const firstIndex = 0

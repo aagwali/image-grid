@@ -4,12 +4,12 @@ import { prop } from "rambda"
 import React from "react"
 import Lightbox from "react-image-lightbox"
 
-import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
-import { getImageServerUrl } from "../../../../privates"
-import { mediaGridDisplaySlice, mediaSelector } from "../../../../reducers"
+import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
+import { getImageServerUrl } from "../../privates"
+import { mediaGridDisplaySlice, mediaSelector } from "../../reducers"
 import { pickAdjacentMedia } from "./privates"
 
-const MediaLightBox = () => {
+const LightBoxContainer = () => {
   const { lightBoxMediumId } = getState(prop("mediaGridDisplay"))
 
   const { actions } = mediaGridDisplaySlice
@@ -41,4 +41,4 @@ const MediaLightBox = () => {
   )
 }
 
-export default MediaLightBox
+export default LightBoxContainer

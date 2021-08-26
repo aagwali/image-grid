@@ -3,8 +3,8 @@ import React, { useState } from "react"
 import { Button, Center, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
 import { navigate, RouteComponentProps } from "@reach/router"
 
-import { useAppDispatch } from "../../../../storeConfig"
-import { contextSlice } from "../../../reducers"
+import { useAppDispatch } from "../../../storeConfig"
+import { contextSlice } from "../../reducers"
 import { HomeInputBox } from "./styles"
 
 const Home = (_: RouteComponentProps) => {

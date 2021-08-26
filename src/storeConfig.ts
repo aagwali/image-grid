@@ -13,7 +13,6 @@ const configureAppStore = () =>
       [authSlice.name]: authSlice.reducer,
       [mediaGridDisplaySlice.name]: mediaGridDisplaySlice.reducer,
       [mediaSlice.name]: mediaSlice.reducer,
-      // [mediaSelectedSlice.name]: mediaSelectedSlice.reducer,
       [mediashareApi.reducerPath]: mediashareApi.reducer,
     },
     middleware: (getDefault) => getDefault().concat(mediashareApi.middleware).concat(apiErrorsMiddleware),

@@ -1,7 +1,7 @@
 import Keycloak from "keycloak-js"
 
-import { AppDispatch } from "../../../../../storeConfig"
-import { authSlice } from "../../../../reducers"
+import { AppDispatch } from "../../../storeConfig"
+import { authSlice } from "../../reducers"
 
 const keycloak = Keycloak({
   realm: process.env.SSO_REALM ?? "",

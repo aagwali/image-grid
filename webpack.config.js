@@ -61,7 +61,7 @@ module.exports = (_env, options) => {
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({ filename: "css/app.min.css" }),
       new CopyPlugin({
-        patterns: [{ from: "./src/application/assets/images", to: "images" }],
+        patterns: [{ from: "./src/assets/images", to: "images" }],
       }),
       new HtmlWebpackPlugin({
         template: "./index.html",

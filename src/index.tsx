@@ -7,7 +7,7 @@ import { Provider } from "react-redux"
 import { ChakraProvider } from "@chakra-ui/react"
 
 import Application from "./application"
-import Auth from "./application/tree/auth"
+import Authentication from "./application/auth"
 import { store } from "./storeConfig"
 import { theme } from "./theme"
 
@@ -15,8 +15,9 @@ const render = () =>
   ReactDOM.render(
     <Provider store={store}>
       <ChakraProvider theme={theme}>
-        {/* <Auth /> */}
-        <Application />
+        <Authentication>
+          <Application />
+        </Authentication>
       </ChakraProvider>
     </Provider>,
     document.getElementById("app"),

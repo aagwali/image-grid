@@ -31,7 +31,7 @@ const handleFailedQueries = (endpointName: MediaGridEndpoints): void => {
       break
     case MediaGridEndpoints.GetMediaByContextLabel:
       description = "Unable to get medias"
-      displayExit(ExitType.Error, description)
+      displayExit(ExitType.Warning, description)
       break
 
     default: {

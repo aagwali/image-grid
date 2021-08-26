@@ -15,6 +15,6 @@ export const ImageBoxError = styled(Center)`
 `
 
 export const BoxLink = styled(Link)`
-  padding-top: 35px;
+  padding-top: 120px;
   text-decoration: underline;
 `

@@ -4,12 +4,6 @@ import { State } from "../storeConfig"
 import { getMediaByContextLabel } from "./services"
 import { MediumItem } from "./types"
 
-export const authSlice = createSlice({
-  name: "authenticated",
-  initialState: false,
-  reducers: { setAuthenticated: (authenticated, { payload }: PayloadAction<typeof authenticated>) => payload },
-})
-
 export const contextSlice = createSlice({
   name: "context",
   initialState: "",
@@ -66,5 +60,5 @@ export const mediaGridDisplaySlice = createSlice({
   },
 })
 
-// TODO config check projection
+// TODO config selection projection
 // last = no reducers, only extra reducers on interceptipn selection event ()

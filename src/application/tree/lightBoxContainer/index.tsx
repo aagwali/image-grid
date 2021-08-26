@@ -9,6 +9,7 @@ import { getImageServerUrl } from "../../privates"
 import { mediaGridDisplaySlice, mediaSelector } from "../../reducers"
 import { pickAdjacentMedia } from "./privates"
 
+// depends on navigator cache
 const LightBoxContainer = () => {
   const { lightBoxMediumId } = getState(prop("mediaGridDisplay"))
 

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components"
 
-import { Box, Center, HStack, theme, VStack } from "@chakra-ui/react"
+import { Box, Button, Center, HStack, theme, VStack } from "@chakra-ui/react"
 
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
 
@@ -8,9 +8,24 @@ export const DynamicGridBox = styled(VStack)`
   margin-top: ${theme.space[5]};
 `
 
-export const SettingsBox = styled(HStack)`
+export const HeaderBox = styled(HStack)`
+  margin-bottom: ${theme.space[2]};
+`
+
+export const TransparencyBox = styled(HStack)`
+  position: absolute;
+  left: 12.5%;
+`
+
+export const SizeBox = styled(HStack)``
+
+export const SelectionBox = styled(HStack)`
+  position: absolute;
+  right: 12.5%;
   margin-bottom: ${theme.space[0.5]};
 `
+
+export const SelectButton = styled(Button)``
 
 export const MediaBox = styled(Box)`
   width: 75%;

@@ -6,14 +6,14 @@ import Lightbox from "react-image-lightbox"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
 import { getImageServerUrl } from "../../privates"
-import { mediaGridDisplaySlice, mediaSelector } from "../../reducers"
+import { mediaGridSlice, mediaSelector } from "../../reducers"
 import { pickAdjacentMedia } from "./privates"
 
 // depends on navigator cache
 const LightBoxContainer = () => {
-  const { lightBoxMediumId } = getState(prop("mediaGridDisplay"))
+  const { lightBoxMediumId } = getState(prop("mediaGrid"))
 
-  const { actions } = mediaGridDisplaySlice
+  const { actions } = mediaGridSlice
   const dispatch = useAppDispatch()
 
   const lightBoxItemSize = Number(process.env.LIGHTBOX_ITEM_SIZE) ?? 500
@@ -35,9 +35,9 @@ const LightBoxContainer = () => {
       enableZoom={true}
       animationDisabled={true} // avoid flashing render
       imagePadding={65}
-      onCloseRequest={() => dispatch(actions.updateDisplay({ lightBoxMediumId: "none" }))}
-      onMovePrevRequest={() => dispatch(actions.updateDisplay({ lightBoxMediumId: previousMediumId }))}
-      onMoveNextRequest={() => dispatch(actions.updateDisplay({ lightBoxMediumId: nextMediumId }))}
+      onCloseRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: "none" }))}
+      onMovePrevRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: previousMediumId }))}
+      onMoveNextRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: nextMediumId }))}
     />
   )
 }

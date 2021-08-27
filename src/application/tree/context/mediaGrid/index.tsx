@@ -1,7 +1,7 @@
-import { add, prop } from "rambda"
+import { add, indexOf, last, prop, slice, sort, uniq } from "rambda"
 import React, { useReducer } from "react"
 
-import { Checkbox } from "@chakra-ui/react"
+import { Checkbox, Text } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../storeConfig"
@@ -9,39 +9,69 @@ import DynamicGrid from "../../../dynamicGrid"
 import SizeSlider from "../../../dynamicGrid/sizeSlider"
 import ImageCard from "../../../imageCard"
 import { getImageServerUrl } from "../../../privates"
-import { mediaGridDisplaySlice, mediaSelector } from "../../../reducers"
+import { mediaGridSlice, mediaSelector } from "../../../reducers"
 import { MediumItem } from "../../../types"
-import { DynamicGridBox, MediaBox, SettingsBox } from "./styles"
+import { DynamicGridBox, HeaderBox, MediaBox, SelectButton, SelectionBox, SizeBox, TransparencyBox } from "./styles"
 
 const MediaGrid = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaGridDisplaySlice
+  const { actions } = mediaGridSlice
 
   const { loaded: mediaLoaded } = getState(prop("media"))
-  const { transparency, contentSize, scrollRatio, cellMatrix } = getState(prop("mediaGridDisplay"))
+  const { selectMediaIds, transparency, contentSize, scrollRatio, cellMatrix } = getState(prop("mediaGrid"))
   const media = getState(mediaSelector.selectAll)
+  const mediaIds = getState(mediaSelector.selectIds) as string[]
 
-  const toggleTransparency = () => dispatch(actions.updateDisplay({ transparency: !transparency }))
-  const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateDisplay({ contentSize: x }))
-  const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateDisplay({ scrollRatio: x }))
-  const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateDisplay({ cellMatrix: x }))
-  const openLightBox = (mediumId: string) => () => dispatch(actions.updateDisplay({ lightBoxMediumId: mediumId }))
+  const toggleTransparency = () => dispatch(actions.updateMediaGrid({ transparency: !transparency }))
+  const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaGrid({ contentSize: x }))
+  const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaGrid({ scrollRatio: x }))
+  const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaGrid({ cellMatrix: x }))
+
+  const getSelectedMedia = (selectMediaIds: string[], mediaIds: string[], mediumId: string, event: any) => {
+    const selectedIndex = indexOf(mediumId, mediaIds)
+    const lastSelectedIndex = indexOf(last(selectMediaIds), mediaIds)
+
+    const sortedIndexes = sort((a, b) => a - b, [selectedIndex, lastSelectedIndex])
+
+    if (event.shiftKey) return uniq([...selectMediaIds, ...mediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
+
+    return selectMediaIds.includes(mediumId)
+      ? selectMediaIds.filter((selectedId) => selectedId !== mediumId)
+      : [...selectMediaIds, mediumId]
+  }
+
+  const select = (medium: typeof selectMediaIds[0]) => (event: any) =>
+    dispatch(actions.updateMediaGrid({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
+
+  const selectAll = () => dispatch(actions.updateMediaGrid({ selectMediaIds: mediaIds }))
+  const deselectAll = () => dispatch(actions.updateMediaGrid({ selectMediaIds: [] }))
+  const openLightBox = (mediumId: string) => () => dispatch(actions.updateMediaGrid({ lightBoxMediumId: mediumId }))
 
   const [, forceUpdate] = useReducer(add(1), 0)
 
   return (
     <DynamicGridBox>
-      <SettingsBox>
-        <SizeSlider
-          sliderStepCount={10}
-          contentSizeRange={[150, 350]}
-          contentSize={contentSize}
-          updateContentSize={updateContentSize}
-          updateCellMatrix={updateCellMatrix}
-          forceUpdate={forceUpdate}
-        />
-        <Checkbox children="Transparency" colorScheme="teal" isChecked={transparency} onChange={toggleTransparency} />
-      </SettingsBox>
+      <HeaderBox>
+        <TransparencyBox>
+          <Checkbox children="Transparency" colorScheme="teal" isChecked={transparency} onChange={toggleTransparency} />
+        </TransparencyBox>
+        <Text children={"Size : "} />
+        <SizeBox>
+          <SizeSlider
+            sliderStepCount={10}
+            contentSizeRange={[150, 350]}
+            contentSize={contentSize}
+            updateContentSize={updateContentSize}
+            updateCellMatrix={updateCellMatrix}
+            forceUpdate={forceUpdate}
+          />
+        </SizeBox>
+        <SelectionBox spacing={5}>
+          <Text children={`Selected : ${selectMediaIds.length} / ${mediaIds.length}`} />
+          <SelectButton onClick={selectAll} colorScheme="teal" children={"Select all"} />
+          <SelectButton onClick={deselectAll} colorScheme="teal" children={"Deselect all"} />
+        </SelectionBox>
+      </HeaderBox>
 
       <MediaBox data-loaded={mediaLoaded}>
         <DynamicGrid
@@ -52,14 +82,18 @@ const MediaGrid = (_: RouteComponentProps) => {
           updateCellMatrix={updateCellMatrix}
           items={media}
           itemsLoaded={mediaLoaded}
-          renderItem={(medium: MediumItem) => (
-            <ImageCard
-              transparency={transparency}
-              imageSize={contentSize}
-              openLightBox={openLightBox(medium.id)}
-              urlSource={getImageServerUrl(medium.id, contentSize)}
-            />
-          )}
+          renderItem={(medium: MediumItem) => {
+            return (
+              <ImageCard
+                transparency={transparency}
+                imageSize={contentSize}
+                checked={selectMediaIds.includes(medium.id)}
+                urlSource={getImageServerUrl(medium.id, contentSize)}
+                openLightBox={openLightBox(medium.id)}
+                toggleCardSelection={select(medium.id)}
+              />
+            )
+          }}
           forceUpdate={forceUpdate}
         />
       </MediaBox>

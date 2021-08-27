@@ -1,19 +1,31 @@
-import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { prop } from "rambda"
+
+import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../storeConfig"
 import { getMediaByContextLabel } from "./services"
 import { MediumItem } from "./types"
 
+//#region CONTEXT
 export const contextSlice = createSlice({
   name: "context",
   initialState: "",
   reducers: { initiateContext: (context, { payload }: PayloadAction<Partial<typeof context>>) => payload },
 })
+//#endregion
 
+//#region MEDIA
 const mediaAdapter = createEntityAdapter<MediumItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })
+
 export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
+
+export const mediaSelectedSelector = createSelector(
+  [prop("mediaGrid"), (state: State) => (id: string) => mediaSelector.selectById(state, id)], // curried
+  ({ selectMediaIds }, selectMediaById) => selectMediaIds.map(selectMediaById),
+)
+
 export const mediaSlice = createSlice({
   name: "media",
   initialState: mediaAdapter.getInitialState({ loaded: false }),
@@ -29,13 +41,17 @@ export const mediaSlice = createSlice({
         media.loaded = false
       })
       .addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
-        mediaAdapter.upsertMany(media, action.payload)
+        mediaAdapter.setAll(media, action.payload)
         mediaSlice.caseReducers.setLoaded(media)
       })
   },
 })
 
-const initialMediaGridDisplay = {
+//#endregion
+
+//#region MEDIA GRID
+const initialMediaGrid = {
+  selectMediaIds: [] as string[],
   contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
   transparency: false,
   lightBoxMediumId: "none",
@@ -46,19 +62,17 @@ const initialMediaGridDisplay = {
   },
 }
 
-export const mediaGridDisplaySlice = createSlice({
-  name: "mediaGridDisplay",
-  initialState: initialMediaGridDisplay,
+export const mediaGridSlice = createSlice({
+  name: "mediaGrid",
+  initialState: initialMediaGrid,
   reducers: {
-    updateDisplay: (display, action: PayloadAction<Partial<typeof display>>) => ({
-      ...display,
-      ...action.payload,
+    updateMediaGrid: (mediaGrid, { payload }: PayloadAction<Partial<typeof mediaGrid>>) => ({
+      ...mediaGrid,
+      ...payload,
     }),
   },
   extraReducers: (builder) => {
-    builder.addCase(contextSlice.actions.initiateContext, () => ({ ...initialMediaGridDisplay }))
+    builder.addCase(contextSlice.actions.initiateContext, () => ({ ...initialMediaGrid }))
   },
 })
-
-// TODO config selection projection
-// last = no reducers, only extra reducers on interceptipn selection event ()
+//#endregion

@@ -30,6 +30,13 @@ export const ImageBox = styled(Box)`
       background: url("${CheckerBoardSvg}") center;
     `};
 
+  ${(props) =>
+    props["item-checked"] === "true" &&
+    css`
+      border-color: ${theme.colors.pink[400]};
+      border-width: 2px;
+    `};
+
   :hover {
     .enlargeImage {
       opacity: 0.8;
@@ -37,7 +44,7 @@ export const ImageBox = styled(Box)`
   }
 `
 
-export const ImageBoxError = styled(ImageBox)`
+export const ImageErrorBox = styled(ImageBox)`
   background: url("${DocErrorSvg}") center no-repeat;
 `
 

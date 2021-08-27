@@ -4,12 +4,12 @@ import React from "react"
 
 import { RouteComponentProps } from "@reach/router"
 
-import { BoxLink, ImageBoxError } from "./styles"
+import { HomeLink, ImageErrorBox } from "./styles"
 
 const NotFound = (_: RouteComponentProps) => (
-  <ImageBoxError>
-    <BoxLink children="Home" to="../../../../" />
-  </ImageBoxError>
+  <ImageErrorBox>
+    <HomeLink children="Home" to="../../../../" />
+  </ImageErrorBox>
 )
 
 export default NotFound

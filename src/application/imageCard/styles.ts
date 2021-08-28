@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from "styled-components"
 
-import { Box, Center, theme } from "@chakra-ui/react"
+import { Box, Center, Text, theme } from "@chakra-ui/react"
 
 import CheckerBoardSvg from "../../assets/images/checkerboard.svg"
 import DocErrorSvg from "../../assets/images/docError.svg"
@@ -16,12 +16,11 @@ const fadeIn = keyframes`
   }
 `
 
-export const ImageBox = styled(Box)`
+export const CardBox = styled(Box)`
   border-width: 0.75px;
   border-color: ${theme.colors.gray[400]};
   border-radius: 3px;
   animation: ${fadeIn} 1.5s;
-  position: relative;
 
   ${(props) =>
     props["data-loaded"] &&
@@ -58,11 +57,15 @@ export const ImageBox = styled(Box)`
   }
 `
 
-export const ImageErrorBox = styled(ImageBox)`
+export const CardImageBox = styled(Box)`
+  position: relative;
+`
+
+export const CardImageErrorBox = styled(Box)`
   background: url("${DocErrorSvg}") center no-repeat;
 `
 
-export const ImageBoxLoading = styled(Box)`
+export const CardImageLoading = styled(Box)`
   background: url("${SpinnerSvg}") center no-repeat;
 `
 
@@ -94,4 +97,29 @@ export const EnlargeBox = styled(Center)<{ size: number }>`
       transform: scale(0.65);
     }
   }
+`
+export const CardHeaderBox = styled(Center)`
+  width: 100%;
+
+  ${({ height }) => css`
+    height: ${height}px;
+  `};
+  border-bottom-width: 1px;
+  border-bottom-color: ${theme.colors.gray[300]};
+  background: ${theme.colors.gray[50]};
+`
+
+export const CardTitle = styled(Text)`
+  ${({ size }) => css`
+    font-weight: ${theme.fontWeights.semibold};
+    font-size: ${Math.floor(size / 15)}px;
+    user-select: none;
+  `};
+`
+
+export const CardSubTitle = styled(Text)`
+  ${({ size }) => css`
+    font-size: ${Math.floor(size / 20)}px;
+    user-select: none;
+  `};
 `

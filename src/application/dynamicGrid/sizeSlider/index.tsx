@@ -3,6 +3,7 @@ import Hotkeys from "react-hot-keys"
 
 import { Slider, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
 
+import { getHotkeys } from "../../privates"
 import { setCellMatrix_ } from "../privates"
 import { SizeSliderProps, SizeSliderShortcuts } from "../types"
 import { SliderBox, SliderTrackCustom } from "./styles"
@@ -32,7 +33,7 @@ const SizeSlider = ({
 
   return (
     <SliderBox>
-      {/* <Hotkeys keyName={getHotkeys(SizeSliderShortcuts)} onKeyDown={handleHotkey} /> */}
+      <Hotkeys keyName={getHotkeys(SizeSliderShortcuts)} onKeyDown={handleHotkey} />
 
       <Slider
         min={contentSizeRange[0]}

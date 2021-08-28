@@ -8,6 +8,7 @@ export interface DynamicGridProps {
   itemsLoaded: boolean
   renderItem: (item: any) => JSX.Element
   forceUpdate: React.DispatchWithoutAction
+  headerHeightRatio?: number
 }
 
 export interface SizeSliderProps {

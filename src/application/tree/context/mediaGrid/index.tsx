@@ -33,7 +33,10 @@ const MediaGrid = (_: RouteComponentProps) => {
     dispatch(actions.updateMediaGrid({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
   const selectAll = () => dispatch(actions.updateMediaGrid({ selectMediaIds: mediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaGrid({ selectMediaIds: [] }))
-  const openLightBox = (mediumId: string) => () => dispatch(actions.updateMediaGrid({ lightBoxMediumId: mediumId }))
+  const openLightBox = (mediumId: string) => (e: MouseEvent) => {
+    e.stopPropagation()
+    dispatch(actions.updateMediaGrid({ lightBoxMediumId: mediumId }))
+  }
 
   const [, forceUpdate] = useReducer(add(1), 0)
 
@@ -64,8 +67,20 @@ const MediaGrid = (_: RouteComponentProps) => {
         </SizeBox>
         <SelectionBox spacing={5}>
           <Text children={`Selected : ${selectMediaIds.length} / ${mediaIds.length}`} />
-          <SelectButton onClick={selectAll} colorScheme="teal" children={"Select all"} />
-          <SelectButton onClick={deselectAll} colorScheme="teal" children={"Deselect all"} />
+          <SelectButton
+            onClick={selectAll}
+            variant={"outline"}
+            size={"sm"}
+            colorScheme="teal"
+            children={"Select all"}
+          />
+          <SelectButton
+            onClick={deselectAll}
+            variant={"outline"}
+            size={"sm"}
+            colorScheme="teal"
+            children={"Deselect all"}
+          />
         </SelectionBox>
       </HeaderBox>
 
@@ -78,18 +93,20 @@ const MediaGrid = (_: RouteComponentProps) => {
           updateCellMatrix={updateCellMatrix}
           items={media}
           itemsLoaded={mediaLoaded}
-          renderItem={(medium: MediumItem) => {
-            return (
-              <ImageCard
-                transparency={transparency}
-                imageSize={contentSize}
-                checked={selectMediaIds.includes(medium.id)}
-                urlSource={getImageServerUrl(medium.id, contentSize)}
-                openLightBox={openLightBox(medium.id)}
-                toggleCardSelection={select(medium.id)}
-              />
-            )
-          }}
+          headerHeightRatio={1.25}
+          renderItem={(medium: MediumItem) => (
+            <ImageCard
+              title={medium.fileName}
+              subtitle={`${medium.width} x ${medium.height}`}
+              transparency={transparency}
+              imageSize={contentSize}
+              checked={selectMediaIds.includes(medium.id)}
+              urlSource={getImageServerUrl(medium.id, contentSize)}
+              openLightBox={openLightBox(medium.id)}
+              toggleCardSelection={select(medium.id)}
+              headerHeightRatio={0.25}
+            />
+          )}
           forceUpdate={forceUpdate}
         />
       </MediaBox>

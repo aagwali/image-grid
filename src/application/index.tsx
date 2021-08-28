@@ -1,7 +1,6 @@
 import "react-toastify/dist/ReactToastify.css"
 
 import React from "react"
-import Hotkeys from "react-hot-keys"
 import { ToastContainer } from "react-toastify"
 
 import { Redirect, RouteComponentProps } from "@reach/router"

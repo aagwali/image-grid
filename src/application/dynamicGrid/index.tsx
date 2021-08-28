@@ -29,6 +29,7 @@ const DynamicGrid = ({
   itemsLoaded,
   renderItem,
   forceUpdate,
+  headerHeightRatio = 1,
 }: DynamicGridProps) => {
   const { cellSize, columnCount } = cellMatrix
 
@@ -49,7 +50,7 @@ const DynamicGrid = ({
                   id="grid"
                   width={width}
                   columnWidth={cellSize}
-                  rowHeight={cellSize}
+                  rowHeight={cellSize * headerHeightRatio}
                   rowCount={dataLayer.length}
                   columnCount={columnCount}
                   overscanRowCount={2}

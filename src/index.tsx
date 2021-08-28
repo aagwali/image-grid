@@ -1,4 +1,4 @@
-import "@fontsource/raleway/400.css"
+import "@fontsource/mulish/300.css"
 
 import React from "react"
 import ReactDOM from "react-dom"

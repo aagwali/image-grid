@@ -1,4 +1,6 @@
+import { T } from "rambda"
 import React, { useState } from "react"
+import Hotkeys from "react-hot-keys"
 
 import { Button, Center, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
 import { navigate, RouteComponentProps } from "@reach/router"
@@ -13,21 +15,23 @@ const Home = (_: RouteComponentProps) => {
 
   const [inputText, updateInputText] = useState("")
 
-  const initiateContext = (input: string) => dispatch(actions.initiateContext(input))
+  const initiateContext = (input: string) => () => {
+    dispatch(actions.initiateContext(input))
+    navigate(`context/${inputText}`)
+  }
 
   return (
     <Center>
+      <Hotkeys
+        keyName="enter"
+        filter={T} // get hotkey from input
+        onKeyDown={initiateContext(inputText)}
+      />
       <HomeInputBox>
         <InputGroup>
-          <Input placeholder="Select an operation" onChange={(e) => updateInputText(e.target.value)} />
+          <Input autoFocus={true} placeholder="Select an operation" onChange={(e) => updateInputText(e.target.value)} />
           <InputRightElement width="5rem">
-            <Button
-              colorScheme="teal"
-              onClick={() => {
-                initiateContext(inputText)
-                navigate(`context/${inputText}`)
-              }}
-            >
+            <Button colorScheme="teal" onClick={initiateContext(inputText)}>
               Validate
             </Button>
           </InputRightElement>

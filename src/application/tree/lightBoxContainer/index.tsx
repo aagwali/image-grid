@@ -61,36 +61,40 @@ const LightBoxContainer = () => {
   const mediaIds = getState(mediaSelector.selectIds) as string[]
   const [previousMediumId, nextMediumId] = pickAdjacentMedia(mediaIds, lightBoxMediumId)
 
-  const selectMedium = (medium: typeof selectMediaIds[0]) => (event: MouseEvent) =>
+  const selectMedium = (medium: typeof selectMediaIds[0]) => (event: MouseEvent | KeyboardEvent) =>
     dispatch(actions.updateMediaGrid({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
 
   if (lightBoxMediumId === "none") return <React.Fragment />
 
+  const handleHotkey = (input: string) => (e: any) => selectMedium(input)(e)
+
   return (
-    <Lightbox
-      mainSrc={getImageServerUrl(lightBoxMediumId, lightBoxItemSize)}
-      prevSrc={getImageServerUrl(previousMediumId, lightBoxItemSize)}
-      nextSrc={getImageServerUrl(nextMediumId, lightBoxItemSize)}
-      mainSrcThumbnail={getImageServerUrl(lightBoxMediumId, lightBoxThumbnailSize)}
-      prevSrcThumbnail={getImageServerUrl(previousMediumId, lightBoxThumbnailSize)}
-      nextSrcThumbnail={getImageServerUrl(nextMediumId, lightBoxThumbnailSize)}
-      enableZoom={isHd}
-      animationDisabled={true} // avoid flashing render
-      imagePadding={65}
-      onCloseRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: "none" }))}
-      onMovePrevRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: previousMediumId }))}
-      onMoveNextRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: nextMediumId }))}
-      toolbarButtons={[
-        <ToolBarButtons
-          isHd={isHd}
-          updateIsHd={updateIsHd}
-          lightBoxItemSize={lightBoxItemSize}
-          updateLightBoxItemSize={updateLightBoxItemSize}
-          checked={selectMediaIds.includes(lightBoxMediumId)}
-          selectMedium={selectMedium(lightBoxMediumId)}
-        />,
-      ]}
-    />
+    <React.Fragment>
+      <Lightbox
+        mainSrc={getImageServerUrl(lightBoxMediumId, lightBoxItemSize)}
+        prevSrc={getImageServerUrl(previousMediumId, lightBoxItemSize)}
+        nextSrc={getImageServerUrl(nextMediumId, lightBoxItemSize)}
+        mainSrcThumbnail={getImageServerUrl(lightBoxMediumId, lightBoxThumbnailSize)}
+        prevSrcThumbnail={getImageServerUrl(previousMediumId, lightBoxThumbnailSize)}
+        nextSrcThumbnail={getImageServerUrl(nextMediumId, lightBoxThumbnailSize)}
+        enableZoom={isHd}
+        animationDisabled={true} // avoid flashing render
+        imagePadding={65}
+        onCloseRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: "none" }))}
+        onMovePrevRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: previousMediumId }))}
+        onMoveNextRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: nextMediumId }))}
+        toolbarButtons={[
+          <ToolBarButtons
+            isHd={isHd}
+            updateIsHd={updateIsHd}
+            lightBoxItemSize={lightBoxItemSize}
+            updateLightBoxItemSize={updateLightBoxItemSize}
+            checked={selectMediaIds.includes(lightBoxMediumId)}
+            selectMedium={selectMedium(lightBoxMediumId)}
+          />,
+        ]}
+      />
+    </React.Fragment>
   )
 }
 

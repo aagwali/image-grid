@@ -1,9 +1,10 @@
 import React from "react"
+import Hotkeys from "react-hot-keys"
 
 import { Slider, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
 
 import { setCellMatrix_ } from "../privates"
-import { SizeSliderProps } from "../types"
+import { SizeSliderProps, SizeSliderShortcuts } from "../types"
 import { SliderBox, SliderTrackCustom } from "./styles"
 
 const SizeSlider = ({
@@ -14,19 +15,33 @@ const SizeSlider = ({
   updateCellMatrix,
   forceUpdate,
 }: SizeSliderProps) => {
-  const _setCellMatrix_ = setCellMatrix_(updateCellMatrix, forceUpdate) // (contentSize)
+  const step = (contentSizeRange[1] - contentSizeRange[0]) / sliderStepCount
+
+  const setDisplay = (selectedSize: number) => {
+    updateContentSize(selectedSize)
+    setCellMatrix_(updateCellMatrix, forceUpdate)(selectedSize)
+  }
+
+  const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
+    event.preventDefault()
+    if (hotkey === SizeSliderShortcuts.MediumSizeUp && contentSize < contentSizeRange[1]) setDisplay(contentSize + step)
+
+    if (hotkey === SizeSliderShortcuts.MediumSizeDown && contentSize > contentSizeRange[0])
+      setDisplay(contentSize - step)
+  }
 
   return (
     <SliderBox>
+      {/* <Hotkeys keyName={getHotkeys(SizeSliderShortcuts)} onKeyDown={handleHotkey} /> */}
+
       <Slider
         min={contentSizeRange[0]}
         max={contentSizeRange[1]}
-        step={(contentSizeRange[1] - contentSizeRange[0]) / sliderStepCount}
+        step={step}
         defaultValue={contentSize}
         colorScheme="teal"
         onChangeEnd={(selectedSize) => {
-          updateContentSize(selectedSize)
-          _setCellMatrix_(selectedSize)
+          setDisplay(selectedSize)
         }}
         focusThumbOnChange={false}
       >

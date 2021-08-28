@@ -18,3 +18,8 @@ export interface SizeSliderProps {
   updateCellMatrix: (cellMatrix: { columnCount: number; cellSize: number }) => void
   forceUpdate: React.DispatchWithoutAction
 }
+
+export enum SizeSliderShortcuts {
+  MediumSizeUp = "ctrl+up",
+  MediumSizeDown = "ctrl+down",
+}

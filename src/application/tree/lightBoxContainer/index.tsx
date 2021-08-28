@@ -4,35 +4,52 @@ import { prop } from "rambda"
 import React, { useState } from "react"
 import Lightbox from "react-image-lightbox"
 
-import { Text } from "@chakra-ui/react"
+import { Switch } from "@chakra-ui/react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
 import { getImageServerUrl } from "../../privates"
 import { mediaGridSlice, mediaSelector } from "../../reducers"
+import { getSelectedMedia } from "../context/mediaGrid/privates"
 import { pickAdjacentMedia } from "./privates"
-import { QualitySwitch, SwitchBox } from "./styles"
+import { QualityText, SelectedButton, SwitchBox, ToolBarBox } from "./styles"
 
-const ToolBarButtons = ({ isHd, updateIsHd, lightBoxItemSize, updateLightBoxItemSize }: any): JSX.Element => {
+const ToolBarButtons = ({
+  isHd,
+  updateIsHd,
+  lightBoxItemSize,
+  updateLightBoxItemSize,
+  checked,
+  selectMedium,
+}: any): JSX.Element => {
   return (
-    <SwitchBox>
-      <Text children={"SD"} />
-      <QualitySwitch
-        colorScheme="teal"
+    <ToolBarBox>
+      <SelectedButton
+        variant="outline"
         size="sm"
-        onChange={() => {
-          updateIsHd(!isHd)
-          updateLightBoxItemSize(Math.floor(isHd ? lightBoxItemSize / 2.5 : lightBoxItemSize * 2.5))
-        }}
-        isChecked={isHd}
+        children={"Selected"}
+        item-checked={`${checked}`}
+        onClick={selectMedium}
       />
-      <Text children={"HD"} />
-    </SwitchBox>
+      <SwitchBox>
+        <QualityText children={"SD"} />
+        <Switch
+          colorScheme="teal"
+          size="sm"
+          onChange={() => {
+            updateIsHd(!isHd)
+            updateLightBoxItemSize(Math.floor(isHd ? lightBoxItemSize / 2.5 : lightBoxItemSize * 2.5))
+          }}
+          isChecked={isHd}
+        />
+        <QualityText children={"HD"} />
+      </SwitchBox>
+    </ToolBarBox>
   )
 }
 
 // depends on navigator cache
 const LightBoxContainer = () => {
-  const { lightBoxMediumId } = getState(prop("mediaGrid"))
+  const { lightBoxMediumId, selectMediaIds } = getState(prop("mediaGrid"))
   const { actions } = mediaGridSlice
   const dispatch = useAppDispatch()
 
@@ -44,9 +61,10 @@ const LightBoxContainer = () => {
   const mediaIds = getState(mediaSelector.selectIds) as string[]
   const [previousMediumId, nextMediumId] = pickAdjacentMedia(mediaIds, lightBoxMediumId)
 
-  if (lightBoxMediumId === "none") return <React.Fragment />
+  const selectMedium = (medium: typeof selectMediaIds[0]) => (event: MouseEvent) =>
+    dispatch(actions.updateMediaGrid({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
 
-  console.log("lightBoxItemSize =====> ", lightBoxItemSize)
+  if (lightBoxMediumId === "none") return <React.Fragment />
 
   return (
     <Lightbox
@@ -68,6 +86,8 @@ const LightBoxContainer = () => {
           updateIsHd={updateIsHd}
           lightBoxItemSize={lightBoxItemSize}
           updateLightBoxItemSize={updateLightBoxItemSize}
+          checked={selectMediaIds.includes(lightBoxMediumId)}
+          selectMedium={selectMedium(lightBoxMediumId)}
         />,
       ]}
     />

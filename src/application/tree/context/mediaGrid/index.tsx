@@ -1,4 +1,4 @@
-import { add, indexOf, last, prop, slice, sort, uniq } from "rambda"
+import { add, prop } from "rambda"
 import React, { useReducer } from "react"
 
 import { Checkbox, Text } from "@chakra-ui/react"
@@ -11,6 +11,7 @@ import ImageCard from "../../../imageCard"
 import { getImageServerUrl } from "../../../privates"
 import { mediaGridSlice, mediaSelector } from "../../../reducers"
 import { MediumItem } from "../../../types"
+import { getSelectedMedia } from "./privates"
 import { DynamicGridBox, HeaderBox, MediaBox, SelectButton, SelectionBox, SizeBox, TransparencyBox } from "./styles"
 
 const MediaGrid = (_: RouteComponentProps) => {
@@ -26,23 +27,8 @@ const MediaGrid = (_: RouteComponentProps) => {
   const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaGrid({ contentSize: x }))
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaGrid({ scrollRatio: x }))
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaGrid({ cellMatrix: x }))
-
-  const getSelectedMedia = (selectMediaIds: string[], mediaIds: string[], mediumId: string, event: any) => {
-    const selectedIndex = indexOf(mediumId, mediaIds)
-    const lastSelectedIndex = indexOf(last(selectMediaIds), mediaIds)
-
-    const sortedIndexes = sort((a, b) => a - b, [selectedIndex, lastSelectedIndex])
-
-    if (event.shiftKey) return uniq([...selectMediaIds, ...mediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
-
-    return selectMediaIds.includes(mediumId)
-      ? selectMediaIds.filter((selectedId) => selectedId !== mediumId)
-      : [...selectMediaIds, mediumId]
-  }
-
-  const select = (medium: typeof selectMediaIds[0]) => (event: any) =>
+  const select = (medium: typeof selectMediaIds[0]) => (event: MouseEvent) =>
     dispatch(actions.updateMediaGrid({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
-
   const selectAll = () => dispatch(actions.updateMediaGrid({ selectMediaIds: mediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaGrid({ selectMediaIds: [] }))
   const openLightBox = (mediumId: string) => () => dispatch(actions.updateMediaGrid({ lightBoxMediumId: mediumId }))

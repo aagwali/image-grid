@@ -10,7 +10,7 @@ import { MediumItem } from "./types"
 export const contextSlice = createSlice({
   name: "context",
   initialState: "",
-  reducers: { initiateContext: (context, { payload }: PayloadAction<Partial<typeof context>>) => payload },
+  reducers: { initiateContext: (context, { payload }: PayloadAction<typeof context>) => payload },
 })
 //#endregion
 
@@ -37,7 +37,6 @@ export const mediaSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(contextSlice.actions.initiateContext, (media, _) => {
-        mediaAdapter.removeAll(media)
         media.loaded = false
       })
       .addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {

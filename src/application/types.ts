@@ -13,7 +13,6 @@ export type MediumItem = {
   id: string
   mediaUid: string
   fileName: string
-  checked: boolean
 }
 
 export enum MediaGridEndpoints {

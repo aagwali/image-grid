@@ -18,8 +18,8 @@ const fadeIn = keyframes`
 
 export const ImageBox = styled(Box)`
   border-width: 0.75px;
-  border-color: ${theme.colors.gray[500]};
-
+  border-color: ${theme.colors.gray[400]};
+  border-radius: 3px;
   animation: ${fadeIn} 1.5s;
   position: relative;
 
@@ -35,12 +35,26 @@ export const ImageBox = styled(Box)`
     css`
       border-color: ${theme.colors.pink[400]};
       border-width: 2px;
+      border-radius: 4px;
+      box-shadow: 0.6px 0.6px 4px ${theme.colors.pink[200]};
     `};
 
   :hover {
+    ${(props) =>
+      props["item-checked"] !== "true" &&
+      css`
+        box-shadow: 0.6px 0.6px 4px ${theme.colors.gray[400]};
+      `};
+
     .enlargeImage {
       opacity: 0.8;
     }
+  }
+
+  :active {
+    -webkit-transform: scale(0.995, 0.995);
+    transform: scale(0.995, 0.995);
+    box-shadow: none;
   }
 `
 

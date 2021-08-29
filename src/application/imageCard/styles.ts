@@ -29,8 +29,8 @@ export const CardBox = styled(Box)`
       background: url("${CheckerBoardSvg}") center;
     `};
 
-  ${(props) =>
-    props["item-checked"] === "true" &&
+  ${({ checked }) =>
+    checked &&
     css`
       border-color: ${theme.colors.pink[400]};
       border-width: 2px;
@@ -39,8 +39,8 @@ export const CardBox = styled(Box)`
     `};
 
   :hover {
-    ${(props) =>
-      props["item-checked"] !== "true" &&
+    ${({ checked }) =>
+      !checked &&
       css`
         box-shadow: 0.6px 0.6px 4px ${theme.colors.gray[400]};
       `};
@@ -112,7 +112,7 @@ export const CardHeaderBox = styled(Center)`
 export const CardTitle = styled(Text)`
   ${({ size }) => css`
     font-weight: ${theme.fontWeights.semibold};
-    font-size: ${Math.floor(size / 15)}px;
+    font-size: ${Math.floor(size / 17)}px;
     user-select: none;
   `};
 `
@@ -123,3 +123,37 @@ export const CardSubTitle = styled(Text)`
     user-select: none;
   `};
 `
+
+export const CardBadge = styled(Box)`
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  bottom: 0;
+
+  height: ${({ size }) => `${Math.floor(size / 10.8)}px`};
+  font-size: ${({ size }) => `${Math.floor(size / 19.2)}px`};
+
+  margin-bottom: ${({ size }) => `${Math.floor(size / 22.7)}px`}; // 11
+  margin-left: ${({ size }) => `${Math.floor(size / 16.6)}px`};
+
+  border-radius: 10px;
+  text-align: center;
+  padding: 2px;
+
+  color: #001111;
+  background-color: #55bbff;
+`
+
+export const Ellipsis = styled.span`
+  padding: 0px 5px 0px 5px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+{
+  /* <CardBadge status={"statusTest"} size={imageSize}>
+          <Ellipsis>Sizeasdad</Ellipsis>
+        </CardBadge> */
+}

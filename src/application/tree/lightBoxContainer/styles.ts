@@ -1,8 +1,14 @@
 import styled, { css } from "styled-components"
 
-import { Button, HStack, Text, theme } from "@chakra-ui/react"
+import { Button, Center, HStack, Text, theme } from "@chakra-ui/react"
 
-export const ToolBarBox = styled(HStack)`
+export const ToolBarBox = styled(Center)`
+  top: 0;
+  left: 0;
+  width: 100vw;
+`
+
+export const LeftToolsBox = styled(HStack)`
   position: absolute;
   top: 0;
   left: 0;
@@ -10,10 +16,10 @@ export const ToolBarBox = styled(HStack)`
 
 export const SelectedButton = styled(Button)`
   padding: 15px;
-  margin: 10px;
+  margin-left: 10px;
   border-width: 2px;
-  color: ${theme.colors.gray[400]};
-  border-color: ${theme.colors.gray[400]};
+  color: ${theme.colors.gray[300]};
+  border-color: ${theme.colors.gray[300]};
 
   ${(props) =>
     props["item-checked"] === "true" &&
@@ -43,12 +49,14 @@ export const SelectedButton = styled(Button)`
   }
 `
 
-export const SwitchBox = styled(HStack)`
-  margin-right: ${theme.space[2.5]};
-`
-
 export const QualityText = styled(Text)`
   font-weight: ${theme.fontWeights.bold};
-  color: ${theme.colors.gray[400]};
-  border-color: ${theme.colors.gray[400]};
+  color: ${theme.colors.gray[300]};
+  border-color: ${theme.colors.gray[300]};
+`
+
+export const ImageTitle = styled(Text)`
+  font-size: ${theme.fontSizes.md};
+  font-weight: ${theme.fontWeights.semibold};
+  color: ${theme.colors.gray[300]};
 `

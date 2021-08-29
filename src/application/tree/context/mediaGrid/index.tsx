@@ -2,7 +2,7 @@ import { add, prop } from "rambda"
 import React, { useReducer } from "react"
 import Hotkeys from "react-hot-keys"
 
-import { Checkbox, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../storeConfig"
@@ -13,7 +13,15 @@ import { getHotkeys, getImageServerUrl } from "../../../privates"
 import { mediaGridSlice, mediaSelector } from "../../../reducers"
 import { MediumItem } from "../../../types"
 import { getSelectedMedia } from "./privates"
-import { DynamicGridBox, HeaderBox, MediaBox, SelectButton, SelectionBox, SizeBox, TransparencyBox } from "./styles"
+import {
+  DynamicGridBox,
+  HeaderBox,
+  MediaBox,
+  SelectButton,
+  SelectionBox,
+  SizeBox,
+  TransparencyCheckbox,
+} from "./styles"
 import { MediaGridShortcuts } from "./types"
 
 const MediaGrid = (_: RouteComponentProps) => {
@@ -51,9 +59,12 @@ const MediaGrid = (_: RouteComponentProps) => {
     <DynamicGridBox>
       <Hotkeys keyName={getHotkeys(MediaGridShortcuts)} onKeyDown={handleHotkey} />
       <HeaderBox spacing={3}>
-        <TransparencyBox>
-          <Checkbox children="Transparency" colorScheme="teal" isChecked={transparency} onChange={toggleTransparency} />
-        </TransparencyBox>
+        <TransparencyCheckbox
+          children="Transparency"
+          colorScheme="teal"
+          isChecked={transparency}
+          onChange={toggleTransparency}
+        />
         <Text children={"Size :"} />
         <SizeBox>
           <SizeSlider

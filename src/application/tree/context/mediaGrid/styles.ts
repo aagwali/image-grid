@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components"
 
-import { Box, Button, Center, HStack, theme, VStack } from "@chakra-ui/react"
+import { Box, Button, Center, Checkbox, HStack, theme, VStack } from "@chakra-ui/react"
 
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
 
@@ -12,7 +12,7 @@ export const HeaderBox = styled(HStack)`
   margin-bottom: ${theme.space[2]};
 `
 
-export const TransparencyBox = styled(HStack)`
+export const TransparencyCheckbox = styled(Checkbox)`
   position: absolute;
   left: 12.5%;
 `
@@ -36,7 +36,8 @@ export const SelectButton = styled(Button)`
     box-shadow: none;
   }
   :active {
-    background-color: ${theme.colors.pink[50]};
+    -webkit-transform: scale(0.98, 0.98);
+    transform: scale(0.98, 0.98);
   }
 `
 

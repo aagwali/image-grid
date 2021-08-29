@@ -4,16 +4,17 @@ import { prop } from "rambda"
 import React, { useState } from "react"
 import Lightbox from "react-image-lightbox"
 
-import { Switch } from "@chakra-ui/react"
+import { HStack, Switch } from "@chakra-ui/react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
 import { getImageServerUrl } from "../../privates"
 import { mediaGridSlice, mediaSelector } from "../../reducers"
 import { getSelectedMedia } from "../context/mediaGrid/privates"
 import { pickAdjacentMedia } from "./privates"
-import { QualityText, SelectedButton, SwitchBox, ToolBarBox } from "./styles"
+import { ImageTitle, LeftToolsBox, QualityText, SelectedButton, ToolBarBox } from "./styles"
 
 const ToolBarButtons = ({
+  title,
   isHd,
   updateIsHd,
   lightBoxItemSize,
@@ -23,35 +24,40 @@ const ToolBarButtons = ({
 }: any): JSX.Element => {
   return (
     <ToolBarBox>
-      <SelectedButton
-        variant="outline"
-        size="sm"
-        children={"Selected"}
-        item-checked={`${checked}`}
-        onClick={selectMedium}
-      />
-      <SwitchBox>
-        <QualityText children={"SD"} />
-        <Switch
-          colorScheme="teal"
+      <LeftToolsBox>
+        <SelectedButton
+          variant="outline"
           size="sm"
-          onChange={() => {
-            updateIsHd(!isHd)
-            updateLightBoxItemSize(Math.floor(isHd ? lightBoxItemSize / 2.5 : lightBoxItemSize * 2.5))
-          }}
-          isChecked={isHd}
+          children={"Selected"}
+          item-checked={`${checked}`}
+          onClick={selectMedium}
         />
-        <QualityText children={"HD"} />
-      </SwitchBox>
+        <HStack>
+          <QualityText children={"SD"} />
+          <Switch
+            colorScheme="teal"
+            size="sm"
+            onChange={() => {
+              updateIsHd(!isHd)
+              updateLightBoxItemSize(Math.floor(isHd ? lightBoxItemSize / 2.5 : lightBoxItemSize * 2.5))
+            }}
+            isChecked={isHd}
+          />
+          <QualityText children={"HD"} />
+        </HStack>
+      </LeftToolsBox>
+      <ImageTitle children={title} />
     </ToolBarBox>
   )
 }
 
 // depends on navigator cache
 const LightBoxContainer = () => {
-  const { lightBoxMediumId, selectMediaIds } = getState(prop("mediaGrid"))
   const { actions } = mediaGridSlice
   const dispatch = useAppDispatch()
+
+  const { lightBoxMediumId, selectMediaIds } = getState(prop("mediaGrid"))
+  const medium = getState((s) => mediaSelector.selectById(s, lightBoxMediumId))
 
   const [lightBoxItemSize, updateLightBoxItemSize] = useState(Number(process.env.LIGHTBOX_ITEM_SIZE) / 2.5 ?? 500)
   const lightBoxThumbnailSize = Math.floor(lightBoxItemSize / 10)
@@ -65,8 +71,6 @@ const LightBoxContainer = () => {
     dispatch(actions.updateMediaGrid({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
 
   if (lightBoxMediumId === "none") return <React.Fragment />
-
-  const handleHotkey = (input: string) => (e: any) => selectMedium(input)(e)
 
   return (
     <React.Fragment>
@@ -85,6 +89,7 @@ const LightBoxContainer = () => {
         onMoveNextRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: nextMediumId }))}
         toolbarButtons={[
           <ToolBarButtons
+            title={medium?.fileName}
             isHd={isHd}
             updateIsHd={updateIsHd}
             lightBoxItemSize={lightBoxItemSize}

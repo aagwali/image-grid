@@ -30,12 +30,7 @@ const ImageCard = ({
   const [loaded, setLoaded] = useState(false)
 
   return (
-    <CardBox
-      item-checked={`${checked}`}
-      data-loaded={loaded}
-      data-transparency={transparency}
-      onClick={toggleCardSelection}
-    >
+    <CardBox checked={checked} data-loaded={loaded} data-transparency={transparency} onClick={toggleCardSelection}>
       <CardHeaderBox height={imageSize * headerHeightRatio}>
         <VStack spacing={0}>
           <CardTitle children={title} size={imageSize} />

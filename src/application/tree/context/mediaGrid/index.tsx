@@ -112,10 +112,11 @@ const MediaGrid = (_: RouteComponentProps) => {
               transparency={transparency}
               imageSize={contentSize}
               checked={selectMediaIds.includes(medium.id)}
-              urlSource={getImageServerUrl(medium.id, contentSize)}
+              getUrlBySize={(size: number) => getImageServerUrl(medium.id, size)} // cf. paddedSize
               openLightBox={openLightBox(medium.id)}
               toggleCardSelection={select(medium.id)}
               headerHeightRatio={0.25}
+              padding={5}
             />
           )}
           forceUpdate={forceUpdate}

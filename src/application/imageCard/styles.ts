@@ -16,6 +16,18 @@ const fadeIn = keyframes`
   }
 `
 
+export const PaddingBox = styled(Box)`
+  /* padding: ${(1 / 25) * 250}px; */
+  position: relative;
+  padding: ${({ padding }) => `${padding}px`}; // 5 at 250
+
+  :active {
+    -webkit-transform: scale(0.995, 0.995);
+    transform: scale(0.995, 0.995);
+    box-shadow: none;
+  }
+`
+
 export const CardBox = styled(Box)`
   border-width: 0.75px;
   border-color: ${theme.colors.gray[400]};
@@ -49,12 +61,32 @@ export const CardBox = styled(Box)`
       opacity: 0.8;
     }
   }
+`
 
-  :active {
-    -webkit-transform: scale(0.995, 0.995);
-    transform: scale(0.995, 0.995);
-    box-shadow: none;
-  }
+export const CardHeaderBox = styled(Center)`
+  width: 100%;
+
+  ${({ height }) => css`
+    height: ${height}px;
+  `};
+  border-bottom-width: 1px;
+  border-bottom-color: ${theme.colors.gray[300]};
+  background: ${theme.colors.gray[50]};
+`
+
+export const CardTitle = styled(Text)`
+  ${({ size }) => css`
+    font-weight: ${theme.fontWeights.semibold};
+    font-size: ${Math.floor(size / 17)}px;
+    pointer-events: none;
+  `};
+`
+
+export const CardSubTitle = styled(Text)`
+  ${({ size }) => css`
+    font-size: ${Math.floor(size / 20)}px;
+    pointer-events: none;
+  `};
 `
 
 export const CardImageBox = styled(Box)`
@@ -98,62 +130,32 @@ export const EnlargeBox = styled(Center)<{ size: number }>`
     }
   }
 `
-export const CardHeaderBox = styled(Center)`
-  width: 100%;
 
-  ${({ height }) => css`
-    height: ${height}px;
-  `};
-  border-bottom-width: 1px;
-  border-bottom-color: ${theme.colors.gray[300]};
-  background: ${theme.colors.gray[50]};
-`
-
-export const CardTitle = styled(Text)`
-  ${({ size }) => css`
-    font-weight: ${theme.fontWeights.semibold};
-    font-size: ${Math.floor(size / 17)}px;
-    user-select: none;
-  `};
-`
-
-export const CardSubTitle = styled(Text)`
-  ${({ size }) => css`
-    font-size: ${Math.floor(size / 20)}px;
-    user-select: none;
-  `};
-`
-
-export const CardBadge = styled(Box)`
+export const CardBadge = styled(Center)`
   position: absolute;
   z-index: 5;
   right: 0;
   bottom: 0;
 
-  height: ${({ size }) => `${Math.floor(size / 10.8)}px`};
-  font-size: ${({ size }) => `${Math.floor(size / 19.2)}px`};
+  height: ${({ size }) => `${size / 12}px`};
+  font-size: ${({ size }) => `${size / 18}px`};
 
-  margin-bottom: ${({ size }) => `${Math.floor(size / 22.7)}px`}; // 11
-  margin-left: ${({ size }) => `${Math.floor(size / 16.6)}px`};
-
-  border-radius: 10px;
+  border-radius: ${({ size }) => `${(1 / 25) * size}px`};
   text-align: center;
-  padding: 2px;
+  padding: ${({ size }) => `${(1 / 100) * size}px`};
 
   color: #001111;
   background-color: #55bbff;
 `
 
-export const Ellipsis = styled.span`
-  padding: 0px 5px 0px 5px;
+export const Ellipsis = styled(Box)`
+  margin-bottom: 1.5px;
+  padding-right: ${({ size }) => `${(1 / 50) * size}px`};
+  padding-left: ${({ size }) => `${(1 / 50) * size}px`};
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  pointer-events: none;
 `
-{
-  /* <CardBadge status={"statusTest"} size={imageSize}>
-          <Ellipsis>Sizeasdad</Ellipsis>
-        </CardBadge> */
-}

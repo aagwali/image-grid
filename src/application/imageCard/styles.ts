@@ -1,10 +1,11 @@
 import styled, { css, keyframes } from "styled-components"
 
-import { Box, Center, Text, theme } from "@chakra-ui/react"
+import { Box, Center, HStack, Text, theme } from "@chakra-ui/react"
 
 import CheckerBoardSvg from "../../assets/images/checkerboard.svg"
 import DocErrorSvg from "../../assets/images/docError.svg"
 import SpinnerSvg from "../../assets/images/spinner.svg"
+import { QualityStatus } from "../types"
 
 const fadeIn = keyframes`
   from {
@@ -131,21 +132,43 @@ export const EnlargeBox = styled(Center)<{ size: number }>`
   }
 `
 
-export const CardBadge = styled(Center)`
+export const CardBadgesBox = styled(HStack)`
   position: absolute;
   z-index: 5;
   right: 0;
   bottom: 0;
+`
 
+export const CardBadge = styled(Center)`
   height: ${({ size }) => `${size / 12}px`};
   font-size: ${({ size }) => `${size / 18}px`};
+  font-weight: ${theme.fontWeights.bold};
 
   border-radius: ${({ size }) => `${(1 / 25) * size}px`};
   text-align: center;
   padding: ${({ size }) => `${(1 / 100) * size}px`};
 
-  color: #001111;
-  background-color: #55bbff;
+  border-width: 1px;
+
+  ${({ badge }) => {
+    if (badge === QualityStatus.High)
+      return css`
+        border-color: ${theme.colors.green[300]};
+        color: ${theme.colors.green[300]};
+      `
+    if (badge === QualityStatus.Medium)
+      return css`
+        border-color: ${theme.colors.orange[300]};
+        color: ${theme.colors.orange[300]};
+      `
+    //else is quality badge
+    return css`
+      border-color: ${theme.colors.orange[500]};
+      color: ${theme.colors.orange[500]};
+    `
+  }};
+
+  background-color: ${theme.colors.white};
 `
 
 export const Ellipsis = styled(Box)`

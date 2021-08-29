@@ -22,7 +22,7 @@ const mediaAdapter = createEntityAdapter<MediumItem>({
 export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
 
 export const mediaSelectedSelector = createSelector(
-  [prop("mediaGrid"), (state: State) => (id: string) => mediaSelector.selectById(state, id)], // curried
+  [prop("mediaDisplay"), (state: State) => (id: string) => mediaSelector.selectById(state, id)], // curried
   ({ selectMediaIds }, selectMediaById) => selectMediaIds.map(selectMediaById),
 )
 
@@ -49,10 +49,12 @@ export const mediaSlice = createSlice({
 //#endregion
 
 //#region MEDIA GRID
-const initialMediaGrid = {
+const initialMediaDisplay = {
   selectMediaIds: [] as string[],
   contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
   transparency: false,
+  cardHeader: false,
+  badges: false,
   lightBoxMediumId: "none",
   scrollRatio: 0,
   cellMatrix: {
@@ -61,17 +63,17 @@ const initialMediaGrid = {
   },
 }
 
-export const mediaGridSlice = createSlice({
-  name: "mediaGrid",
-  initialState: initialMediaGrid,
+export const mediaDisplaySlice = createSlice({
+  name: "mediaDisplay",
+  initialState: initialMediaDisplay,
   reducers: {
-    updateMediaGrid: (mediaGrid, { payload }: PayloadAction<Partial<typeof mediaGrid>>) => ({
-      ...mediaGrid,
+    updateMediaDisplay: (mediaDisplay, { payload }: PayloadAction<Partial<typeof mediaDisplay>>) => ({
+      ...mediaDisplay,
       ...payload,
     }),
   },
   extraReducers: (builder) => {
-    builder.addCase(contextSlice.actions.initiateContext, () => ({ ...initialMediaGrid }))
+    builder.addCase(contextSlice.actions.initiateContext, () => ({ ...initialMediaDisplay }))
   },
 })
 //#endregion

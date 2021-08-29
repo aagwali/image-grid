@@ -8,8 +8,8 @@ import { HStack, Switch } from "@chakra-ui/react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
 import { getImageServerUrl } from "../../privates"
-import { mediaGridSlice, mediaSelector } from "../../reducers"
-import { getSelectedMedia } from "../context/mediaGrid/privates"
+import { mediaDisplaySlice, mediaSelector } from "../../reducers"
+import { getSelectedMedia } from "../context/mediaDisplay/privates"
 import { pickAdjacentMedia } from "./privates"
 import { ImageTitle, LeftToolsBox, QualityText, SelectedButton, ToolBarBox } from "./styles"
 
@@ -53,10 +53,10 @@ const ToolBarButtons = ({
 
 // depends on navigator cache
 const LightBoxContainer = () => {
-  const { actions } = mediaGridSlice
+  const { actions } = mediaDisplaySlice
   const dispatch = useAppDispatch()
 
-  const { lightBoxMediumId, selectMediaIds } = getState(prop("mediaGrid"))
+  const { lightBoxMediumId, selectMediaIds } = getState(prop("mediaDisplay"))
   const medium = getState((s) => mediaSelector.selectById(s, lightBoxMediumId))
 
   const [lightBoxItemSize, updateLightBoxItemSize] = useState(Number(process.env.LIGHTBOX_ITEM_SIZE) / 2.5 ?? 500)
@@ -68,7 +68,7 @@ const LightBoxContainer = () => {
   const [previousMediumId, nextMediumId] = pickAdjacentMedia(mediaIds, lightBoxMediumId)
 
   const selectMedium = (medium: typeof selectMediaIds[0]) => (event: MouseEvent | KeyboardEvent) =>
-    dispatch(actions.updateMediaGrid({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
+    dispatch(actions.updateMediaDisplay({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
 
   if (lightBoxMediumId === "none") return <React.Fragment />
 
@@ -84,9 +84,9 @@ const LightBoxContainer = () => {
         enableZoom={isHd}
         animationDisabled={true} // avoid flashing render
         imagePadding={65}
-        onCloseRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: "none" }))}
-        onMovePrevRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: previousMediumId }))}
-        onMoveNextRequest={() => dispatch(actions.updateMediaGrid({ lightBoxMediumId: nextMediumId }))}
+        onCloseRequest={() => dispatch(actions.updateMediaDisplay({ lightBoxMediumId: "none" }))}
+        onMovePrevRequest={() => dispatch(actions.updateMediaDisplay({ lightBoxMediumId: previousMediumId }))}
+        onMoveNextRequest={() => dispatch(actions.updateMediaDisplay({ lightBoxMediumId: nextMediumId }))}
         toolbarButtons={[
           <ToolBarButtons
             title={medium?.fileName}

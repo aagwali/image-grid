@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 import { formatApiResult } from "./privates"
-import { MediaGridEndpoints, MediumItem } from "./types"
+import { MediaDisplayEndpoints, MediumItem } from "./types"
 
 export const mediashareApi = createApi({
   reducerPath: "msApi",
@@ -10,15 +10,15 @@ export const mediashareApi = createApi({
   }),
   keepUnusedDataFor: 0, // limit data cache to Context lifecycle
   endpoints: (build) => ({
-    [MediaGridEndpoints.GetContextByLabel]: build.query<MediumItem[], string>({
+    [MediaDisplayEndpoints.GetContextByLabel]: build.query<MediumItem[], string>({
       query: (label) => `context/${label}`,
     }),
-    [MediaGridEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
+    [MediaDisplayEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
       query: (label) => `context/${label}/media`,
       transformResponse: formatApiResult,
     }),
   }),
 })
 
-export const getMediaByContextLabel = mediashareApi.endpoints[MediaGridEndpoints.GetMediaByContextLabel]
-export const getContextByLabel = mediashareApi.endpoints[MediaGridEndpoints.GetContextByLabel]
+export const getMediaByContextLabel = mediashareApi.endpoints[MediaDisplayEndpoints.GetMediaByContextLabel]
+export const getContextByLabel = mediashareApi.endpoints[MediaDisplayEndpoints.GetContextByLabel]

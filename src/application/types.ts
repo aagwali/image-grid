@@ -3,22 +3,31 @@ export enum ExitType {
   Error = "error",
 }
 
+export enum QualityStatus {
+  High = "OK",
+  Medium = "NO_ZOOM",
+  Low = "KO",
+  Manual = "A_VERIFIER",
+}
+
 export type RawMedium = {
   id: string
-  mediaUid: string
   fileName: string
   metadata: { width: number; height: number }
+  computedQualityControl: QualityStatus
+  dmapId: string
 }
 
 export type MediumItem = {
   id: string
-  mediaUid: string
   fileName: string
   width: number
   height: number
+  status: QualityStatus
+  controlId?: string
 }
 
-export enum MediaGridEndpoints {
+export enum MediaDisplayEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
   GetContextByLabel = "getContextByLabel",
 }

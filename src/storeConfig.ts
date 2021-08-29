@@ -3,14 +3,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import { configureStore } from "@reduxjs/toolkit"
 
 import { apiErrorsMiddleware } from "./application/apiErrors"
-import { contextSlice, mediaGridSlice, mediaSlice } from "./application/reducers"
+import { contextSlice, mediaDisplaySlice, mediaSlice } from "./application/reducers"
 import { mediashareApi } from "./application/services"
 
 const configureAppStore = () =>
   configureStore({
     reducer: {
       [contextSlice.name]: contextSlice.reducer,
-      [mediaGridSlice.name]: mediaGridSlice.reducer,
+      [mediaDisplaySlice.name]: mediaDisplaySlice.reducer,
       [mediaSlice.name]: mediaSlice.reducer,
       [mediashareApi.reducerPath]: mediashareApi.reducer,
     },

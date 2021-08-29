@@ -4,7 +4,7 @@ import { toast, ToastOptions } from "react-toastify"
 import { navigate } from "@reach/router"
 import { AnyAction, isRejectedWithValue, Middleware, MiddlewareAPI } from "@reduxjs/toolkit"
 
-import { ExitType, MediaGridEndpoints } from "./types"
+import { ExitType, MediaDisplayEndpoints } from "./types"
 
 const toastOptions: ToastOptions = {
   position: "bottom-center",
@@ -21,15 +21,15 @@ const displayExit = (status: ExitType, description: string): void => {
   }
 }
 
-const handleFailedQueries = (endpointName: MediaGridEndpoints): void => {
+const handleFailedQueries = (endpointName: MediaDisplayEndpoints): void => {
   let description = ""
 
   switch (endpointName) {
-    case MediaGridEndpoints.GetContextByLabel:
+    case MediaDisplayEndpoints.GetContextByLabel:
       description = "Unable to get context"
       displayExit(ExitType.Error, description)
       break
-    case MediaGridEndpoints.GetMediaByContextLabel:
+    case MediaDisplayEndpoints.GetMediaByContextLabel:
       description = "Unable to get medias"
       displayExit(ExitType.Warning, description)
       break

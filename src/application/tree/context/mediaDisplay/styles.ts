@@ -17,6 +17,16 @@ export const TransparencyCheckbox = styled(Checkbox)`
   left: 12.5%;
 `
 
+export const HeaderCheckbox = styled(Checkbox)`
+  position: absolute;
+  left: 25%;
+`
+
+export const BadgesCheckbox = styled(Checkbox)`
+  position: absolute;
+  left: 37.5%;
+`
+
 export const SizeBox = styled(HStack)``
 
 export const SelectionBox = styled(HStack)`

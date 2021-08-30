@@ -1,18 +1,19 @@
 import React from "react"
 
-import { Center } from "@chakra-ui/react"
-import { Link } from "@reach/router"
+import { Box, Link } from "@chakra-ui/react"
+import { Link as RouterLink } from "@reach/router"
 
 import { NavBarBox } from "./styles"
 
 const NavBar = () => {
   return (
-    <Center>
-      <NavBarBox>
-        <Link children="Home" to="/" />
-        <Link children="Medias" to="medias" />
+    <Box>
+      <NavBarBox spacing={10}>
+        <Link mr={32} as={RouterLink} children="Home" to="/" />
+        <Link as={RouterLink} children="References" to="medias" />
+        <Link as={RouterLink} children="Medias" to="medias" />
       </NavBarBox>
-    </Center>
+    </Box>
   )
 }
 

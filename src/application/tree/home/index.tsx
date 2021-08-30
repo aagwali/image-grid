@@ -30,7 +30,7 @@ const Home = (_: RouteComponentProps) => {
         onKeyDown={initiateContext(inputText)}
       />
       <NavigationLeftBox>
-        <NavigationBar />
+        <NavigationBar home={true} />
       </NavigationLeftBox>
       <NavigationRightBox style={{ flex: 38 }}>
         <Center>

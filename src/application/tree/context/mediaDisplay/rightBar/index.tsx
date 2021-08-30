@@ -32,7 +32,11 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
         <AccordionItem borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
-            <AccordionButtonTitle flex="1" textAlign="left" children={"Selection actions"} />
+            <AccordionButtonTitle
+              flex="1"
+              textAlign="left"
+              children={`Selection ${selectMediaIds.length} / ${mediaIds.length}`}
+            />
           </AccordionButtonBox>
           <AccordionPanel>
             <Stack mt={0} spacing={4}>

@@ -18,18 +18,6 @@ export const NavigationRightBox = styled(Box)`
   flex: 38;
 `
 
-export const NavigationBarBox2 = styled(Box)`
-  display: flex;
-`
-
-export const NavigationLeftBox2 = styled(Box)`
-  flex: 1;
-`
-
-export const NavigationRightBox2 = styled(Box)`
-  flex: 38;
-`
-
 export const HoverIcon = styled(Box)`
   :hover {
     border-bottom-width: 2px;
@@ -43,8 +31,6 @@ export const NavBarBox = styled(Stack)`
   padding-left: 4px;
 `
 export const MediaLogoIcon = styled(HoverIcon)`
-  border-width: 1px;
-
   width: 40px;
   height: 40px;
   background: url("${MsLogo}") center no-repeat;

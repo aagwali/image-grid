@@ -7,8 +7,9 @@ import { skipToken } from "@reduxjs/toolkit/dist/query"
 import AppRouter from "../../appRouter"
 import { getContextByLabel, getMediaByContextLabel } from "../../services"
 import NavigationBar from "../navBar"
-import { NavigationLeftBox, NavigationRightBox } from "../navBar/styles"
+import { NavigationLeftBox as NavigationLeft, NavigationRightBox as ContentRight } from "../navBar/styles"
 import MediaDisplay from "./mediaDisplay"
+import { ContextHeader } from "./styles"
 
 const Context = ({ contextLabel }: RouteComponentProps & { contextLabel?: string }) => {
   const { isLoading, error } = getContextByLabel.useQuery(contextLabel ?? skipToken)
@@ -18,18 +19,20 @@ const Context = ({ contextLabel }: RouteComponentProps & { contextLabel?: string
 
   if (useGetMedia.isUninitialized) getMedia(contextLabel)
 
+  // outer box should be NavigationBarBox => bug css
   return (
-    <Box style={{ display: "flex" }}>
-      {/* bug when using styled component here */}
-      <NavigationLeftBox>
+    <Box display="flex">
+      <NavigationLeft>
         <NavigationBar />
-      </NavigationLeftBox>
-      <NavigationRightBox>
+      </NavigationLeft>
+
+      <ContentRight>
+        <ContextHeader children={contextLabel} />
         <AppRouter>
           <Redirect from="/" to="medias" noThrow />
           <MediaDisplay path="medias" />
         </AppRouter>
-      </NavigationRightBox>
+      </ContentRight>
     </Box>
   )
 }

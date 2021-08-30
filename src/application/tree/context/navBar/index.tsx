@@ -9,9 +9,10 @@ const NavBar = () => {
   return (
     <Box>
       <NavBarBox spacing={10}>
-        <Link mr={32} as={RouterLink} children="Home" to="/" />
+        <Link mr={28} as={RouterLink} children="Home" to="/" />
         <Link as={RouterLink} children="References" to="medias" />
         <Link as={RouterLink} children="Medias" to="medias" />
+        <Link as={RouterLink} children="Associations" to="medias" />
       </NavBarBox>
     </Box>
   )

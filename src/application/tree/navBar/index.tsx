@@ -3,13 +3,13 @@ import React from "react"
 import { Link } from "@chakra-ui/react"
 import { Link as RouterLink } from "@reach/router"
 
-import { ArticleIcon, HomeIcon, MediaLogoIcon, NavBarBox } from "./styles"
+import { ArticleIcon, AssociateIcon, HomeIcon, MediaIcon, MsLogoIcon, NavBarBox, TrashIcon } from "./styles"
 
 const NavigationBar = ({ home }: any) => {
   return (
-    <NavBarBox spacing={1}>
+    <NavBarBox spacing={3}>
       <Link as={RouterLink} to="/">
-        <MediaLogoIcon />
+        <MsLogoIcon />
       </Link>
       <Link as={RouterLink} to="/">
         <HomeIcon />
@@ -20,10 +20,13 @@ const NavigationBar = ({ home }: any) => {
             <ArticleIcon />
           </Link>
           <Link as={RouterLink} to="medias">
-            <ArticleIcon />
+            <MediaIcon />
           </Link>
           <Link as={RouterLink} to="medias">
-            <ArticleIcon />
+            <AssociateIcon />
+          </Link>
+          <Link as={RouterLink} to="medias">
+            <TrashIcon />
           </Link>
         </React.Fragment>
       )}

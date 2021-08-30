@@ -2,7 +2,7 @@ import { add, prop } from "rambda"
 import React, { useReducer } from "react"
 import Hotkeys from "react-hot-keys"
 
-import { Text } from "@chakra-ui/react"
+import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Center, Checkbox, Stack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../storeConfig"
@@ -14,15 +14,14 @@ import { mediaDisplaySlice, mediaSelector } from "../../../reducers"
 import { MediumItem } from "../../../types"
 import { getSelectedMedia } from "./privates"
 import {
-  BadgesCheckbox,
-  DynamicGridBox,
-  HeaderBox,
-  HeaderCheckbox,
+  AccordionButtonBox,
+  AccordionButtonTitle,
+  DisplayCheckboxGroup,
+  LeftBarBox,
+  LeftBarLabel,
+  LeftBarLabelTitle,
   MediaBox,
-  SelectButton,
-  SelectionBox,
-  SizeBox,
-  TransparencyCheckbox,
+  MediaDisplayBox,
 } from "./styles"
 import { MediaDisplayShortcuts } from "./types"
 
@@ -39,11 +38,16 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const [headerCellRatio, headearRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
   const badgePadding = badges ? 5 : 0
 
-  const toggleTransparency = () => dispatch(actions.updateMediaDisplay({ transparency: !transparency }))
+  const allChecked = [cardHeader, badges, transparency].every(Boolean)
+  const isIndeterminate = [cardHeader, badges, transparency].some(Boolean) && !allChecked
   const toggleCardHeader = () => dispatch(actions.updateMediaDisplay({ cardHeader: !cardHeader }))
   const toggleCardBadges = () => dispatch(actions.updateMediaDisplay({ badges: !badges }))
+  const toggleDisplayOptions = (checked: boolean) =>
+    dispatch(actions.updateMediaDisplay({ cardHeader: checked, badges: checked, transparency: checked }))
+  const toggleTransparency = () => dispatch(actions.updateMediaDisplay({ transparency: !transparency }))
   const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaDisplay({ contentSize: x }))
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
+
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
   const selectionHandler = (medium: typeof selectMediaIds[0]) => (event: MouseEvent) =>
     dispatch(actions.updateMediaDisplay({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
@@ -64,34 +68,58 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const [, forceUpdate] = useReducer(add(1), 0)
 
   return (
-    <DynamicGridBox>
+    <MediaDisplayBox>
       <Hotkeys keyName={getHotkeys(MediaDisplayShortcuts)} onKeyDown={handleHotkey} />
-      <HeaderBox spacing={3}>
-        <TransparencyCheckbox
-          children="Transparency"
-          colorScheme="teal"
-          isChecked={transparency}
-          onChange={toggleTransparency}
-        />
-        <HeaderCheckbox
-          children="Images information"
-          colorScheme="teal"
-          isChecked={cardHeader}
-          onChange={toggleCardHeader}
-        />
-        <BadgesCheckbox children="Badges" colorScheme="teal" isChecked={badges} onChange={toggleCardBadges} />
-        <Text children={"Size :"} />
-        <SizeBox>
-          <SizeSlider
-            sliderStepCount={10}
-            contentSizeRange={[150, 350]}
-            contentSize={contentSize}
-            updateContentSize={updateContentSize}
-            updateCellMatrix={updateCellMatrix}
-            forceUpdate={forceUpdate}
-          />
-        </SizeBox>
-        <SelectionBox spacing={5}>
+
+      <LeftBarBox>
+        <Accordion defaultIndex={[0]} allowMultiple>
+          <AccordionItem borderWidth={0}>
+            <AccordionButtonBox>
+              <AccordionIcon />
+              <AccordionButtonTitle flex="1" textAlign="left" children={"Display options"} />
+            </AccordionButtonBox>
+            <AccordionPanel>
+              <Stack mt={3} spacing={8}>
+                <Stack>
+                  <Center>
+                    <LeftBarLabelTitle children={"Images Zoom"} />
+                  </Center>
+                  <SizeSlider
+                    sliderStepCount={10}
+                    contentSizeRange={[150, 350]}
+                    contentSize={contentSize}
+                    updateContentSize={updateContentSize}
+                    updateCellMatrix={updateCellMatrix}
+                    forceUpdate={forceUpdate}
+                  />
+                </Stack>
+                <DisplayCheckboxGroup>
+                  <Checkbox
+                    size={"sm"}
+                    isChecked={allChecked}
+                    isIndeterminate={isIndeterminate}
+                    onChange={(e) => toggleDisplayOptions(e.target.checked)}
+                  >
+                    <LeftBarLabelTitle children={"Images information"} />
+                  </Checkbox>
+                  <Stack pl={6} spacing={1}>
+                    <Checkbox isChecked={cardHeader} size={"sm"} onChange={toggleCardHeader}>
+                      <LeftBarLabel children={"Filename"} />
+                    </Checkbox>
+                    <Checkbox isChecked={badges} size={"sm"} onChange={toggleCardBadges}>
+                      <LeftBarLabel children={"Badges"} />
+                    </Checkbox>
+                    <Checkbox isChecked={transparency} size={"sm"} onChange={toggleTransparency}>
+                      <LeftBarLabel children={"Transparency"} />
+                    </Checkbox>
+                  </Stack>
+                </DisplayCheckboxGroup>
+              </Stack>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+
+        {/* <SelectionBox spacing={5}>
           <Text children={`Selected : ${selectMediaIds.length} / ${mediaIds.length}`} />
           <SelectButton
             onClick={selectAll}
@@ -107,8 +135,8 @@ const MediaDisplay = (_: RouteComponentProps) => {
             colorScheme="teal"
             children={"Deselect all"}
           />
-        </SelectionBox>
-      </HeaderBox>
+        </SelectionBox> */}
+      </LeftBarBox>
 
       <MediaBox data-loaded={mediaLoaded}>
         <DynamicGrid
@@ -139,7 +167,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
           forceUpdate={forceUpdate}
         />
       </MediaBox>
-    </DynamicGridBox>
+    </MediaDisplayBox>
   )
 }
 

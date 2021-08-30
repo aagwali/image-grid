@@ -1,37 +1,55 @@
 import styled, { css } from "styled-components"
 
-import { Box, Button, Center, Checkbox, HStack, theme, VStack } from "@chakra-ui/react"
+import { AccordionButton, Box, Button, Center, HStack, Text, theme } from "@chakra-ui/react"
 
+import CheckerBoardSvg from "../../../../assets/images/checkerboard.svg"
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
 
-export const DynamicGridBox = styled(VStack)`
-  margin-top: ${theme.space[5]};
+export const MediaDisplayBox = styled(Box)`
+  display: flex;
+  flex-direction: row;
 `
 
-export const HeaderBox = styled(HStack)`
-  margin-bottom: ${theme.space[2]};
+export const LeftBarBox = styled(Box)`
+  flex: 1;
 `
 
-export const TransparencyCheckbox = styled(Checkbox)`
-  position: absolute;
-  left: 12.5%;
+export const AccordionButtonBox = styled(AccordionButton)`
+  height: 40px;
+  color: ${theme.colors.teal[800]};
+
+  :focus {
+    box-shadow: none;
+  }
+  :hover {
+    background: none;
+    color: ${theme.colors.teal[400]};
+  }
 `
 
-export const HeaderCheckbox = styled(Checkbox)`
-  position: absolute;
-  left: 25%;
+export const AccordionButtonTitle = styled(Text)`
+  font-size: 14px;
+  font-weight: ${theme.fontWeights.semibold};
 `
 
-export const BadgesCheckbox = styled(Checkbox)`
-  position: absolute;
-  left: 37.5%;
+export const DisplayCheckboxGroup = styled(Box)`
+  margin-left: 24px;
 `
 
-export const SizeBox = styled(HStack)``
+export const LeftBarLabelTitle = styled(Box)`
+  font-size: 13px;
+  user-select: none;
+  font-weight: ${theme.fontWeights.semibold};
+`
+
+export const LeftBarLabel = styled(Text)`
+  font-size: 13px;
+  :hover {
+    color: ${theme.colors.teal[400]};
+  }
+`
 
 export const SelectionBox = styled(HStack)`
-  position: absolute;
-  right: 12.5%;
   margin-bottom: ${theme.space[0.5]};
 `
 
@@ -51,8 +69,12 @@ export const SelectButton = styled(Button)`
   }
 `
 
+export const NoMediaBox = styled(Center)`
+  padding-top: 350px;
+`
+
 export const MediaBox = styled(Box)`
-  width: 75%;
+  flex: 7;
   border-width: 0.75px;
   border-color: ${theme.colors.teal[600]};
   ${(props) =>
@@ -60,8 +82,4 @@ export const MediaBox = styled(Box)`
     css`
       background: url("${SpinnerSvg}") center no-repeat;
     `};
-`
-
-export const NoMediaBox = styled(Center)`
-  padding-top: 350px;
 `

@@ -34,6 +34,7 @@ export const CardBox = styled(Box)`
   border-color: ${theme.colors.teal[600]};
   border-radius: 3px;
   animation: ${fadeIn} 1.5s;
+  background: ${theme.colors.white};
 
   ${(props) =>
     props["data-loaded"] &&

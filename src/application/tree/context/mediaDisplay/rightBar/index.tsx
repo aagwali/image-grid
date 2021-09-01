@@ -1,7 +1,7 @@
 import { isEmpty, prop } from "rambda"
 import React from "react"
 
-import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Box, Stack } from "@chakra-ui/react"
+import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Stack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
@@ -12,8 +12,9 @@ import {
   RightBarAction,
   RightBarActionBox,
   SelectAllIcon,
+  SideBarBox,
   UnselectAllIcon,
-} from "./styles"
+} from "../styles"
 
 const MediaDisplayRightBar = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
@@ -26,7 +27,7 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
 
   return (
-    <Box w={72}>
+    <SideBarBox>
       <Accordion allowMultiple>
         <AccordionItem borderWidth={0}>
           <AccordionButtonBox>
@@ -55,7 +56,7 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
-    </Box>
+    </SideBarBox>
   )
 }
 

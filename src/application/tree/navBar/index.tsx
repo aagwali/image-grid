@@ -19,7 +19,7 @@ const NavigationBar = () => {
             <NavBarLink as={RouterLink} to="/">
               <HomeIcon />
             </NavBarLink>
-            {pathname !== "/" && pathname !== "/home" && (
+            {pathname !== "/home" && pathname !== "/home" && (
               <React.Fragment>
                 <NavBarLink as={RouterLink} to={`${rootPath}/medias`}>
                   <ArticleIcon />

@@ -31,7 +31,7 @@ export const PaddingBox = styled(Box)`
 
 export const CardBox = styled(Box)`
   border-width: 0.75px;
-  border-color: ${theme.colors.gray[400]};
+  border-color: ${theme.colors.teal[600]};
   border-radius: 3px;
   animation: ${fadeIn} 1.5s;
 

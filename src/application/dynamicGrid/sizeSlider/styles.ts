@@ -7,5 +7,5 @@ export const SliderBox = styled(Box)`
   margin-right: ${theme.space[4]};
 `
 export const SliderTrackCustom = styled(SliderTrack)`
-  height: ${theme.space[0.5]};
+  height: ${theme.space[1]};
 `

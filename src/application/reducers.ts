@@ -37,6 +37,7 @@ export const mediaSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(contextSlice.actions.initiateContext, (media, _) => {
+        mediaAdapter.removeAll(media)
         media.loaded = false
       })
       .addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {

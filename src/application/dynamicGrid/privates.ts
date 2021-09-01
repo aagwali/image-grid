@@ -37,6 +37,8 @@ export const setScrollRatio_ =
   (scrollParams: ScrollParams): void => {
     const { clientHeight } = getElementFirstChild(getElementById("grid"))
 
+    getElementFirstChild(getElementById("grid")).scrollTop
+
     if (clientHeight !== 0) {
       const newScrollRatio = clientHeight === 0 ? 0 : scrollParams.scrollTop / clientHeight
       updateScrollRatio(newScrollRatio)

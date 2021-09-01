@@ -29,8 +29,6 @@ export const AccordionButtonTitle = styled(Text)`
 
 export const RightBarActionBox = styled(HStack)`
   ${({ enabled }) => {
-    console.log("enabled =====> ", enabled)
-
     if (enabled === "false")
       return css`
         opacity: 0.4;

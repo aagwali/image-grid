@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import styled from "styled-components"
 
 import { Image, VStack } from "@chakra-ui/react"
 
@@ -80,7 +79,7 @@ const ImageCard = ({
 
             {controlId && (
               <AppToolTip tooltip={controlId}>
-                <CardBadge data-tip="React-tooltip" size={imageSize} badge={controlId}>
+                <CardBadge size={imageSize} badge={controlId}>
                   <Ellipsis size={imageSize}>Control</Ellipsis>
                 </CardBadge>
               </AppToolTip>

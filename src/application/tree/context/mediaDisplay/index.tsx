@@ -55,7 +55,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
     <MediaDisplayBox>
       <Hotkeys keyName={getHotkeys(MediaDisplayShortcuts)} onKeyDown={handleHotkey} />
 
-      <MediaDisplayLeftBar />
+      <MediaDisplayLeftBar forceUpdate={forceUpdate} />
 
       <MediaBox data-loaded={mediaLoaded}>
         <DynamicGrid

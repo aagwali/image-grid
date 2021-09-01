@@ -2,7 +2,7 @@ import { T } from "rambda"
 import React, { useState } from "react"
 import Hotkeys from "react-hot-keys"
 
-import { Button, Center, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
+import { Center, Input, InputGroup } from "@chakra-ui/react"
 import { navigate, RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch } from "../../../storeConfig"
@@ -41,11 +41,6 @@ const Home = (_: RouteComponentProps) => {
                 placeholder="Select an operation"
                 onChange={(e) => updateInputText(e.target.value)}
               />
-              <InputRightElement width="5rem">
-                <Button colorScheme="teal" onClick={initiateContext(inputText)}>
-                  Validate
-                </Button>
-              </InputRightElement>
             </InputGroup>
           </HomeInputBox>
         </Center>

@@ -32,6 +32,10 @@ export const NavBarBox = styled(Stack)`
   height: 100vh;
   background: ${theme.colors.teal[700]};
   padding-left: 4px;
+
+  :focus {
+    box-shadow: none;
+  }
 `
 export const MsLogoIcon = styled(HoverIcon)`
   width: 40px;

@@ -1,5 +1,5 @@
-import { add, prop } from "rambda"
-import React, { useReducer } from "react"
+import { prop } from "rambda"
+import React from "react"
 
 import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Center, Checkbox, Stack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
@@ -16,7 +16,7 @@ import {
   LeftBarLabelTitle,
 } from "./styles"
 
-const MediaDisplayLeftBar = (_: RouteComponentProps) => {
+const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdate: any }) => {
   const dispatch = useAppDispatch()
   const { actions } = mediaDisplaySlice
 
@@ -32,8 +32,6 @@ const MediaDisplayLeftBar = (_: RouteComponentProps) => {
   const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaDisplay({ contentSize: x }))
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
-
-  const [, forceUpdate] = useReducer(add(1), 0)
 
   return (
     <LeftBarBox>
@@ -68,7 +66,7 @@ const MediaDisplayLeftBar = (_: RouteComponentProps) => {
                   <LeftBarLabelTitle children={"Images information"} />
                 </Checkbox>
                 <Stack pl={6} spacing={1}>
-                  <Checkbox isChecked={cardHeader} size={"sm"} onChange={toggleCardHeader}>
+                  <Checkbox isChecked={cardHeader} size={"sm"} onChange={() => toggleCardHeader()}>
                     <LeftBarLabel children={"Filename"} />
                   </Checkbox>
                   <Checkbox isChecked={badges} size={"sm"} onChange={toggleCardBadges}>

@@ -4,5 +4,5 @@ import { Center } from "@chakra-ui/react"
 
 export const HomeInputBox = styled(Center)`
   height: 100vh;
-  width: 255px;
+  width: 200px;
 `

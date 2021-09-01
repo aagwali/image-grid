@@ -6,7 +6,7 @@ import SelectAll from "../../../../../assets/images/selectAll.svg"
 import UnselectAll from "../../../../../assets/images/unselectAll.svg"
 
 export const RightBarBox = styled(Box)`
-  flex: 1;
+  width: 300px;
 `
 
 export const AccordionButtonBox = styled(AccordionButton)`

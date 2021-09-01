@@ -1,16 +1,13 @@
 import styled, { css } from "styled-components"
 
-import { Box, theme } from "@chakra-ui/react"
+import { Box, HStack, theme } from "@chakra-ui/react"
 
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
 
-export const MediaDisplayBox = styled(Box)`
-  display: flex;
-  flex-direction: row;
-`
+export const MediaDisplayBox = styled(HStack)``
 
 export const MediaBox = styled(Box)`
-  flex: 7;
+  width: 100%;
   border-width: 0.75px;
   border-color: ${theme.colors.teal[600]};
   ${(props) =>

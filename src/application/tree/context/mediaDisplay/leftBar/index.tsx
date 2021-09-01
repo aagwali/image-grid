@@ -1,7 +1,7 @@
 import { prop } from "rambda"
 import React from "react"
 
-import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Center, Checkbox, Stack } from "@chakra-ui/react"
+import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Box, Center, Checkbox, Stack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
@@ -11,7 +11,6 @@ import {
   AccordionButtonBox,
   AccordionButtonTitle,
   DisplayCheckboxGroup,
-  LeftBarBox,
   LeftBarLabel,
   LeftBarLabelTitle,
 } from "./styles"
@@ -34,8 +33,8 @@ const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdat
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
 
   return (
-    <LeftBarBox>
-      <Accordion defaultIndex={[0]} allowMultiple>
+    <Box w={72}>
+      <Accordion allowMultiple>
         <AccordionItem borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
@@ -81,7 +80,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdat
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
-    </LeftBarBox>
+    </Box>
   )
 }
 

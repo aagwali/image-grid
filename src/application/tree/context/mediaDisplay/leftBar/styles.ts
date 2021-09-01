@@ -2,10 +2,6 @@ import styled from "styled-components"
 
 import { AccordionButton, Box, Text, theme } from "@chakra-ui/react"
 
-export const LeftBarBox = styled(Box)`
-  flex: 1;
-`
-
 export const AccordionButtonBox = styled(AccordionButton)`
   height: 40px;
   color: ${theme.colors.teal[800]};

@@ -7,9 +7,6 @@ import { navigate, RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch } from "../../../storeConfig"
 import { contextSlice } from "../../reducers"
-import NavigationBar from "../navBar"
-import { NavigationBarBox, NavigationLeftBox, NavigationRightBox } from "../navBar/styles"
-import { HomeInputBox } from "./styles"
 
 const Home = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
@@ -23,29 +20,18 @@ const Home = (_: RouteComponentProps) => {
   }
 
   return (
-    <NavigationBarBox>
+    <Center>
       <Hotkeys
         keyName="enter"
         filter={T} // get hotkey from input
         onKeyDown={initiateContext(inputText)}
       />
-      <NavigationLeftBox>
-        <NavigationBar home={true} />
-      </NavigationLeftBox>
-      <NavigationRightBox style={{ flex: 38 }}>
-        <Center>
-          <HomeInputBox>
-            <InputGroup>
-              <Input
-                autoFocus={true}
-                placeholder="Select an operation"
-                onChange={(e) => updateInputText(e.target.value)}
-              />
-            </InputGroup>
-          </HomeInputBox>
-        </Center>
-      </NavigationRightBox>
-    </NavigationBarBox>
+      <Center>
+        <InputGroup>
+          <Input autoFocus={true} placeholder="Select an operation" onChange={(e) => updateInputText(e.target.value)} />
+        </InputGroup>
+      </Center>
+    </Center>
   )
 }
 

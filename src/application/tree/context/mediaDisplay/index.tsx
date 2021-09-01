@@ -2,6 +2,7 @@ import { add, prop } from "rambda"
 import React, { useReducer } from "react"
 import Hotkeys from "react-hot-keys"
 
+import { Stack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../storeConfig"
@@ -13,7 +14,7 @@ import { MediumItem } from "../../../types"
 import MediaDisplayLeftBar from "./leftBar"
 import { getSelectedMedia } from "./privates"
 import MediaDisplayRightBar from "./rightBar"
-import { MediaBox, MediaDisplayBox } from "./styles"
+import { MediaBox } from "./styles"
 import { MediaDisplayShortcuts } from "./types"
 
 const MediaDisplay = (_: RouteComponentProps) => {
@@ -52,7 +53,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const [, forceUpdate] = useReducer(add(1), 0)
 
   return (
-    <MediaDisplayBox>
+    <Stack spacing={0} direction="row">
       <Hotkeys keyName={getHotkeys(MediaDisplayShortcuts)} onKeyDown={handleHotkey} />
 
       <MediaDisplayLeftBar forceUpdate={forceUpdate} />
@@ -88,7 +89,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
       </MediaBox>
 
       <MediaDisplayRightBar />
-    </MediaDisplayBox>
+    </Stack>
   )
 }
 

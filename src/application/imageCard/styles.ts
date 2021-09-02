@@ -19,7 +19,7 @@ const fadeIn = keyframes`
 
 export const PaddingBox = styled(Box)`
   position: relative;
-  padding: ${({ padding }) => `${padding}px`}; // 5 at 250
+  padding: ${({ padding }) => `${padding}px`};
 
   :active {
     -webkit-transform: scale(0.995, 0.995);
@@ -46,8 +46,8 @@ export const CardBox = styled(Box)`
   ${({ checked }) =>
     checked &&
     css`
-      border-color: ${theme.colors.pink[400]};
-      border-width: 2px;
+      border-color: ${theme.colors.pink[300]};
+      border-width: 3px;
       border-radius: 4px;
       box-shadow: 0.6px 0.6px 4px ${theme.colors.pink[200]};
     `};

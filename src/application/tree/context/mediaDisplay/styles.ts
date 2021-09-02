@@ -2,10 +2,12 @@ import styled, { css } from "styled-components"
 
 import { AccordionButton, Box, HStack, Text, theme } from "@chakra-ui/react"
 
+import DeselectAll from "../../../../assets/images/deselectAll.svg"
 import MsLogoBack from "../../../../assets/images/msLogoBackground.svg"
 import SelectAll from "../../../../assets/images/selectAll.svg"
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
-import UnselectAll from "../../../../assets/images/unselectAll.svg"
+
+//#region MEDIA
 
 export const MediaBox = styled(Box)`
   width: 100%;
@@ -16,6 +18,7 @@ export const LogoBox = styled(Box)`
   border-width: 1px;
   border-color: ${theme.colors.gray[300]};
   background: url("${MsLogoBack}") center no-repeat;
+
   ${(props) =>
     !props["data-loaded"] &&
     css`
@@ -26,6 +29,10 @@ export const LogoBox = styled(Box)`
 export const SideBarBox = styled(Box)`
   width: ${theme.space[72]};
 `
+
+//#endregion
+
+//#region SIDE BAR COMMON
 
 export const AccordionButtonBox = styled(AccordionButton)`
   height: 40px;
@@ -44,6 +51,7 @@ export const AccordionButtonTitle = styled(Text)`
   font-size: 14px;
   font-weight: ${theme.fontWeights.semibold};
 `
+//#endregion
 
 //#region LEFT BAR
 
@@ -101,8 +109,8 @@ export const SelectAllIcon = styled(ActionIcon)`
   background: url("${SelectAll}") center no-repeat;
 `
 
-export const UnselectAllIcon = styled(ActionIcon)`
-  background: url("${UnselectAll}") center no-repeat;
+export const DeselectAllIcon = styled(ActionIcon)`
+  background: url("${DeselectAll}") center no-repeat;
 `
 
 //#endregion

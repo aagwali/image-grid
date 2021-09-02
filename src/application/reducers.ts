@@ -52,7 +52,7 @@ export const mediaSlice = createSlice({
 //#region MEDIA GRID
 const initialMediaDisplay = {
   selectMediaIds: [] as string[],
-  contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
+  contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
   transparency: false,
   cardHeader: false,
   badges: false,
@@ -60,7 +60,7 @@ const initialMediaDisplay = {
   scrollRatio: 0,
   cellMatrix: {
     columnCount: 10,
-    cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 250,
+    cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
   },
 }
 

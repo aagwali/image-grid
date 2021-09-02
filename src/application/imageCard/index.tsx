@@ -31,16 +31,16 @@ const ImageCard = ({
   getUrlBySize,
   status,
   headerHeightRatio = 0,
-  badgePadding = 0,
   controlId,
+  badges,
 }: ImageCardProps) => {
   const [error, setError] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
-  const paddedSize = Math.floor(imageSize * (1 - (badgePadding / imageSize) * 2))
+  const paddedSize = Math.floor(imageSize * (1 - (5 / imageSize) * 2))
 
   return (
-    <PaddingBox onClick={selectionHandler} padding={badgePadding}>
+    <PaddingBox onClick={selectionHandler} padding={5}>
       <CardBox checked={checked} data-loaded={loaded} data-transparency={transparency}>
         {headerHeightRatio !== 0 && (
           <CardHeaderBox height={paddedSize * headerHeightRatio}>
@@ -69,7 +69,7 @@ const ImageCard = ({
             />
           </CardImageBox>
         )}
-        {badgePadding !== 0 && (
+        {badges && (
           <CardBadgesBox spacing={0.5}>
             <AppToolTip tooltip={status}>
               <CardBadge size={imageSize} badge={status}>

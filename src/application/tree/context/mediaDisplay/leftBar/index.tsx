@@ -1,11 +1,14 @@
 import { prop } from "rambda"
 import React from "react"
+import Hotkeys from "react-hot-keys"
 
 import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Center, Checkbox, Stack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
+import AppToolTip from "../../../../appTooltip"
 import SizeSlider from "../../../../dynamicGrid/sizeSlider"
+import { getHotkeys } from "../../../../privates"
 import { mediaDisplaySlice } from "../../../../reducers"
 import {
   AccordionButtonBox,
@@ -15,6 +18,7 @@ import {
   LeftBarLabelTitle,
   SideBarBox,
 } from "../styles"
+import { LeftBarShortcuts } from "../types"
 
 const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdate: any }) => {
   const dispatch = useAppDispatch()
@@ -33,8 +37,19 @@ const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdat
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
 
+  const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
+    event.preventDefault()
+    console.log("hotkey =====> ", hotkey)
+
+    if (hotkey === LeftBarShortcuts.Transparency) toggleTransparency()
+    if (hotkey === LeftBarShortcuts.DisplayInfos) toggleCardHeader()
+    if (hotkey === LeftBarShortcuts.DisplayBadges) toggleCardBadges()
+  }
+
   return (
     <SideBarBox>
+      <Hotkeys keyName={getHotkeys(LeftBarShortcuts)} onKeyDown={handleHotkey} />
+
       <Accordion allowMultiple>
         <AccordionItem borderWidth={0}>
           <AccordionButtonBox>
@@ -45,11 +60,13 @@ const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdat
             <Stack mt={3} spacing={8}>
               <Stack>
                 <Center>
-                  <LeftBarLabelTitle children={"Images Zoom"} />
+                  <AppToolTip tooltip="zoom">
+                    <LeftBarLabelTitle children={"Images Zoom"} />
+                  </AppToolTip>
                 </Center>
                 <SizeSlider
                   sliderStepCount={10}
-                  contentSizeRange={[150, 350]}
+                  contentSizeRange={[130, 330]}
                   contentSize={contentSize}
                   updateContentSize={updateContentSize}
                   updateCellMatrix={updateCellMatrix}
@@ -67,13 +84,19 @@ const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdat
                 </Checkbox>
                 <Stack pl={6} spacing={1}>
                   <Checkbox isChecked={cardHeader} size={"sm"} onChange={() => toggleCardHeader()}>
-                    <LeftBarLabel children={"Filename"} />
+                    <AppToolTip tooltip="filename">
+                      <LeftBarLabel children={"Filename"} />
+                    </AppToolTip>
                   </Checkbox>
                   <Checkbox isChecked={badges} size={"sm"} onChange={toggleCardBadges}>
-                    <LeftBarLabel children={"Badges"} />
+                    <AppToolTip tooltip="badges">
+                      <LeftBarLabel children={"Badges"} />
+                    </AppToolTip>
                   </Checkbox>
                   <Checkbox isChecked={transparency} size={"sm"} onChange={toggleTransparency}>
-                    <LeftBarLabel children={"Transparency"} />
+                    <AppToolTip tooltip="transparency">
+                      <LeftBarLabel children={"Transparency"} />
+                    </AppToolTip>
                   </Checkbox>
                 </Stack>
               </DisplayCheckboxGroup>

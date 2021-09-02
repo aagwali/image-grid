@@ -3,7 +3,6 @@ import { QualityStatus } from "../types"
 export interface ImageCardProps {
   title: string
   subtitle: string
-  padding?: number
   imageSize: number
   transparency: boolean
   openLightBox: (e: MouseEvent) => void
@@ -13,5 +12,5 @@ export interface ImageCardProps {
   status: QualityStatus
   headerHeightRatio?: number
   controlId?: string
-  badgePadding?: number
+  badges: boolean
 }

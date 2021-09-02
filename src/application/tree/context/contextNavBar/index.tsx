@@ -22,7 +22,7 @@ const ContextNavigationBar = () => (
             <AppLink active={isActive("associations")} children={"Associations"} />
           </Link>
           <Link to={"medias"}>
-            <AppLink active={isActive("trash")} children={"Trash can"} />
+            <AppLink active={isActive("trash")} children={"Bin"} />
           </Link>
         </HStack>
       )

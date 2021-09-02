@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-import { formatApiResult } from "./privates"
+import { formatGetMediaResult } from "./privates"
 import { MediaDisplayEndpoints, MediumItem } from "./types"
 
 export const mediashareApi = createApi({
-  reducerPath: "mediashare-queries",
+  reducerPath: "mediashareServer",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.MEDIASHARE_API_URL,
   }),
@@ -15,10 +15,18 @@ export const mediashareApi = createApi({
     }),
     [MediaDisplayEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
       query: (label) => `context/${label}/media`,
-      transformResponse: formatApiResult,
+      transformResponse: formatGetMediaResult,
+    }),
+    [MediaDisplayEndpoints.PostDownloadMedia]: build.mutation<any, string[]>({
+      query: (mediumIds) => ({
+        url: `/media/download`,
+        method: "POST",
+        body: mediumIds,
+      }),
     }),
   }),
 })
 
 export const getMediaByContextLabel = mediashareApi.endpoints[MediaDisplayEndpoints.GetMediaByContextLabel]
 export const getContextByLabel = mediashareApi.endpoints[MediaDisplayEndpoints.GetContextByLabel]
+export const triggerDownloadMedia = mediashareApi.endpoints[MediaDisplayEndpoints.PostDownloadMedia]

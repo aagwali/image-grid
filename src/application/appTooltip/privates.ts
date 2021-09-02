@@ -10,6 +10,7 @@ export const getQualityBadge = (tootltipData: string): string => {
   if (tootltipData === "zoom") return "Ctrl ↑ / Ctrl ↓"
   if (tootltipData === "selectAll") return "Ctrl A"
   if (tootltipData === "deselectAll") return "Ctrl D"
+  if (tootltipData === "download media") return "Ctrl Shift D"
   // else
   return "Quality control is pending" // TODO calcul real pending
 }

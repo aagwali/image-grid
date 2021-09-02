@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../../store
 import AppToolTip from "../../../../appTooltip"
 import { getHotkeys } from "../../../../privates"
 import { mediaDisplaySlice, mediaSelector } from "../../../../reducers"
+import { triggerDownloadMedia } from "../../../../services"
 import {
   AccordionButtonBox,
   AccordionButtonTitle,
@@ -37,10 +38,13 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
   const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: mediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
 
+  const [downloadMedia] = triggerDownloadMedia.useMutation()
+
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
     if (hotkey === RightBarShortcuts.Deselect) deselectAll()
     if (hotkey === RightBarShortcuts.SelectAll) selectAll()
+    // if (hotkey === RightBarShortcuts.Download && !isEmpty(selectMediaIds)) downloadMedia(selectMediaIds)
   }
 
   return (
@@ -84,7 +88,13 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
             </AccordionButtonBox>
             <AccordionPanel>
               <Stack mt={0} spacing={4}>
-                <RightBarActionBox spacing={1} onClick={selectAll}>
+                <RightBarActionBox
+                  spacing={1}
+                  onClick={() => {
+                    console.log("Fix me - server response must be json/text")
+                    // downloadMedia(selectMediaIds)
+                  }}
+                >
                   <AppToolTip tooltip="download media">
                     <TealButton size="sm" variant="outline">
                       <HStack spacing={1}>

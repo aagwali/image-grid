@@ -30,6 +30,7 @@ export type MediumItem = {
 export enum MediaDisplayEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
   GetContextByLabel = "getContextByLabel",
+  PostDownloadMedia = "ffffffffffffffff",
 }
 
 export enum NeutralState {

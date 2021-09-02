@@ -33,6 +33,10 @@ const handleFailedQueries = (endpointName: MediaDisplayEndpoints): void => {
       description = "Unable to get medias"
       displayExit(ExitType.Warning, description)
       break
+    case MediaDisplayEndpoints.PostDownloadMedia:
+      description = "Media download failed"
+      displayExit(ExitType.Warning, description)
+      break
 
     default: {
       ;((_incompleteSwitchCase: never) => "")(endpointName)

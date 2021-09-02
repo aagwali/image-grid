@@ -7,4 +7,5 @@ export enum LeftBarShortcuts {
 export enum RightBarShortcuts {
   Deselect = "ctrl+d",
   SelectAll = "ctrl+a",
+  Download = "ctrl+shift+d",
 }

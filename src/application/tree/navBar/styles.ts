@@ -16,19 +16,11 @@ export const NavBarBox = styled(Stack)`
 `
 
 export const NavBarLink = styled(Link)`
-  /* width: 40px;
-  height: 40px; */
   :hover {
     box-shadow: none;
-    border-width: 0px;
-  }
-  :active {
-    box-shadow: none;
-    border-width: 0px;
   }
   :focus {
     box-shadow: none;
-    border-width: 0px;
   }
 `
 

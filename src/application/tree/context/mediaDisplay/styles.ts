@@ -1,11 +1,13 @@
 import styled, { css } from "styled-components"
 
-import { AccordionButton, Box, HStack, Text, theme } from "@chakra-ui/react"
+import { AccordionButton, Box, Button, HStack, Text, theme } from "@chakra-ui/react"
 
 import DeselectAll from "../../../../assets/images/deselectAll.svg"
+import Download from "../../../../assets/images/download.svg"
 import MsLogoBack from "../../../../assets/images/msLogoBackground.svg"
 import SelectAll from "../../../../assets/images/selectAll.svg"
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
+import Trash from "../../../../assets/images/trashCanMini.svg"
 
 //#region MEDIA
 
@@ -99,6 +101,37 @@ export const RightBarAction = styled(Box)`
   }
 `
 
+export const RightBarButton = styled(Button)`
+  border-radius: 3px;
+  border-width: 2px;
+  padding: 5px;
+
+  :hover {
+    background: none;
+  }
+  :focus {
+    box-shadow: none;
+  }
+`
+
+export const RedButton = styled(RightBarButton)`
+  color: ${theme.colors.red[500]};
+  border-color: ${theme.colors.red[500]};
+
+  :hover {
+    box-shadow: 0.6px 0.6px 4px ${theme.colors.red[300]};
+  }
+`
+
+export const TealButton = styled(RightBarButton)`
+  color: ${theme.colors.teal[500]};
+  border-color: ${theme.colors.teal[500]};
+
+  :hover {
+    box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[500]};
+  }
+`
+
 export const ActionIcon = styled(Box)`
   width: 20px;
   height: 20px;
@@ -111,6 +144,15 @@ export const SelectAllIcon = styled(ActionIcon)`
 
 export const DeselectAllIcon = styled(ActionIcon)`
   background: url("${DeselectAll}") center no-repeat;
+`
+
+export const TrashIcon = styled(ActionIcon)`
+  background: url("${Trash}") center no-repeat;
+`
+
+export const DownloadIcon = styled(ActionIcon)`
+  padding-bottom: 2px;
+  background: url("${Download}") center no-repeat;
 `
 
 //#endregion

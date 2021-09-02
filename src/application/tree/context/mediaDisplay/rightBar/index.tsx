@@ -2,7 +2,7 @@ import { isEmpty, prop } from "rambda"
 import React from "react"
 import Hotkeys from "react-hot-keys"
 
-import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Stack } from "@chakra-ui/react"
+import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, HStack, Stack, Text } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
@@ -13,10 +13,14 @@ import {
   AccordionButtonBox,
   AccordionButtonTitle,
   DeselectAllIcon,
+  DownloadIcon,
+  RedButton,
   RightBarAction,
   RightBarActionBox,
   SelectAllIcon,
   SideBarBox,
+  TealButton,
+  TrashIcon,
 } from "../styles"
 import { RightBarShortcuts } from "../types"
 
@@ -26,6 +30,8 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
 
   const { selectMediaIds } = getState(prop("mediaDisplay"))
   const mediaIds = getState(mediaSelector.selectIds) as string[]
+
+  const selectionExists = !isEmpty(selectMediaIds)
 
   const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: mediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
@@ -39,7 +45,7 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
   return (
     <SideBarBox>
       <Hotkeys keyName={getHotkeys(RightBarShortcuts)} onKeyDown={handleHotkey} />
-      <Accordion allowMultiple>
+      <Accordion defaultIndex={[1]} allowMultiple>
         <AccordionItem borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
@@ -57,11 +63,7 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
                   <RightBarAction children={"Select all medias"} />
                 </AppToolTip>
               </RightBarActionBox>
-              <RightBarActionBox
-                enabled={!isEmpty(selectMediaIds) ? "true" : "false"}
-                spacing={1}
-                onClick={deselectAll}
-              >
+              <RightBarActionBox enabled={selectionExists ? "true" : "false"} spacing={1} onClick={deselectAll}>
                 <DeselectAllIcon />
                 <AppToolTip tooltip="deselectAll">
                   <RightBarAction children={"Deselect all medias"} />
@@ -70,6 +72,39 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
             </Stack>
           </AccordionPanel>
         </AccordionItem>
+
+        {selectionExists && (
+          <AccordionItem borderWidth={0}>
+            <AccordionButtonBox>
+              <AccordionIcon />
+              <AccordionButtonTitle flex="1" textAlign="left" children={"Actions"} />
+            </AccordionButtonBox>
+            <AccordionPanel>
+              <Stack mt={0} spacing={4}>
+                <RightBarActionBox spacing={1} onClick={selectAll}>
+                  <AppToolTip tooltip="download media">
+                    <TealButton size="sm" variant="outline">
+                      <HStack spacing={1}>
+                        <DownloadIcon />
+                        <Text children={"Download"} />
+                      </HStack>
+                    </TealButton>
+                  </AppToolTip>
+                </RightBarActionBox>
+                <RightBarActionBox spacing={1} onClick={deselectAll}>
+                  <AppToolTip tooltip="trash media">
+                    <RedButton size="sm" variant="outline">
+                      <HStack spacing={1}>
+                        <TrashIcon />
+                        <Text children={"Move to bin"} />
+                      </HStack>
+                    </RedButton>
+                  </AppToolTip>
+                </RightBarActionBox>
+              </Stack>
+            </AccordionPanel>
+          </AccordionItem>
+        )}
       </Accordion>
     </SideBarBox>
   )

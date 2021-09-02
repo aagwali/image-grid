@@ -56,7 +56,7 @@ export const CardBox = styled(Box)`
     ${({ checked }) =>
       !checked &&
       css`
-        box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[400]};
+        box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[600]};
       `};
 
     .enlargeImage {

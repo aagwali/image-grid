@@ -16,6 +16,7 @@ import {
   DisplayCheckboxGroup,
   LeftBarLabel,
   LeftBarLabelTitle,
+  SeparatorBox,
   SideBarBox,
 } from "../styles"
 import { LeftBarShortcuts } from "../types"
@@ -39,8 +40,6 @@ const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdat
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
-    console.log("hotkey =====> ", hotkey)
-
     if (hotkey === LeftBarShortcuts.Transparency) toggleTransparency()
     if (hotkey === LeftBarShortcuts.DisplayInfos) toggleCardHeader()
     if (hotkey === LeftBarShortcuts.DisplayBadges) toggleCardBadges()
@@ -48,6 +47,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: RouteComponentProps & { forceUpdat
 
   return (
     <SideBarBox>
+      <SeparatorBox />
       <Hotkeys keyName={getHotkeys(LeftBarShortcuts)} onKeyDown={handleHotkey} />
 
       <Accordion allowMultiple>

@@ -6,11 +6,11 @@ import { ToastContainer } from "react-toastify"
 import { Box, HStack } from "@chakra-ui/react"
 import { Redirect, RouteComponentProps } from "@reach/router"
 
+import NavigationBar from "./appNavBar"
 import AppRouter from "./appRouter"
 import Context from "./tree/context"
 import Home from "./tree/home"
 import LightBoxContainer from "./tree/lightBoxContainer"
-import NavigationBar from "./tree/navBar"
 
 const Application = (_: RouteComponentProps) => (
   <React.Fragment>

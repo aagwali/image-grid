@@ -5,7 +5,7 @@ import { skipToken } from "@reduxjs/toolkit/dist/query"
 
 import AppRouter from "../../appRouter"
 import { getContextByLabel, getMediaByContextLabel } from "../../services"
-import NavigationBar from "../navBar"
+import NavigationBar from "./contextNavBar"
 import MediaDisplay from "./mediaDisplay"
 import { ContextHeader } from "./styles"
 
@@ -20,6 +20,7 @@ const Context = ({ contextLabel }: RouteComponentProps & { contextLabel?: string
   return (
     <React.Fragment>
       <ContextHeader children={contextLabel} />
+      <NavigationBar />
       <AppRouter>
         <Redirect from="/" to="medias" noThrow />
         <MediaDisplay path="medias" />

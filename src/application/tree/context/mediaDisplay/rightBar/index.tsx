@@ -18,6 +18,7 @@ import {
   RightBarAction,
   RightBarActionBox,
   SelectAllIcon,
+  SeparatorBox,
   SideBarBox,
   TealButton,
   TrashIcon,
@@ -44,6 +45,8 @@ const MediaDisplayRightBar = (_: RouteComponentProps) => {
 
   return (
     <SideBarBox>
+      <SeparatorBox />
+
       <Hotkeys keyName={getHotkeys(RightBarShortcuts)} onKeyDown={handleHotkey} />
       <Accordion defaultIndex={[1]} allowMultiple>
         <AccordionItem borderWidth={0}>

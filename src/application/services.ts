@@ -4,7 +4,7 @@ import { formatApiResult } from "./privates"
 import { MediaDisplayEndpoints, MediumItem } from "./types"
 
 export const mediashareApi = createApi({
-  reducerPath: "msApi",
+  reducerPath: "mediashare-queries",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.MEDIASHARE_API_URL,
   }),

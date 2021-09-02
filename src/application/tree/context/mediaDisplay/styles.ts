@@ -17,10 +17,6 @@ export const MediaBox = styled(Box)`
   background: #fafafa;
 `
 
-export const Spinner = styled(Box)`
-  background: url("${SpinnerSvg}") center no-repeat;
-`
-
 export const LogoBox = styled(Box)`
   border-width: 1px;
   border-color: ${theme.colors.gray[300]};
@@ -37,7 +33,12 @@ export const LogoBox = styled(Box)`
 export const SideBarBox = styled(Box)`
   width: ${theme.space[72]};
 `
-
+export const SeparatorBox = styled(Box)`
+  height: ${theme.space[4]};
+  background: ${theme.colors.gray[50]};
+  border-top-width: 0.75px;
+  border-bottom-width: 0.75px;
+`
 //#endregion
 
 //#region SIDE BAR COMMON

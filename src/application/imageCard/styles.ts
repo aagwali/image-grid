@@ -18,7 +18,6 @@ const fadeIn = keyframes`
 `
 
 export const PaddingBox = styled(Box)`
-  /* padding: ${(1 / 25) * 250}px; */
   position: relative;
   padding: ${({ padding }) => `${padding}px`}; // 5 at 250
 
@@ -30,11 +29,12 @@ export const PaddingBox = styled(Box)`
 `
 
 export const CardBox = styled(Box)`
-  border-width: 0.75px;
-  border-color: ${theme.colors.teal[600]};
+  border-width: 1px;
+  border-color: ${theme.colors.gray[400]};
   border-radius: 3px;
   animation: ${fadeIn} 1.5s;
   background: ${theme.colors.white};
+  box-shadow: 1.5px 1.5px 1px ${theme.colors.gray[300]};
 
   ${(props) =>
     props["data-loaded"] &&
@@ -56,12 +56,18 @@ export const CardBox = styled(Box)`
     ${({ checked }) =>
       !checked &&
       css`
-        box-shadow: 0.6px 0.6px 4px ${theme.colors.gray[400]};
+        box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[400]};
       `};
 
     .enlargeImage {
       opacity: 0.8;
     }
+  }
+
+  :active {
+    border-color: ${theme.colors.teal[300]};
+    box-shadow: none;
+    border-width: 2px;
   }
 `
 

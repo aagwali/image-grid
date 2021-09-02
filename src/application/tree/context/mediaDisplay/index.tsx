@@ -14,7 +14,7 @@ import { MediumItem } from "../../../types"
 import MediaDisplayLeftBar from "./leftBar"
 import { getSelectedMedia } from "./privates"
 import MediaDisplayRightBar from "./rightBar"
-import { MediaBox } from "./styles"
+import { LogoBox, MediaBox } from "./styles"
 import { MediaDisplayShortcuts } from "./types"
 
 const MediaDisplay = (_: RouteComponentProps) => {
@@ -58,34 +58,36 @@ const MediaDisplay = (_: RouteComponentProps) => {
 
       <MediaDisplayLeftBar forceUpdate={forceUpdate} />
 
-      <MediaBox data-loaded={mediaLoaded}>
-        <DynamicGrid
-          contentSize={contentSize}
-          scrollRatio={scrollRatio}
-          updateScrollRatio={updateScrollRatio}
-          cellMatrix={cellMatrix}
-          updateCellMatrix={updateCellMatrix}
-          items={media}
-          itemsLoaded={mediaLoaded}
-          headerHeightRatio={headerCellRatio}
-          renderItem={(medium: MediumItem) => (
-            <ImageCard
-              title={medium.fileName}
-              subtitle={`${medium.width} x ${medium.height}`}
-              transparency={transparency}
-              imageSize={contentSize}
-              checked={selectMediaIds.includes(medium.id)}
-              getUrlBySize={(size: number) => getImageServerUrl(medium.id, size)} // cf. paddedSize
-              openLightBox={openLightBox(medium.id)}
-              selectionHandler={selectionHandler(medium.id)}
-              status={medium.status}
-              headerHeightRatio={headearRatio}
-              controlId={medium.controlId}
-              badgePadding={badgePadding}
-            />
-          )}
-          forceUpdate={forceUpdate}
-        />
+      <MediaBox>
+        <LogoBox data-loaded={mediaLoaded}>
+          <DynamicGrid
+            contentSize={contentSize}
+            scrollRatio={scrollRatio}
+            updateScrollRatio={updateScrollRatio}
+            cellMatrix={cellMatrix}
+            updateCellMatrix={updateCellMatrix}
+            items={media}
+            itemsLoaded={mediaLoaded}
+            headerHeightRatio={headerCellRatio}
+            renderItem={(medium: MediumItem) => (
+              <ImageCard
+                title={medium.fileName}
+                subtitle={`${medium.width} x ${medium.height}`}
+                transparency={transparency}
+                imageSize={contentSize}
+                checked={selectMediaIds.includes(medium.id)}
+                getUrlBySize={(size: number) => getImageServerUrl(medium.id, size)} // cf. paddedSize
+                openLightBox={openLightBox(medium.id)}
+                selectionHandler={selectionHandler(medium.id)}
+                status={medium.status}
+                headerHeightRatio={headearRatio}
+                controlId={medium.controlId}
+                badgePadding={badgePadding}
+              />
+            )}
+            forceUpdate={forceUpdate}
+          />
+        </LogoBox>
       </MediaBox>
 
       <MediaDisplayRightBar />

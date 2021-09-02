@@ -2,16 +2,20 @@ import styled, { css } from "styled-components"
 
 import { AccordionButton, Box, HStack, Text, theme } from "@chakra-ui/react"
 
+import MsLogoBack from "../../../../assets/images/msLogoBackground.svg"
 import SelectAll from "../../../../assets/images/selectAll.svg"
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
 import UnselectAll from "../../../../assets/images/unselectAll.svg"
 
-export const MediaDisplayBox = styled(HStack)``
-
 export const MediaBox = styled(Box)`
   width: 100%;
-  border-width: 0.75px;
-  border-color: ${theme.colors.teal[600]};
+  background: #fafafa;
+`
+
+export const LogoBox = styled(Box)`
+  border-width: 1px;
+  border-color: ${theme.colors.gray[300]};
+  background: url("${MsLogoBack}") center no-repeat;
   ${(props) =>
     !props["data-loaded"] &&
     css`

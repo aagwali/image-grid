@@ -1,5 +1,6 @@
 import { add, prop } from "rambda"
 import React, { useReducer } from "react"
+import styled from "styled-components"
 
 import { Stack } from "@chakra-ui/react"
 import { RouteComponentProps } from "@reach/router"
@@ -44,7 +45,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
       <MediaDisplayLeftBar forceUpdate={forceUpdate} />
 
       <MediaBox>
-        <LogoBox data-loaded={mediaLoaded}>
+        <LogoBox loaded={mediaLoaded ? "true" : "false"}>
           <DynamicGrid
             contentSize={contentSize}
             scrollRatio={scrollRatio}

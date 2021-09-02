@@ -1,3 +1,4 @@
+import React from "react"
 import styled, { css } from "styled-components"
 
 import { AccordionButton, Box, Button, HStack, Text, theme } from "@chakra-ui/react"
@@ -16,16 +17,21 @@ export const MediaBox = styled(Box)`
   background: #fafafa;
 `
 
+export const Spinner = styled(Box)`
+  background: url("${SpinnerSvg}") center no-repeat;
+`
+
 export const LogoBox = styled(Box)`
   border-width: 1px;
   border-color: ${theme.colors.gray[300]};
-  background: url("${MsLogoBack}") center no-repeat;
+  background: url("${SpinnerSvg}") center no-repeat;
 
-  ${(props) =>
-    !props["data-loaded"] &&
-    css`
-      background: url("${SpinnerSvg}") center no-repeat;
-    `};
+  ${({ loaded }) => {
+    if (loaded === "true")
+      return css`
+        background: url("${MsLogoBack}") center no-repeat;
+      `
+  }};
 `
 
 export const SideBarBox = styled(Box)`

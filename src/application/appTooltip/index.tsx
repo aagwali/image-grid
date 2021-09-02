@@ -3,6 +3,7 @@ import styled from "styled-components"
 
 import { Tooltip } from "@chakra-ui/react"
 
+import MsLogo from "../../assets/images/msLogo.svg"
 import { getQualityBadge } from "./privates"
 
 export const AppTooltipBox = styled(Tooltip)``

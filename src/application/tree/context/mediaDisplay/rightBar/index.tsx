@@ -3,7 +3,6 @@ import React from "react"
 import Hotkeys from "react-hot-keys"
 
 import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, HStack, Stack, Text } from "@chakra-ui/react"
-import { RouteComponentProps } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../appTooltip"
@@ -26,7 +25,7 @@ import {
 } from "../styles"
 import { RightBarShortcuts } from "../types"
 
-const MediaDisplayRightBar = (_: RouteComponentProps) => {
+const MediaDisplayRightBar = () => {
   const dispatch = useAppDispatch()
   const { actions } = mediaDisplaySlice
 

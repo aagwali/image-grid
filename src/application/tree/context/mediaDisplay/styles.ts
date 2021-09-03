@@ -77,9 +77,7 @@ export const LeftBarLabel = styled(Text)`
   }
 `
 
-export const DisplayCheckboxGroup = styled(Box)`
-  margin-left: 24px;
-`
+export const DisplayCheckboxGroup = styled(Box)``
 
 //#endregion
 

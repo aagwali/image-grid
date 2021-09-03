@@ -1,4 +1,5 @@
-import { prop } from "rambda"
+import { parse } from "query-string"
+import { isEmpty, prop } from "rambda"
 
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
@@ -24,6 +25,21 @@ export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.m
 export const mediaSelectedSelector = createSelector(
   [prop("mediaDisplay"), (state: State) => (id: string) => mediaSelector.selectById(state, id)], // curried
   ({ selectMediaIds }, selectMediaById) => selectMediaIds.map(selectMediaById),
+)
+
+export const mediaStatusFilterSelector = createSelector(
+  [mediaSelector.selectAll, (_: any, { location }: any) => location],
+  (media, location) => {
+    const queryObjectParameters = parse(location.search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+    const rawFilters = queryObjectParameters.filters ?? []
+    const filters = Array.isArray(rawFilters) ? rawFilters : [rawFilters]
+
+    if (isEmpty(filters)) return media
+
+    const filteredMedia = media.filter((x) => filters.includes(x.status))
+
+    return filteredMedia
+  },
 )
 
 export const mediaSlice = createSlice({

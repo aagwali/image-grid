@@ -9,14 +9,14 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../storeCon
 import DynamicGrid from "../../../dynamicGrid"
 import ImageCard from "../../../imageCard"
 import { getImageServerUrl } from "../../../privates"
-import { mediaDisplaySlice, mediaSelector } from "../../../reducers"
+import { mediaDisplaySlice, mediaSelector, mediaStatusFilterSelector } from "../../../reducers"
 import { MediumItem } from "../../../types"
 import MediaDisplayLeftBar from "./leftBar"
 import { getSelectedMedia } from "./privates"
 import MediaDisplayRightBar from "./rightBar"
 import { LogoBox, MediaBox } from "./styles"
 
-const MediaDisplay = (_: RouteComponentProps) => {
+const MediaDisplay = (props: RouteComponentProps) => {
   const dispatch = useAppDispatch()
   const { actions } = mediaDisplaySlice
 
@@ -24,7 +24,9 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const { selectMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges } = getState(
     prop("mediaDisplay"),
   )
-  const media = getState(mediaSelector.selectAll)
+
+  const filteredMedia = getState((x) => mediaStatusFilterSelector(x, props))
+
   const mediaIds = getState(mediaSelector.selectIds) as string[]
   const [headerCellRatio, headearRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
 
@@ -52,7 +54,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
             updateScrollRatio={updateScrollRatio}
             cellMatrix={cellMatrix}
             updateCellMatrix={updateCellMatrix}
-            items={media}
+            items={filteredMedia}
             itemsLoaded={mediaLoaded}
             headerHeightRatio={headerCellRatio}
             renderItem={(medium: MediumItem) => (

@@ -168,6 +168,18 @@ export const CardBadge = styled(Center)`
         border-color: ${theme.colors.orange[300]};
         color: ${theme.colors.orange[300]};
       `
+
+    if (badge === QualityStatus.Low)
+      return css`
+        border-color: ${theme.colors.red[500]};
+        color: ${theme.colors.red[500]};
+      `
+
+    if (badge === QualityStatus.Manual)
+      return css`
+        border-color: ${theme.colors.purple[300]};
+        color: ${theme.colors.purple[300]};
+      `
     //else is quality badge
     return css`
       border-color: ${theme.colors.orange[500]};

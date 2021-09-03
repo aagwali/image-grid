@@ -1,7 +1,7 @@
 import React from "react"
 import styled, { css } from "styled-components"
 
-import { AccordionButton, Box, Button, HStack, Text, theme } from "@chakra-ui/react"
+import { AccordionButton, AccordionItem, Box, Button, Checkbox, HStack, Text, theme } from "@chakra-ui/react"
 
 import DeselectAll from "../../../../assets/images/deselectAll.svg"
 import Download from "../../../../assets/images/download.svg"
@@ -30,18 +30,20 @@ export const LogoBox = styled(Box)`
   }};
 `
 
+//#endregion
+
+//#region SIDE BAR COMMON
+
 export const SideBarBox = styled(Box)`
   width: ${theme.space[72]};
 `
+
 export const SeparatorBox = styled(Box)`
   height: ${theme.space[4]};
   background: ${theme.colors.gray[50]};
   border-top-width: 0.75px;
   border-bottom-width: 0.75px;
 `
-//#endregion
-
-//#region SIDE BAR COMMON
 
 export const AccordionButtonBox = styled(AccordionButton)`
   height: 40px;
@@ -64,6 +66,10 @@ export const AccordionButtonTitle = styled(Text)`
 
 //#region LEFT BAR
 
+export const DisplayAccordion = styled(AccordionItem)``
+
+export const FiltersAccordion = styled(AccordionItem)``
+
 export const LeftBarLabelTitle = styled(Box)`
   font-size: 13px;
   user-select: none;
@@ -75,6 +81,22 @@ export const LeftBarLabel = styled(Text)`
   :hover {
     color: ${theme.colors.teal[400]};
   }
+`
+
+export const FilterCheckbox = styled(Checkbox)`
+  :focus {
+    outline: none;
+    box-shadow: none;
+  }
+`
+
+export const DisabledCheck = styled(Box)`
+  width: 12px;
+  height: 12px;
+  border-width: 2px;
+  border-color: ${theme.colors.gray[200]};
+  border-radius: 2px;
+  background: ${theme.colors.gray[100]};
 `
 
 export const DisplayCheckboxGroup = styled(Box)``

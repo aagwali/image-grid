@@ -1,38 +1,59 @@
-import { prop } from "rambda"
+import { intersection, isEmpty, prop } from "rambda"
 import React from "react"
 import Hotkeys from "react-hot-keys"
 
-import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, Center, Checkbox, Stack } from "@chakra-ui/react"
+import { Accordion, AccordionIcon, AccordionPanel, Center, HStack, Radio, RadioGroup, Stack } from "@chakra-ui/react"
 import { navigate, useLocation } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../appTooltip"
 import SizeSlider from "../../../../dynamicGrid/sizeSlider"
+import { getControlLabel, getQualityLabel } from "../../../../imageCard/privates"
 import { CardBadge, Ellipsis } from "../../../../imageCard/styles"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice } from "../../../../reducers"
-import { QualityStatus } from "../../../../types"
+import { mediaDisplaySlice, mediaStatusFilterSelector } from "../../../../reducers"
+import { ControlStatus, QualityStatus } from "../../../../types"
 import {
   AccordionButtonBox,
   AccordionButtonTitle,
+  DisabledCheck,
+  DisplayAccordion,
   DisplayCheckboxGroup,
+  FilterCheckbox,
+  FiltersAccordion,
   LeftBarLabel,
   LeftBarLabelTitle,
   SeparatorBox,
   SideBarBox,
 } from "../styles"
 import { LeftBarShortcuts } from "../types"
-import { isFilterActive, toggleStatusFilter } from "./privates"
+import {
+  getStatusFilters,
+  isAllQualityFilterChecked,
+  isControlFilterActive,
+  isStatusFilterActive,
+  toggleAllQualityFilters,
+  toggleControlFilter,
+  toggleOffControlFilters,
+  toggleStatusFilter,
+} from "./privates"
 
 const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
   const dispatch = useAppDispatch()
   const { actions } = mediaDisplaySlice
-  const location = useLocation()
+  const { search } = useLocation()
 
-  const { transparency, contentSize, cellMatrix, cardHeader, badges } = getState(prop("mediaDisplay"))
+  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectMediaIds } = getState(prop("mediaDisplay"))
 
-  const allChecked = [cardHeader, badges, transparency].every(Boolean)
-  const isIndeterminate = [cardHeader, badges, transparency].some(Boolean) && !allChecked
+  const state = getState((x) => x)
+
+  const allCheckedDisplay = [cardHeader, badges, transparency].every(Boolean)
+  const isIndeterminateDisplay = [cardHeader, badges, transparency].some(Boolean) && !allCheckedDisplay
+  const allCheckedQualityFilters = isAllQualityFilterChecked(search)
+  const isIndeterminateQualityFilters = !isEmpty(getStatusFilters(search)) && !allCheckedQualityFilters
+  const controlIsIndeterminate =
+    isControlFilterActive(search, ControlStatus.Validated) || isControlFilterActive(search, ControlStatus.Pending)
+
   const toggleCardHeader = () => dispatch(actions.updateMediaDisplay({ cardHeader: !cardHeader }))
   const toggleCardBadges = () => dispatch(actions.updateMediaDisplay({ badges: !badges }))
   const toggleDisplayOptions = (checked: boolean) =>
@@ -41,6 +62,18 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
   const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaDisplay({ contentSize: x }))
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
+
+  const updateFilter = (setNewSearch: (search: string) => string) => {
+    const newSearch = setNewSearch(search)
+
+    const filteredMedia = mediaStatusFilterSelector(state, newSearch)
+    const filteredMediaIds = filteredMedia.map(prop("id"))
+    dispatch(actions.updateMediaDisplay({ selectMediaIds: intersection(filteredMediaIds, selectMediaIds) }))
+
+    const searchToken = isEmpty(newSearch) ? "" : "?"
+
+    navigate(`medias${searchToken}${newSearch}`)
+  }
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
@@ -55,7 +88,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
       <Hotkeys keyName={getHotkeys(LeftBarShortcuts)} onKeyDown={handleHotkey} />
 
       <Accordion allowToggle>
-        <AccordionItem borderWidth={0}>
+        <DisplayAccordion borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
             <AccordionButtonTitle flex="1" textAlign="left" children={"Display options"} />
@@ -78,103 +111,151 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                 />
               </Stack>
               <DisplayCheckboxGroup>
-                <Checkbox
+                <FilterCheckbox
                   size={"sm"}
-                  isChecked={allChecked}
-                  isIndeterminate={isIndeterminate}
-                  onChange={(e) => toggleDisplayOptions(e.target.checked)}
+                  isChecked={allCheckedDisplay}
+                  isIndeterminate={isIndeterminateDisplay}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => toggleDisplayOptions(e.target.checked)}
                 >
                   <LeftBarLabelTitle children={"Images information"} />
-                </Checkbox>
+                </FilterCheckbox>
                 <Stack pl={6} spacing={1}>
-                  <Checkbox isChecked={cardHeader} size={"sm"} onChange={toggleCardHeader}>
+                  <FilterCheckbox isChecked={cardHeader} size={"sm"} onChange={toggleCardHeader}>
                     <AppToolTip tooltip="filename">
                       <LeftBarLabel children={"Filename"} />
                     </AppToolTip>
-                  </Checkbox>
-                  <Checkbox isChecked={badges} size={"sm"} onChange={toggleCardBadges}>
+                  </FilterCheckbox>
+                  <FilterCheckbox isChecked={badges} size={"sm"} onChange={toggleCardBadges}>
                     <AppToolTip tooltip="badges">
                       <LeftBarLabel children={"Badges"} />
                     </AppToolTip>
-                  </Checkbox>
-                  <Checkbox isChecked={transparency} size={"sm"} onChange={toggleTransparency}>
+                  </FilterCheckbox>
+                  <FilterCheckbox isChecked={transparency} size={"sm"} onChange={toggleTransparency}>
                     <AppToolTip tooltip="transparency">
                       <LeftBarLabel children={"Transparency"} />
                     </AppToolTip>
-                  </Checkbox>
+                  </FilterCheckbox>
                 </Stack>
               </DisplayCheckboxGroup>
             </Stack>
           </AccordionPanel>
-        </AccordionItem>
+        </DisplayAccordion>
 
-        <AccordionItem borderWidth={0}>
+        <FiltersAccordion borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
             <AccordionButtonTitle flex="1" textAlign="left" children={"Filters"} />
           </AccordionButtonBox>
           <AccordionPanel>
-            <Stack spacing={8}>
+            <Stack spacing={4}>
               <DisplayCheckboxGroup>
-                <Checkbox
+                <FilterCheckbox
                   size={"sm"}
-                  isChecked={allChecked}
-                  isIndeterminate={isIndeterminate}
-                  onChange={(e) => toggleDisplayOptions(e.target.checked)}
+                  isChecked={allCheckedQualityFilters}
+                  isIndeterminate={isIndeterminateQualityFilters}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    updateFilter(toggleAllQualityFilters(e.target.checked))
+                  }}
                 >
-                  <LeftBarLabelTitle children={"Badges"} />
-                </Checkbox>
+                  <LeftBarLabelTitle children={"Quality"} />
+                </FilterCheckbox>
                 <Stack mt={1} pl={6} spacing={2}>
-                  <Checkbox
-                    isChecked={isFilterActive(location, QualityStatus.High)}
+                  <FilterCheckbox
+                    isChecked={isStatusFilterActive(search, QualityStatus.High)}
                     size={"sm"}
-                    onChange={() => navigate(`medias${toggleStatusFilter(location, QualityStatus.High)}`)}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.High))}
                   >
-                    <CardBadge size={240} badge={QualityStatus.High}>
-                      <Ellipsis size={240}>Size</Ellipsis>
-                    </CardBadge>
-                  </Checkbox>
-                  <Checkbox
-                    isChecked={isFilterActive(location, QualityStatus.Medium)}
+                    <AppToolTip tooltip={QualityStatus.High}>
+                      <CardBadge size={225} badge={QualityStatus.High}>
+                        <Ellipsis size={225}> {getQualityLabel(QualityStatus.High)} </Ellipsis>
+                      </CardBadge>
+                    </AppToolTip>
+                  </FilterCheckbox>
+                  <FilterCheckbox
+                    isChecked={isStatusFilterActive(search, QualityStatus.Medium)}
                     size={"sm"}
-                    onChange={() => navigate(`medias${toggleStatusFilter(location, QualityStatus.Medium)}`)}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Medium))}
                   >
-                    <CardBadge size={240} badge={QualityStatus.Medium}>
-                      <Ellipsis size={240}>Size</Ellipsis>
-                    </CardBadge>
-                  </Checkbox>
-                  <Checkbox
-                    isChecked={isFilterActive(location, QualityStatus.Low)}
+                    <AppToolTip tooltip={QualityStatus.Medium}>
+                      <CardBadge size={225} badge={QualityStatus.Medium}>
+                        <Ellipsis size={225}>{getQualityLabel(QualityStatus.Medium)}</Ellipsis>
+                      </CardBadge>
+                    </AppToolTip>
+                  </FilterCheckbox>
+                  <FilterCheckbox
+                    isChecked={isStatusFilterActive(search, QualityStatus.Low)}
                     size={"sm"}
-                    onChange={() => navigate(`medias${toggleStatusFilter(location, QualityStatus.Low)}`)}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Low))}
                   >
-                    <CardBadge size={240} badge={QualityStatus.Low}>
-                      <Ellipsis size={240}>Size</Ellipsis>
-                    </CardBadge>
-                  </Checkbox>
-                  <Checkbox
-                    isChecked={isFilterActive(location, QualityStatus.Manual)}
+                    <AppToolTip tooltip={QualityStatus.Low}>
+                      <CardBadge size={225} badge={QualityStatus.Low}>
+                        <Ellipsis size={225}>{getQualityLabel(QualityStatus.Low)}</Ellipsis>
+                      </CardBadge>
+                    </AppToolTip>
+                  </FilterCheckbox>
+                  <FilterCheckbox
+                    isChecked={isStatusFilterActive(search, QualityStatus.Manual)}
                     size={"sm"}
-                    onChange={() => navigate(`medias${toggleStatusFilter(location, QualityStatus.Manual)}`)}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Manual))}
                   >
-                    <CardBadge size={240} badge={QualityStatus.Manual}>
-                      <Ellipsis size={240}>Size</Ellipsis>
-                    </CardBadge>
-                  </Checkbox>
-                  <Checkbox
-                    isChecked={isFilterActive(location, QualityStatus.High)}
-                    size={"sm"}
-                    onChange={() => navigate(`medias${toggleStatusFilter(location, QualityStatus.High)}`)}
-                  >
-                    <CardBadge size={240} badge={"Control"}>
-                      <Ellipsis size={240}>Control</Ellipsis>
-                    </CardBadge>
-                  </Checkbox>
+                    <AppToolTip tooltip={QualityStatus.Manual}>
+                      <CardBadge size={225} badge={QualityStatus.Manual}>
+                        <Ellipsis size={225}>{getQualityLabel(QualityStatus.Manual)}</Ellipsis>
+                      </CardBadge>
+                    </AppToolTip>
+                  </FilterCheckbox>
                 </Stack>
+              </DisplayCheckboxGroup>
+
+              <DisplayCheckboxGroup>
+                {controlIsIndeterminate ? (
+                  <FilterCheckbox
+                    size={"sm"}
+                    isChecked={false}
+                    isIndeterminate={controlIsIndeterminate}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      updateFilter(toggleOffControlFilters)
+                    }}
+                  >
+                    <LeftBarLabelTitle children={"Control"} />
+                  </FilterCheckbox>
+                ) : (
+                  <HStack mb="11px">
+                    <DisabledCheck />
+                    <LeftBarLabelTitle children={"Control"} />
+                  </HStack>
+                )}
+
+                <RadioGroup>
+                  <Stack mt={1.5} pl={6} spacing={2}>
+                    <Radio
+                      isChecked={isControlFilterActive(search, ControlStatus.Pending)}
+                      size={"sm"}
+                      onChange={() => updateFilter(toggleControlFilter(ControlStatus.Pending))}
+                    >
+                      <AppToolTip tooltip={ControlStatus.Pending}>
+                        <CardBadge size={225} badge={ControlStatus.Pending}>
+                          <Ellipsis size={225}>{getControlLabel(ControlStatus.Pending)}</Ellipsis>
+                        </CardBadge>
+                      </AppToolTip>
+                    </Radio>
+                    <Radio
+                      isChecked={isControlFilterActive(search, ControlStatus.Validated)}
+                      size={"sm"}
+                      onChange={() => updateFilter(toggleControlFilter(ControlStatus.Validated))}
+                    >
+                      <AppToolTip tooltip={ControlStatus.Validated}>
+                        <CardBadge size={225} badge={ControlStatus.Validated}>
+                          <Ellipsis size={225}>{getControlLabel(ControlStatus.Validated)}</Ellipsis>
+                        </CardBadge>
+                      </AppToolTip>
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
               </DisplayCheckboxGroup>
             </Stack>
           </AccordionPanel>
-        </AccordionItem>
+        </FiltersAccordion>
       </Accordion>
     </SideBarBox>
   )

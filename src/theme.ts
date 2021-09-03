@@ -7,6 +7,11 @@ export const theme = extendTheme({
         colorScheme: "teal",
       },
     },
+    Radio: {
+      defaultProps: {
+        colorScheme: "teal",
+      },
+    },
   },
   fonts: {
     body: "mulish",

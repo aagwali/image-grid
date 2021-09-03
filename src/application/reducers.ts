@@ -1,11 +1,11 @@
 import { parse } from "query-string"
-import { isEmpty, prop } from "rambda"
+import { isEmpty, isNil, prop } from "rambda"
 
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../storeConfig"
 import { getMediaByContextLabel } from "./services"
-import { MediumItem } from "./types"
+import { ControlStatus, MediumItem } from "./types"
 
 //#region CONTEXT
 export const contextSlice = createSlice({
@@ -28,15 +28,30 @@ export const mediaSelectedSelector = createSelector(
 )
 
 export const mediaStatusFilterSelector = createSelector(
-  [mediaSelector.selectAll, (_: any, { location }: any) => location],
-  (media, location) => {
-    const queryObjectParameters = parse(location.search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
-    const rawFilters = queryObjectParameters.filters ?? []
-    const filters = Array.isArray(rawFilters) ? rawFilters : [rawFilters]
+  [mediaSelector.selectAll, (_: State, search: string) => search],
+  (media, search) => {
+    const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+    const rawStatusFilters = queryObjectParameters.status ?? []
+    const statusFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
+    const controlFilter = queryObjectParameters.control as string | null
 
-    if (isEmpty(filters)) return media
+    if (isEmpty(statusFilters) && !controlFilter) return media
 
-    const filteredMedia = media.filter((x) => filters.includes(x.status))
+    const filteredMedia = media.filter((x) => {
+      let controlFilterResult = true
+
+      if (!controlFilter) {
+        controlFilterResult = true
+      } else if (controlFilter && controlFilter === ControlStatus.Pending) {
+        controlFilterResult = isNil(x.controlId)
+      } else {
+        controlFilterResult = !isNil(x.controlId)
+      }
+
+      const statusFilterResult = !isEmpty(statusFilters) ? statusFilters.includes(x.status) : true
+
+      return controlFilterResult && statusFilterResult
+    })
 
     return filteredMedia
   },

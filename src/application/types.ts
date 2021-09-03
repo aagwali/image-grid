@@ -7,7 +7,12 @@ export enum QualityStatus {
   High = "OK",
   Medium = "NO_ZOOM",
   Low = "KO",
-  Manual = "A_VERIFIER",
+  Manual = "TO_BE_CHECKED",
+}
+
+export enum ControlStatus {
+  Pending = "pending",
+  Validated = "validated",
 }
 
 export type RawMedium = {
@@ -30,7 +35,7 @@ export type MediumItem = {
 export enum MediaDisplayEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
   GetContextByLabel = "getContextByLabel",
-  PostDownloadMedia = "ffffffffffffffff",
+  PostDownloadMedia = "postDownloadMedia",
 }
 
 export enum NeutralState {

@@ -5,7 +5,7 @@ import { Box, Center, HStack, Text, theme } from "@chakra-ui/react"
 import CheckerBoardSvg from "../../assets/images/checkerboard.svg"
 import DocErrorSvg from "../../assets/images/docError.svg"
 import SpinnerSvg from "../../assets/images/spinner.svg"
-import { QualityStatus } from "../types"
+import { ControlStatus, QualityStatus } from "../types"
 
 const fadeIn = keyframes`
   from {
@@ -154,6 +154,7 @@ export const CardBadge = styled(Center)`
   border-radius: ${({ size }) => `${(1 / 25) * size}px`};
   text-align: center;
   padding: ${({ size }) => `${(1 / 100) * size}px`};
+  padding-top: ${({ size }) => `${(1 / 75) * size}px`};
 
   border-width: 1px;
 
@@ -177,14 +178,22 @@ export const CardBadge = styled(Center)`
 
     if (badge === QualityStatus.Manual)
       return css`
-        border-color: ${theme.colors.purple[300]};
-        color: ${theme.colors.purple[300]};
+        border-color: ${theme.colors.purple[400]};
+        color: ${theme.colors.purple[400]};
       `
-    //else is quality badge
-    return css`
-      border-color: ${theme.colors.orange[500]};
-      color: ${theme.colors.orange[500]};
-    `
+
+    //control is done
+    if (badge === ControlStatus.Validated)
+      return css`
+        border-color: ${theme.colors.green[300]};
+        color: ${theme.colors.green[300]};
+      `
+
+    if (badge === ControlStatus.Pending)
+      return css`
+        border-color: ${theme.colors.gray[400]};
+        color: ${theme.colors.gray[400]};
+      `
   }};
 
   background-color: ${theme.colors.white};

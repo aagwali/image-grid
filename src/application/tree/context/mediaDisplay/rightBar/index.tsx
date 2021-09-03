@@ -3,11 +3,12 @@ import React from "react"
 import Hotkeys from "react-hot-keys"
 
 import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, HStack, Stack, Text } from "@chakra-ui/react"
+import { useLocation } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../appTooltip"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice, mediaSelector } from "../../../../reducers"
+import { mediaDisplaySlice, mediaStatusFilterSelector } from "../../../../reducers"
 import { triggerDownloadMedia } from "../../../../services"
 import {
   AccordionButtonBox,
@@ -28,13 +29,15 @@ import { RightBarShortcuts } from "../types"
 const MediaDisplayRightBar = () => {
   const dispatch = useAppDispatch()
   const { actions } = mediaDisplaySlice
+  const location = useLocation()
 
   const { selectMediaIds } = getState(prop("mediaDisplay"))
-  const mediaIds = getState(mediaSelector.selectIds) as string[]
+  const filteredMedia = getState((x) => mediaStatusFilterSelector(x, location.search))
+  const filteredMediaIds = filteredMedia.map(prop("id"))
 
   const selectionExists = !isEmpty(selectMediaIds)
 
-  const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: mediaIds }))
+  const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: filteredMediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
 
   const [downloadMedia] = triggerDownloadMedia.useMutation()
@@ -43,6 +46,7 @@ const MediaDisplayRightBar = () => {
     event.preventDefault()
     if (hotkey === RightBarShortcuts.Deselect) deselectAll()
     if (hotkey === RightBarShortcuts.SelectAll) selectAll()
+    // if (hotkey === RightBarShortcuts.Trash) selectAll()
     // if (hotkey === RightBarShortcuts.Download && !isEmpty(selectMediaIds)) downloadMedia(selectMediaIds)
   }
 
@@ -58,7 +62,7 @@ const MediaDisplayRightBar = () => {
             <AccordionButtonTitle
               flex="1"
               textAlign="left"
-              children={`Selection ${selectMediaIds.length} / ${mediaIds.length}`}
+              children={`Selection ${selectMediaIds.length} / ${filteredMediaIds.length}`}
             />
           </AccordionButtonBox>
           <AccordionPanel>
@@ -104,7 +108,7 @@ const MediaDisplayRightBar = () => {
                   </AppToolTip>
                 </RightBarActionBox>
                 <RightBarActionBox spacing={1} onClick={deselectAll}>
-                  <AppToolTip tooltip="trash media">
+                  <AppToolTip tooltip="trash">
                     <RedButton size="sm" variant="outline">
                       <HStack spacing={1}>
                         <TrashIcon />

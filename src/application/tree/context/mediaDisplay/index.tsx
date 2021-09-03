@@ -1,40 +1,41 @@
 import { add, prop } from "rambda"
 import React, { useReducer } from "react"
-import styled from "styled-components"
 
 import { Stack } from "@chakra-ui/react"
-import { RouteComponentProps } from "@reach/router"
+import { RouteComponentProps, useLocation } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../storeConfig"
 import DynamicGrid from "../../../dynamicGrid"
 import ImageCard from "../../../imageCard"
 import { getImageServerUrl } from "../../../privates"
-import { mediaDisplaySlice, mediaSelector, mediaStatusFilterSelector } from "../../../reducers"
+import { mediaDisplaySlice, mediaStatusFilterSelector } from "../../../reducers"
 import { MediumItem } from "../../../types"
 import MediaDisplayLeftBar from "./leftBar"
 import { getSelectedMedia } from "./privates"
 import MediaDisplayRightBar from "./rightBar"
 import { LogoBox, MediaBox } from "./styles"
 
-const MediaDisplay = (props: RouteComponentProps) => {
+const MediaDisplay = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
   const { actions } = mediaDisplaySlice
+  const location = useLocation()
 
   const { loaded: mediaLoaded } = getState(prop("media"))
   const { selectMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges } = getState(
     prop("mediaDisplay"),
   )
 
-  const filteredMedia = getState((x) => mediaStatusFilterSelector(x, props))
-
-  const mediaIds = getState(mediaSelector.selectIds) as string[]
+  const filteredMedia = getState((x) => mediaStatusFilterSelector(x, location.search))
+  const filteredMediaIds = filteredMedia.map(prop("id"))
   const [headerCellRatio, headearRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
 
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
   const selectionHandler = (medium: typeof selectMediaIds[0]) => (event: MouseEvent) =>
-    dispatch(actions.updateMediaDisplay({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
+    dispatch(
+      actions.updateMediaDisplay({ selectMediaIds: getSelectedMedia(selectMediaIds, filteredMediaIds, medium, event) }),
+    )
   const openLightBox = (mediumId: string) => (e: MouseEvent) => {
     e.stopPropagation()
     dispatch(actions.updateMediaDisplay({ lightBoxMediumId: mediumId }))

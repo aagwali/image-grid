@@ -8,7 +8,7 @@ import { useLocation } from "@reach/router"
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../appTooltip"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice, mediaStatusFilterSelector } from "../../../../reducers"
+import { mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
 import { triggerDownloadMedia } from "../../../../services"
 import {
   AccordionButtonBox,
@@ -32,7 +32,7 @@ const MediaDisplayRightBar = () => {
   const location = useLocation()
 
   const { selectMediaIds } = getState(prop("mediaDisplay"))
-  const filteredMedia = getState((x) => mediaStatusFilterSelector(x, location.search))
+  const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
 
   const selectionExists = !isEmpty(selectMediaIds)

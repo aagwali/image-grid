@@ -1,7 +1,7 @@
 import React from "react"
 import styled, { css } from "styled-components"
 
-import { AccordionButton, AccordionItem, Box, Button, Checkbox, HStack, Text, theme } from "@chakra-ui/react"
+import { AccordionButton, AccordionItem, Box, Button, HStack, Text, theme } from "@chakra-ui/react"
 
 import DeselectAll from "../../../../assets/images/deselectAll.svg"
 import Download from "../../../../assets/images/download.svg"
@@ -70,6 +70,13 @@ export const DisplayAccordion = styled(AccordionItem)``
 
 export const FiltersAccordion = styled(AccordionItem)``
 
+export const FilterItem = styled(Box)`
+  width: 160px;
+  display: flex;
+  justify-content: "space-between";
+  align-items: "center";
+`
+
 export const LeftBarLabelTitle = styled(Box)`
   font-size: 13px;
   user-select: none;
@@ -80,13 +87,6 @@ export const LeftBarLabel = styled(Text)`
   font-size: 13px;
   :hover {
     color: ${theme.colors.teal[400]};
-  }
-`
-
-export const FilterCheckbox = styled(Checkbox)`
-  :focus {
-    outline: none;
-    box-shadow: none;
   }
 `
 

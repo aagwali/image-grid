@@ -194,6 +194,12 @@ export const CardBadge = styled(Center)`
         border-color: ${theme.colors.gray[400]};
         color: ${theme.colors.gray[400]};
       `
+
+    // gray as undefined
+    return css`
+      border-color: ${theme.colors.gray[300]};
+      color: ${theme.colors.gray[300]};
+    `
   }};
 
   background-color: ${theme.colors.white};

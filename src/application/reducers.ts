@@ -1,5 +1,5 @@
 import { parse } from "query-string"
-import { isEmpty, isNil, prop } from "rambda"
+import { groupBy, isEmpty, isNil, prop } from "rambda"
 
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
@@ -22,12 +22,21 @@ const mediaAdapter = createEntityAdapter<MediumItem>({
 
 export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
 
-export const mediaSelectedSelector = createSelector(
+const mediaSelectedSelector = createSelector(
   [prop("mediaDisplay"), (state: State) => (id: string) => mediaSelector.selectById(state, id)], // curried
   ({ selectMediaIds }, selectMediaById) => selectMediaIds.map(selectMediaById),
 )
 
-export const mediaStatusFilterSelector = createSelector(
+export const mediaGroupedByFilters = createSelector(mediaSelector.selectAll, (media) => {
+  const mediaGroupedByStatus = groupBy(prop("status"), media)
+  const mediaGroupedByControlStatus = groupBy(
+    (x) => (isNil(x.controlId) ? ControlStatus.Pending : ControlStatus.Validated),
+    media,
+  )
+  return { ...mediaGroupedByStatus, ...mediaGroupedByControlStatus }
+})
+
+export const mediaFilteredSelector = createSelector(
   [mediaSelector.selectAll, (_: State, search: string) => search],
   (media, search) => {
     const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
@@ -37,20 +46,16 @@ export const mediaStatusFilterSelector = createSelector(
 
     if (isEmpty(statusFilters) && !controlFilter) return media
 
-    const filteredMedia = media.filter((x) => {
-      let controlFilterResult = true
+    const filteredMedia = media.filter((medium) => {
+      const statusFilterKeep = isEmpty(statusFilters) ? true : statusFilters.includes(medium.status)
 
-      if (!controlFilter) {
-        controlFilterResult = true
-      } else if (controlFilter && controlFilter === ControlStatus.Pending) {
-        controlFilterResult = isNil(x.controlId)
-      } else {
-        controlFilterResult = !isNil(x.controlId)
-      }
+      const controlFilterKeep = !controlFilter
+        ? true
+        : controlFilter === ControlStatus.Validated
+        ? !isNil(medium.controlId)
+        : isNil(medium.controlId)
 
-      const statusFilterResult = !isEmpty(statusFilters) ? statusFilters.includes(x.status) : true
-
-      return controlFilterResult && statusFilterResult
+      return controlFilterKeep && statusFilterKeep
     })
 
     return filteredMedia

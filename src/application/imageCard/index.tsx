@@ -5,7 +5,7 @@ import { Image, VStack } from "@chakra-ui/react"
 import EnlargeSvg from "../../assets/images/enlarge.svg"
 import AppToolTip from "../appTooltip"
 import { ControlStatus } from "../types"
-import { getControlLabel, getQualityLabel } from "./privates"
+import { getBadgeLabel } from "./privates"
 import {
   CardBadge,
   CardBadgesBox,
@@ -75,20 +75,20 @@ const ImageCard = ({
           <CardBadgesBox spacing={0.5}>
             <AppToolTip tooltip={status}>
               <CardBadge size={imageSize} badge={status}>
-                <Ellipsis size={imageSize}>{getQualityLabel(status)} </Ellipsis>
+                <Ellipsis size={imageSize}>{getBadgeLabel(status)} </Ellipsis>
               </CardBadge>
             </AppToolTip>
 
             {controlId ? (
               <AppToolTip tooltip={ControlStatus.Validated}>
                 <CardBadge size={imageSize} badge={ControlStatus.Validated}>
-                  <Ellipsis size={imageSize}>{getControlLabel(ControlStatus.Validated)}</Ellipsis>
+                  <Ellipsis size={imageSize}>{getBadgeLabel(ControlStatus.Validated)}</Ellipsis>
                 </CardBadge>
               </AppToolTip>
             ) : (
               <AppToolTip tooltip={ControlStatus.Pending}>
                 <CardBadge size={imageSize} badge={ControlStatus.Pending}>
-                  <Ellipsis size={imageSize}> {getControlLabel(ControlStatus.Pending)} </Ellipsis>
+                  <Ellipsis size={imageSize}> {getBadgeLabel(ControlStatus.Pending)} </Ellipsis>
                 </CardBadge>
               </AppToolTip>
             )}

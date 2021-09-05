@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../storeCon
 import DynamicGrid from "../../../dynamicGrid"
 import ImageCard from "../../../imageCard"
 import { getImageServerUrl } from "../../../privates"
-import { mediaDisplaySlice, mediaStatusFilterSelector } from "../../../reducers"
+import { mediaDisplaySlice, mediaFilteredSelector } from "../../../reducers"
 import { MediumItem } from "../../../types"
 import MediaDisplayLeftBar from "./leftBar"
 import { getSelectedMedia } from "./privates"
@@ -25,7 +25,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
     prop("mediaDisplay"),
   )
 
-  const filteredMedia = getState((x) => mediaStatusFilterSelector(x, location.search))
+  const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
   const [headerCellRatio, headearRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
 

@@ -21,9 +21,8 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const location = useLocation()
 
   const { loaded: mediaLoaded } = getState(prop("media"))
-  const { selectMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges } = getState(
-    prop("mediaDisplay"),
-  )
+  const { selectMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges, whiteReplacement } =
+    getState(prop("mediaDisplay"))
 
   const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
@@ -65,7 +64,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
                 transparency={transparency}
                 imageSize={contentSize}
                 checked={selectMediaIds.includes(medium.id)}
-                getUrlBySize={(size: number) => getImageServerUrl(medium.id, size)} // cf. paddedSize
+                getUrlBySize={(size: number) => getImageServerUrl(medium.id, size, whiteReplacement)} // cf. paddedSize
                 openLightBox={openLightBox(medium.id)}
                 selectionHandler={selectionHandler(medium.id)}
                 status={medium.status}

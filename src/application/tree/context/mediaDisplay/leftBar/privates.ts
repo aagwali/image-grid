@@ -1,6 +1,10 @@
 import { parse, ParsedQuery, stringify } from "query-string"
-import { omit } from "rambda"
+import { isEmpty, omit, prop } from "rambda"
 
+import { navigate } from "@reach/router"
+
+import { State } from "../../../../../storeConfig"
+import { mediaFilteredSelector } from "../../../../reducers"
 import { ControlStatus, QualityStatus } from "../../../../types"
 
 export const getStatusFilters = (search: string): string[] => {
@@ -17,43 +21,39 @@ export const isAllQualityFilterChecked = (search: string): boolean =>
 export const isStatusFilterActive = (search: string, status: string): boolean =>
   getStatusFilters(search).includes(status)
 
-export const toggleStatusFilter =
-  (status: string) =>
-  (search: string): string => {
-    const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
-    const rawFilters = queryObjectParameters.status ?? []
-    const statusFilters = Array.isArray(rawFilters) ? rawFilters : [rawFilters]
+export const toggleStatusFilter = (status: string, search: string): string => {
+  const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+  const rawFilters = queryObjectParameters.status ?? []
+  const statusFilters = Array.isArray(rawFilters) ? rawFilters : [rawFilters]
 
-    const updateFilters = statusFilters.includes(status)
-      ? statusFilters.filter((y) => y !== status)
-      : [...statusFilters, status]
+  const updateFilters = statusFilters.includes(status)
+    ? statusFilters.filter((y) => y !== status)
+    : [...statusFilters, status]
 
-    const newQueryObjectParameters = { ...queryObjectParameters, status: updateFilters }
+  const newQueryObjectParameters = { ...queryObjectParameters, status: updateFilters }
 
-    const newQueryParameters = stringify(newQueryObjectParameters, {
-      arrayFormat: "separator",
-      arrayFormatSeparator: "|",
-    })
+  const newQueryParameters = stringify(newQueryObjectParameters, {
+    arrayFormat: "separator",
+    arrayFormatSeparator: "|",
+  })
 
-    return newQueryParameters
-  }
+  return newQueryParameters
+}
 
-export const toggleAllQualityFilters =
-  (checked: boolean) =>
-  (search: string): string => {
-    const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+export const toggleAllQualityFilters = (checked: boolean, search: string): string => {
+  const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
 
-    const newQueryObjectParameters = checked
-      ? { ...queryObjectParameters, status: Object.values(QualityStatus) }
-      : (omit("status", queryObjectParameters) as ParsedQuery<string>)
+  const newQueryObjectParameters = checked
+    ? { ...queryObjectParameters, status: Object.values(QualityStatus) }
+    : (omit("status", queryObjectParameters) as ParsedQuery<string>)
 
-    const newQueryParameters = stringify(newQueryObjectParameters, {
-      arrayFormat: "separator",
-      arrayFormatSeparator: "|",
-    })
+  const newQueryParameters = stringify(newQueryObjectParameters, {
+    arrayFormat: "separator",
+    arrayFormatSeparator: "|",
+  })
 
-    return newQueryParameters
-  }
+  return newQueryParameters
+}
 
 export const toggleOffControlFilters = (search: string): string => {
   const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
@@ -70,21 +70,29 @@ export const toggleOffControlFilters = (search: string): string => {
 export const isControlFilterActive = (search: string, controlFilter: ControlStatus): boolean =>
   parse(search).control === controlFilter
 
-export const toggleControlFilter =
-  (controlFilter: ControlStatus) =>
-  (search: string): string => {
-    const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
-    const control = queryObjectParameters.control as string
+export const toggleControlFilter = (controlFilter: ControlStatus, search: string): string => {
+  const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+  const control = queryObjectParameters.control as string
 
-    const newQueryObjectParameters =
-      controlFilter === control
-        ? (omit("control", queryObjectParameters) as ParsedQuery<string>)
-        : { ...queryObjectParameters, control: controlFilter }
+  const newQueryObjectParameters =
+    controlFilter === control
+      ? (omit("control", queryObjectParameters) as ParsedQuery<string>)
+      : { ...queryObjectParameters, control: controlFilter }
 
-    const newQueryParameters = stringify(newQueryObjectParameters, {
-      arrayFormat: "separator",
-      arrayFormatSeparator: "|",
-    })
+  const newQueryParameters = stringify(newQueryObjectParameters, {
+    arrayFormat: "separator",
+    arrayFormatSeparator: "|",
+  })
 
-    return newQueryParameters
+  return newQueryParameters
+}
+
+export const updateFilter_ =
+  (state: State, updateFilterSideEffects: (filteredMediaIds: string[]) => void) => (newSearch: string) => {
+    const filteredMedia = mediaFilteredSelector(state, newSearch)
+    const filteredMediaIds = filteredMedia.map(prop("id"))
+    updateFilterSideEffects(filteredMediaIds)
+    const searchToken = isEmpty(newSearch) ? "" : "?"
+
+    navigate(`medias${searchToken}${newSearch}`)
   }

@@ -1,7 +1,10 @@
 import { MediumItem, RawMedium } from "./types"
 
-export const getImageServerUrl = (id: string, size: number) =>
-  `${process.env.IMAGE_SERVER_MEDIA_URL}r:${size}x${size}/${process.env.MEDIASHARE_API_URL}media/${id}/blob`
+export const getImageServerUrl = (id: string, size: number, whiteReplacement: boolean) => {
+  const replaceColor = whiteReplacement ? "rc:ffffff-FF0000/" : ""
+
+  return `${process.env.IMAGE_SERVER_MEDIA_URL}${replaceColor}r:${size}x${size}/${process.env.MEDIASHARE_API_URL}media/${id}/blob`
+}
 
 export const formatGetMediaResult = (response: RawMedium[]): MediumItem[] =>
   response.map((x) => ({

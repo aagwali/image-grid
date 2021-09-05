@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { navigate, useLocation } from "@reach/router"
+import { useLocation } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../appTooltip"
@@ -23,7 +23,7 @@ import SizeSlider from "../../../../dynamicGrid/sizeSlider"
 import { getBadgeLabel } from "../../../../imageCard/privates"
 import { CardBadge, Ellipsis } from "../../../../imageCard/styles"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice, mediaFilteredSelector, mediaGroupedByFilters } from "../../../../reducers"
+import { mediaDisplaySlice, mediaGroupedByFilters } from "../../../../reducers"
 import { ControlStatus, QualityStatus } from "../../../../types"
 import {
   AccordionButtonBox,
@@ -47,6 +47,7 @@ import {
   toggleControlFilter,
   toggleOffControlFilters,
   toggleStatusFilter,
+  updateFilter_,
 } from "./privates"
 
 const FilterItem = ({ itemsByFilterData, item }: any) => (
@@ -64,7 +65,7 @@ const FilterItem = ({ itemsByFilterData, item }: any) => (
       </CardBadge>
     </AppToolTip>
 
-    <CardBadge size={190}>
+    <CardBadge size={200}>
       <Text children={itemsByFilterData[item]?.length} />
     </CardBadge>
   </Box>
@@ -75,13 +76,15 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
   const { actions } = mediaDisplaySlice
   const { search } = useLocation()
 
-  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectMediaIds } = getState(prop("mediaDisplay"))
+  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectMediaIds, whiteReplacement } = getState(
+    prop("mediaDisplay"),
+  )
 
-  const state = getState(identity)
   const itemsByFilterData = getState(mediaGroupedByFilters)
 
-  const allCheckedDisplay = all(identity, [cardHeader, badges, transparency])
-  const isIndeterminateDisplay = any(identity, [cardHeader, badges, transparency]) && !allCheckedDisplay
+  const allCheckedDisplay = all(identity, [cardHeader, badges, transparency, whiteReplacement])
+  const isIndeterminateDisplay =
+    any(identity, [cardHeader, badges, transparency, whiteReplacement]) && !allCheckedDisplay
   const allCheckedQualityFilters = isAllQualityFilterChecked(search)
   const isIndeterminateQualityFilters = !isEmpty(getStatusFilters(search)) && !allCheckedQualityFilters
   const controlIsIndeterminate =
@@ -90,29 +93,31 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
   const toggleCardHeader = () => dispatch(actions.updateMediaDisplay({ cardHeader: !cardHeader }))
   const toggleCardBadges = () => dispatch(actions.updateMediaDisplay({ badges: !badges }))
   const toggleDisplayOptions = (checked: boolean) =>
-    dispatch(actions.updateMediaDisplay({ cardHeader: checked, badges: checked, transparency: checked }))
+    dispatch(
+      actions.updateMediaDisplay({
+        cardHeader: checked,
+        badges: checked,
+        transparency: checked,
+        whiteReplacement: checked,
+      }),
+    )
   const toggleTransparency = () => dispatch(actions.updateMediaDisplay({ transparency: !transparency }))
+  const toggleWhiteClipping = () => dispatch(actions.updateMediaDisplay({ whiteReplacement: !whiteReplacement }))
   const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaDisplay({ contentSize: x }))
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
 
-  const updateFilter = (setNewSearch: (search: string) => string) => {
-    const newSearch = setNewSearch(search)
-    const filteredMedia = mediaFilteredSelector(state, newSearch)
-    const filteredMediaIds = filteredMedia.map(prop("id"))
-
+  const updateFilterSideEffects = (filteredMediaIds: string[]) =>
     dispatch(
       actions.updateMediaDisplay({ selectMediaIds: intersection(filteredMediaIds, selectMediaIds), scrollRatio: 0 }),
     )
 
-    const searchToken = isEmpty(newSearch) ? "" : "?"
-
-    navigate(`medias${searchToken}${newSearch}`)
-  }
+  const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects)
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
     if (hotkey === LeftBarShortcuts.Transparency) toggleTransparency()
+    if (hotkey === LeftBarShortcuts.Clipping) toggleWhiteClipping()
     if (hotkey === LeftBarShortcuts.DisplayInfos) toggleCardHeader()
     if (hotkey === LeftBarShortcuts.DisplayBadges) toggleCardBadges()
   }
@@ -170,6 +175,11 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                       <LeftBarLabel children={"Transparency"} />
                     </AppToolTip>
                   </Checkbox>
+                  <Checkbox isChecked={whiteReplacement} size={"sm"} onChange={toggleWhiteClipping}>
+                    <AppToolTip tooltip="clipping">
+                      <LeftBarLabel children={"White clipping"} />
+                    </AppToolTip>
+                  </Checkbox>
                 </Stack>
               </DisplayCheckboxGroup>
             </Stack>
@@ -189,7 +199,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                   isChecked={allCheckedQualityFilters}
                   isIndeterminate={isIndeterminateQualityFilters}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    updateFilter(toggleAllQualityFilters(e.target.checked))
+                    updateFilter(toggleAllQualityFilters(e.target.checked, search))
                   }}
                 >
                   <LeftBarLabelTitle children={"Quality"} />
@@ -198,26 +208,26 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                   <Checkbox
                     isChecked={isStatusFilterActive(search, QualityStatus.High)}
                     size={"sm"}
-                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.High))}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.High, search))}
                     children={<FilterItem itemsByFilterData={itemsByFilterData} item={QualityStatus.High} />}
                   />
                   <Checkbox
                     isChecked={isStatusFilterActive(search, QualityStatus.Medium)}
                     size={"sm"}
-                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Medium))}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Medium, search))}
                     children={<FilterItem itemsByFilterData={itemsByFilterData} item={QualityStatus.Medium} />}
                   />
                   <Checkbox
                     isChecked={isStatusFilterActive(search, QualityStatus.Low)}
                     size={"sm"}
-                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Low))}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Low, search))}
                     children={<FilterItem itemsByFilterData={itemsByFilterData} item={QualityStatus.Low} />}
                   />
 
                   <Checkbox
                     isChecked={isStatusFilterActive(search, QualityStatus.Manual)}
                     size={"sm"}
-                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Manual))}
+                    onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Manual, search))}
                     children={<FilterItem itemsByFilterData={itemsByFilterData} item={QualityStatus.Manual} />}
                   />
                 </Stack>
@@ -229,7 +239,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                     size={"sm"}
                     isChecked={false}
                     isIndeterminate={controlIsIndeterminate}
-                    onChange={() => updateFilter(toggleOffControlFilters)}
+                    onChange={() => updateFilter(toggleOffControlFilters(search))}
                   >
                     <LeftBarLabelTitle children={"Control"} />
                   </Checkbox>
@@ -245,13 +255,13 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                     <Radio
                       isChecked={isControlFilterActive(search, ControlStatus.Pending)}
                       size={"sm"}
-                      onChange={() => updateFilter(toggleControlFilter(ControlStatus.Pending))}
+                      onChange={() => updateFilter(toggleControlFilter(ControlStatus.Pending, search))}
                       children={<FilterItem itemsByFilterData={itemsByFilterData} item={ControlStatus.Pending} />}
                     />
                     <Radio
                       isChecked={isControlFilterActive(search, ControlStatus.Validated)}
                       size={"sm"}
-                      onChange={() => updateFilter(toggleControlFilter(ControlStatus.Validated))}
+                      onChange={() => updateFilter(toggleControlFilter(ControlStatus.Validated, search))}
                       children={<FilterItem itemsByFilterData={itemsByFilterData} item={ControlStatus.Validated} />}
                     />
                   </Stack>

@@ -56,7 +56,7 @@ const LightBoxContainer = () => {
   const { actions } = mediaDisplaySlice
   const dispatch = useAppDispatch()
 
-  const { lightBoxMediumId, selectMediaIds } = getState(prop("mediaDisplay"))
+  const { lightBoxMediumId, selectMediaIds, whiteReplacement } = getState(prop("mediaDisplay"))
   const medium = getState((s) => mediaSelector.selectById(s, lightBoxMediumId))
 
   const [lightBoxItemSize, updateLightBoxItemSize] = useState(Number(process.env.LIGHTBOX_ITEM_SIZE) / 2.5 ?? 500)
@@ -75,12 +75,12 @@ const LightBoxContainer = () => {
   return (
     <React.Fragment>
       <Lightbox
-        mainSrc={getImageServerUrl(lightBoxMediumId, lightBoxItemSize)}
-        prevSrc={getImageServerUrl(previousMediumId, lightBoxItemSize)}
-        nextSrc={getImageServerUrl(nextMediumId, lightBoxItemSize)}
-        mainSrcThumbnail={getImageServerUrl(lightBoxMediumId, lightBoxThumbnailSize)}
-        prevSrcThumbnail={getImageServerUrl(previousMediumId, lightBoxThumbnailSize)}
-        nextSrcThumbnail={getImageServerUrl(nextMediumId, lightBoxThumbnailSize)}
+        mainSrc={getImageServerUrl(lightBoxMediumId, lightBoxItemSize, whiteReplacement)}
+        prevSrc={getImageServerUrl(previousMediumId, lightBoxItemSize, whiteReplacement)}
+        nextSrc={getImageServerUrl(nextMediumId, lightBoxItemSize, whiteReplacement)}
+        mainSrcThumbnail={getImageServerUrl(lightBoxMediumId, lightBoxThumbnailSize, whiteReplacement)}
+        prevSrcThumbnail={getImageServerUrl(previousMediumId, lightBoxThumbnailSize, whiteReplacement)}
+        nextSrcThumbnail={getImageServerUrl(nextMediumId, lightBoxThumbnailSize, whiteReplacement)}
         enableZoom={isHd}
         animationDisabled={true} // avoid flashing render
         imagePadding={65}

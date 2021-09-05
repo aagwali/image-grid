@@ -30,7 +30,7 @@ const mediaSelectedSelector = createSelector(
 export const mediaGroupedByFilters = createSelector(mediaSelector.selectAll, (media) => {
   const mediaGroupedByStatus = groupBy(prop("status"), media)
   const mediaGroupedByControlStatus = groupBy(
-    (x) => (isNil(x.controlId) ? ControlStatus.Pending : ControlStatus.Validated),
+    (medium) => (isNil(medium.controlId) ? ControlStatus.Pending : ControlStatus.Validated),
     media,
   )
   return { ...mediaGroupedByStatus, ...mediaGroupedByControlStatus }
@@ -94,6 +94,7 @@ const initialMediaDisplay = {
   badges: false,
   lightBoxMediumId: "none",
   scrollRatio: 0,
+  whiteReplacement: false,
   cellMatrix: {
     columnCount: 10,
     cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,

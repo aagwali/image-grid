@@ -148,6 +148,10 @@ export const RedButton = styled(RightBarButton)`
   :hover {
     box-shadow: 0.6px 0.6px 4px ${theme.colors.red[300]};
   }
+  :active {
+    background: ${theme.colors.red[50]};
+    box-shadow: none;
+  }
 `
 
 export const TealButton = styled(RightBarButton)`
@@ -156,6 +160,10 @@ export const TealButton = styled(RightBarButton)`
 
   :hover {
     box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[500]};
+  }
+  :active {
+    background: ${theme.colors.teal[50]};
+    box-shadow: none;
   }
 `
 

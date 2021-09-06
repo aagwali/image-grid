@@ -44,18 +44,19 @@ export const mediaFilteredSelector = createSelector(
     const statusFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
     const controlFilter = queryObjectParameters.control as string | null
 
-    if (isEmpty(statusFilters) && !controlFilter) return media
+    const binDisplay = queryObjectParameters.bin
 
     const filteredMedia = media.filter((medium) => {
-      const statusFilterKeep = isEmpty(statusFilters) ? true : statusFilters.includes(medium.status)
+      const binFilterKeep = binDisplay ? medium.trashed : !medium.trashed
 
+      const statusFilterKeep = isEmpty(statusFilters) ? true : statusFilters.includes(medium.status)
       const controlFilterKeep = !controlFilter
         ? true
         : controlFilter === ControlStatus.Validated
         ? !isNil(medium.controlId)
         : isNil(medium.controlId)
 
-      return controlFilterKeep && statusFilterKeep
+      return binFilterKeep && controlFilterKeep && statusFilterKeep
     })
 
     return filteredMedia
@@ -95,6 +96,7 @@ const initialMediaDisplay = {
   lightBoxMediumId: "none",
   scrollRatio: 0,
   whiteReplacement: false,
+  lastFilter: "",
   cellMatrix: {
     columnCount: 10,
     cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,

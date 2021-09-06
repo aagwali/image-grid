@@ -30,6 +30,7 @@ export const AppLink = styled(CleanButton)`
   :active {
     color: ${theme.colors.teal[200]};
     border-color: ${theme.colors.teal[200]};
+    border-bottom-width: 0px;
   }
 
   ${({ active }) => {

@@ -107,9 +107,13 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
 
-  const updateFilterSideEffects = (filteredMediaIds: string[]) =>
+  const updateFilterSideEffects = (newSearch: string, filteredMediaIds: string[]) =>
     dispatch(
-      actions.updateMediaDisplay({ selectMediaIds: intersection(filteredMediaIds, selectMediaIds), scrollRatio: 0 }),
+      actions.updateMediaDisplay({
+        selectMediaIds: intersection(filteredMediaIds, selectMediaIds),
+        scrollRatio: 0,
+        lastFilter: newSearch,
+      }),
     )
 
   const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects)

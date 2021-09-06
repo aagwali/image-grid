@@ -13,6 +13,7 @@ export const formatGetMediaResult = (response: RawMedium[]): MediumItem[] =>
     height: x.metadata.height,
     status: x.computedQualityControl,
     controlId: x.dmapId,
+    trashed: x.trashed,
   }))
 
 export const getHotkeys = (shortcuts: Record<string, string>): string =>

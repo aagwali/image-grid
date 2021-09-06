@@ -21,6 +21,7 @@ export type RawMedium = {
   metadata: { width: number; height: number }
   computedQualityControl: QualityStatus
   dmapId: string
+  trashed: boolean
 }
 
 export type MediumItem = {
@@ -30,6 +31,7 @@ export type MediumItem = {
   height: number
   status: QualityStatus
   controlId?: string
+  trashed: boolean
 }
 
 export enum MediaDisplayEndpoints {

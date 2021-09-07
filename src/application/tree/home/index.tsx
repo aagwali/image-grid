@@ -15,8 +15,8 @@ const Home = (_: RouteComponentProps) => {
   const [inputText, updateInputText] = useState("")
 
   const initiateContext = (input: string) => () => {
-    dispatch(actions.initiateContext(input))
-    navigate(`context/${inputText}`)
+    dispatch(actions.initiateContext({ id: "", label: input }))
+    navigate(`context/${input}`)
   }
 
   return (

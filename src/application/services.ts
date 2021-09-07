@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-import { toMediumItem } from "./privates"
+import { toAppContext, toMediumItem } from "./privates"
 import { ContextEndpoints, MediumItem } from "./types"
 
 export const mediashareApi = createApi({
@@ -14,6 +14,7 @@ export const mediashareApi = createApi({
     [ContextEndpoints.GetContextByLabel]: build.query<any, string>({
       query: (label) => ({ url: `context/${label}`, cache: "no-cache" }),
       providesTags: ["Context"],
+      transformResponse: toAppContext,
     }),
     [ContextEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
       query: (label) => ({ url: `context/${label}/media`, cache: "no-cache" }),
@@ -27,7 +28,6 @@ export const mediashareApi = createApi({
         body: mediumIds,
       }),
       invalidatesTags: (_, error) => (error ? ["Media"] : []),
-      async onQueryStarted(arg, { dispatch, getState, queryFulfilled, requestId, extra, getCacheEntry }) {},
     }),
     [ContextEndpoints.RestoreFromTrash]: build.mutation<any, string[]>({
       query: (mediumIds) => ({
@@ -37,18 +37,10 @@ export const mediashareApi = createApi({
       }),
       invalidatesTags: (_, error) => (error ? ["Media"] : []),
     }),
-    [ContextEndpoints.PostDownloadMedia]: build.mutation<any, string[]>({
-      query: (mediumIds) => ({
-        url: `/media/download`,
-        method: "POST",
-        body: mediumIds,
-      }),
-    }),
   }),
 })
 
-export const getMediaByContextLabel = mediashareApi.endpoints[ContextEndpoints.GetMediaByContextLabel]
 export const getContextByLabel = mediashareApi.endpoints[ContextEndpoints.GetContextByLabel]
-export const triggerDownloadMedia = mediashareApi.endpoints[ContextEndpoints.PostDownloadMedia]
+export const getMediaByContextLabel = mediashareApi.endpoints[ContextEndpoints.GetMediaByContextLabel]
 export const triggerTrashMedia = mediashareApi.endpoints[ContextEndpoints.PutInTrash]
 export const triggerRestoreMedia = mediashareApi.endpoints[ContextEndpoints.RestoreFromTrash]

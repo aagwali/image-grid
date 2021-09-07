@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../../store
 import AppToolTip from "../../../../appTooltip"
 import { getHotkeys } from "../../../../privates"
 import { mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
-import { triggerDownloadMedia, triggerRestoreMedia, triggerTrashMedia } from "../../../../services"
+import { triggerRestoreMedia, triggerTrashMedia } from "../../../../services"
 import {
   AccordionButtonBox,
   AccordionButtonTitle,
@@ -26,6 +26,7 @@ import {
   TrashIcon,
 } from "../styles"
 import { RightBarShortcuts } from "../types"
+import { downloadMedia } from "./privates"
 
 const MediaDisplayRightBar = () => {
   const dispatch = useAppDispatch()
@@ -42,7 +43,6 @@ const MediaDisplayRightBar = () => {
   const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: filteredMediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
 
-  const [downloadMedia] = triggerDownloadMedia.useMutation()
   const [trashMedia] = triggerTrashMedia.useMutation()
   const [restoreMedia] = triggerRestoreMedia.useMutation()
 
@@ -58,7 +58,10 @@ const MediaDisplayRightBar = () => {
       trashMedia(selectMediaIds)
       deselectAll()
     }
-    // if (hotkey === RightBarShortcuts.Download && !isEmpty(selectMediaIds)) downloadMedia(selectMediaIds)
+    if (hotkey === RightBarShortcuts.Download && !isEmpty(selectMediaIds)) {
+      downloadMedia(selectMediaIds)
+      deselectAll()
+    }
   }
 
   return (
@@ -106,8 +109,8 @@ const MediaDisplayRightBar = () => {
                   <RightBarActionBox
                     spacing={1}
                     onClick={() => {
-                      console.log("Fix me - server response must be json/text")
-                      // downloadMedia(selectMediaIds)
+                      downloadMedia(selectMediaIds)
+                      deselectAll()
                     }}
                   >
                     <AppToolTip tooltip="download media">

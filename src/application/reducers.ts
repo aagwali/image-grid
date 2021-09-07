@@ -4,14 +4,23 @@ import { groupBy, isEmpty, isNil, prop } from "rambda"
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../storeConfig"
-import { getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia } from "./services"
-import { ControlStatus, MediumItem } from "./types"
+import { getContextByLabel, getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia } from "./services"
+import { Context, ControlStatus, MediumItem } from "./types"
 
 //#region CONTEXT
+
+const initialContext: Context = {
+  id: "initial value",
+  label: "initial value",
+}
+
 export const contextSlice = createSlice({
   name: "context",
-  initialState: "",
+  initialState: initialContext,
+  // is usefull ?
   reducers: { initiateContext: (context, { payload }: PayloadAction<typeof context>) => payload },
+  extraReducers: (builder) =>
+    builder.addMatcher(getContextByLabel.matchFulfilled, (context, { payload: fetchedContext }) => fetchedContext),
 })
 //#endregion
 
@@ -73,16 +82,18 @@ export const mediaSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // remove this action ?
       .addCase(contextSlice.actions.initiateContext, (media, _) => {
         mediaAdapter.removeAll(media)
         media.loaded = false
       })
-      .addMatcher(getMediaByContextLabel.matchPending, (media, _) =>
-        mediaSlice.caseReducers.setLoaded(media, { payload: false, type: "" }),
-      )
-      .addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
-        mediaAdapter.setAll(media, action.payload)
-        mediaSlice.caseReducers.setLoaded(media, { payload: true, type: "" })
+      .addMatcher(getMediaByContextLabel.matchPending, (media, _) => {
+        media.loaded = false
+      })
+      .addMatcher(getMediaByContextLabel.matchFulfilled, (media, { payload: fetchedMedia }) => {
+        mediaAdapter.removeAll(media)
+        mediaAdapter.setAll(media, fetchedMedia)
+        media.loaded = true
       })
       .addMatcher(triggerTrashMedia.matchPending, (media, action) => {
         const optimisticTrashedMedium = action.meta.arg.originalArgs

@@ -15,6 +15,16 @@ export enum ControlStatus {
   Validated = "validated",
 }
 
+export type RawContext = {
+  id: string
+  label: string
+}
+
+export type Context = {
+  id: string
+  label: string
+}
+
 export type RawMedium = {
   id: string
   fileName: string
@@ -39,7 +49,6 @@ export type MediumItem = {
 export enum ContextEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
   GetContextByLabel = "getContextByLabel",
-  PostDownloadMedia = "postDownloadMedia",
   PutInTrash = "putInTrash",
   RestoreFromTrash = "restore",
 }

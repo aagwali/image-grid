@@ -35,10 +35,6 @@ const handleFailedQueries = (endpointName: ContextEndpoints): void => {
       description = "Unable to get medias"
       displayExit(ExitType.Warning, description)
       break
-    case ContextEndpoints.PostDownloadMedia:
-      description = "Media download failed"
-      displayExit(ExitType.Warning, description)
-      break
     case ContextEndpoints.PutInTrash:
       description = "Move to bin failed. Reverting Changes."
       displayExit(ExitType.Warning, description)

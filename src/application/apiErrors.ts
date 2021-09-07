@@ -1,6 +1,7 @@
 import { Dispatch } from "react"
 import { toast, ToastOptions } from "react-toastify"
 
+import { theme } from "@chakra-ui/react"
 import { navigate } from "@reach/router"
 import { AnyAction, isRejectedWithValue, Middleware, MiddlewareAPI } from "@reduxjs/toolkit"
 
@@ -8,6 +9,7 @@ import { ContextEndpoints, ExitType } from "./types"
 
 const toastOptions: ToastOptions = {
   position: "bottom-center",
+  style: { textAlign: "center", fontWeight: theme.fontWeights.bold },
 }
 
 const displayExit = (status: ExitType, description: string): void => {
@@ -38,11 +40,11 @@ const handleFailedQueries = (endpointName: ContextEndpoints): void => {
       displayExit(ExitType.Warning, description)
       break
     case ContextEndpoints.PutInTrash:
-      description = "Move to bin failed"
+      description = "Move to bin failed. Reverting Changes."
       displayExit(ExitType.Warning, description)
       break
     case ContextEndpoints.RestoreFromTrash:
-      description = "Restore failed"
+      description = "Restore failed. Reverting Changes."
       displayExit(ExitType.Warning, description)
       break
 

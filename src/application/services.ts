@@ -26,7 +26,8 @@ export const mediashareApi = createApi({
         method: "POST",
         body: mediumIds,
       }),
-      invalidatesTags: ["Media"],
+      invalidatesTags: (_, error) => (error ? ["Media"] : []),
+      async onQueryStarted(arg, { dispatch, getState, queryFulfilled, requestId, extra, getCacheEntry }) {},
     }),
     [ContextEndpoints.RestoreFromTrash]: build.mutation<any, string[]>({
       query: (mediumIds) => ({
@@ -34,7 +35,7 @@ export const mediashareApi = createApi({
         method: "POST",
         body: mediumIds,
       }),
-      invalidatesTags: ["Media"],
+      invalidatesTags: (_, error) => (error ? ["Media"] : []),
     }),
     [ContextEndpoints.PostDownloadMedia]: build.mutation<any, string[]>({
       query: (mediumIds) => ({

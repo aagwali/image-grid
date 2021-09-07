@@ -67,8 +67,8 @@ export const mediaSlice = createSlice({
   name: "media",
   initialState: mediaAdapter.getInitialState({ loaded: false }),
   reducers: {
-    setLoaded: (media) => {
-      media.loaded = true
+    setLoaded: (media, { payload: loaded }: PayloadAction<boolean>) => {
+      media.loaded = loaded
     },
   },
   extraReducers: (builder) => {
@@ -77,9 +77,12 @@ export const mediaSlice = createSlice({
         mediaAdapter.removeAll(media)
         media.loaded = false
       })
+      .addMatcher(getMediaByContextLabel.matchPending, (media, _) =>
+        mediaSlice.caseReducers.setLoaded(media, { payload: false, type: "" }),
+      )
       .addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
         mediaAdapter.setAll(media, action.payload)
-        mediaSlice.caseReducers.setLoaded(media)
+        mediaSlice.caseReducers.setLoaded(media, { payload: true, type: "" })
       })
       .addMatcher(triggerTrashMedia.matchPending, (media, action) => {
         const optimisticTrashedMedium = action.meta.arg.originalArgs

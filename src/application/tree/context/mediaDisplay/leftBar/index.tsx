@@ -66,7 +66,7 @@ const FilterItem = ({ itemsByFilterData, item }: any) => (
     </AppToolTip>
 
     <CardBadge size={200}>
-      <Text children={itemsByFilterData[item]?.length} />
+      <Text children={itemsByFilterData[item]?.length ?? 0} />
     </CardBadge>
   </Box>
 )

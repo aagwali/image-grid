@@ -22,7 +22,7 @@ const ContextNavigationBar = () => {
 
   return (
     <HStack ml={1} spacing={3}>
-      <Link to={navigateWithFilter("medias")}>
+      <Link to={navigateWithFilter("medias2")}>
         <AppLink active={isActive("references")} children={"References"} />
       </Link>
       <Link to={navigateWithFilter("medias", lastMediaFilter)}>

@@ -5,8 +5,8 @@ import { Slider, SliderFilledTrack, SliderThumb } from "@chakra-ui/react"
 
 import { getHotkeys } from "../../privates"
 import { setCellMatrix_ } from "../privates"
+import { SliderBox, SliderTrackCustom } from "../styles"
 import { SizeSliderProps, SizeSliderShortcuts } from "../types"
-import { SliderBox, SliderTrackCustom } from "./styles"
 
 const SizeSlider = ({
   sliderStepCount,

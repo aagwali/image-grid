@@ -22,6 +22,7 @@ export type RawMedium = {
   computedQualityControl: QualityStatus
   dmapId: string
   trashed: boolean
+  isAssociable: boolean
 }
 
 export type MediumItem = {
@@ -32,12 +33,14 @@ export type MediumItem = {
   status: QualityStatus
   controlId?: string
   trashed: boolean
+  isAssociable: boolean
 }
 
-export enum MediaDisplayEndpoints {
+export enum ContextEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
   GetContextByLabel = "getContextByLabel",
   PostDownloadMedia = "postDownloadMedia",
+  PutInTrash = "putInTrash",
 }
 
 export enum NeutralState {

@@ -6,14 +6,15 @@ export const getImageServerUrl = (id: string, size: number, whiteReplacement: bo
   return `${process.env.IMAGE_SERVER_MEDIA_URL}${replaceColor}r:${size}x${size}/${process.env.MEDIASHARE_API_URL}media/${id}/blob`
 }
 
-export const formatGetMediaResult = (response: RawMedium[]): MediumItem[] =>
+export const toMediumItem = (response: RawMedium[]): MediumItem[] =>
   response.map((x) => ({
     ...x,
-    width: x.metadata.width,
-    height: x.metadata.height,
+    width: x.metadata?.width,
+    height: x.metadata?.height,
     status: x.computedQualityControl,
     controlId: x.dmapId,
     trashed: x.trashed,
+    isAssociable: x.isAssociable,
   }))
 
 export const getHotkeys = (shortcuts: Record<string, string>): string =>

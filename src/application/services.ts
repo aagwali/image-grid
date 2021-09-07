@@ -1,23 +1,34 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-import { formatGetMediaResult } from "./privates"
-import { MediaDisplayEndpoints, MediumItem } from "./types"
+import { toMediumItem } from "./privates"
+import { ContextEndpoints, MediumItem } from "./types"
 
 export const mediashareApi = createApi({
   reducerPath: "mediashareServer",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.MEDIASHARE_API_URL,
   }),
-  keepUnusedDataFor: 0, // limit data cache to Context lifecycle
+  keepUnusedDataFor: 0, // limit data cache to Context component lifecycle
+  tagTypes: ["Context", "References", "Media"],
   endpoints: (build) => ({
-    [MediaDisplayEndpoints.GetContextByLabel]: build.query<MediumItem[], string>({
-      query: (label) => `context/${label}`,
+    [ContextEndpoints.GetContextByLabel]: build.query<any, string>({
+      query: (label) => ({ url: `context/${label}`, cache: "no-cache" }),
+      providesTags: ["Context"],
     }),
-    [MediaDisplayEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
-      query: (label) => `context/${label}/media`,
-      transformResponse: formatGetMediaResult,
+    [ContextEndpoints.GetMediaByContextLabel]: build.query<MediumItem[], string>({
+      query: (label) => ({ url: `context/${label}/media`, cache: "no-cache" }),
+      providesTags: ["Media"],
+      transformResponse: toMediumItem,
     }),
-    [MediaDisplayEndpoints.PostDownloadMedia]: build.mutation<any, string[]>({
+    [ContextEndpoints.PutInTrash]: build.mutation<MediumItem[], string[]>({
+      query: (mediumIds) => ({
+        url: `/media/bulk-trash`,
+        method: "POST",
+        body: mediumIds,
+      }),
+      invalidatesTags: ["Media"],
+    }),
+    [ContextEndpoints.PostDownloadMedia]: build.mutation<any, string[]>({
       query: (mediumIds) => ({
         url: `/media/download`,
         method: "POST",
@@ -27,6 +38,7 @@ export const mediashareApi = createApi({
   }),
 })
 
-export const getMediaByContextLabel = mediashareApi.endpoints[MediaDisplayEndpoints.GetMediaByContextLabel]
-export const getContextByLabel = mediashareApi.endpoints[MediaDisplayEndpoints.GetContextByLabel]
-export const triggerDownloadMedia = mediashareApi.endpoints[MediaDisplayEndpoints.PostDownloadMedia]
+export const getMediaByContextLabel = mediashareApi.endpoints[ContextEndpoints.GetMediaByContextLabel]
+export const getContextByLabel = mediashareApi.endpoints[ContextEndpoints.GetContextByLabel]
+export const triggerDownloadMedia = mediashareApi.endpoints[ContextEndpoints.PostDownloadMedia]
+export const triggerTrashMedia = mediashareApi.endpoints[ContextEndpoints.PutInTrash]

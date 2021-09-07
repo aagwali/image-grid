@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../../store
 import AppToolTip from "../../../../appTooltip"
 import { getHotkeys } from "../../../../privates"
 import { mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
-import { triggerDownloadMedia } from "../../../../services"
+import { triggerDownloadMedia, triggerTrashMedia } from "../../../../services"
 import {
   AccordionButtonBox,
   AccordionButtonTitle,
@@ -41,12 +41,16 @@ const MediaDisplayRightBar = () => {
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
 
   const [downloadMedia] = triggerDownloadMedia.useMutation()
+  const [trashMedia] = triggerTrashMedia.useMutation()
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
     if (hotkey === RightBarShortcuts.Deselect) deselectAll()
     if (hotkey === RightBarShortcuts.SelectAll) selectAll()
-    // if (hotkey === RightBarShortcuts.Trash) selectAll()
+    if (hotkey === RightBarShortcuts.Trash) {
+      trashMedia(selectMediaIds)
+      deselectAll()
+    }
     // if (hotkey === RightBarShortcuts.Download && !isEmpty(selectMediaIds)) downloadMedia(selectMediaIds)
   }
 
@@ -107,7 +111,13 @@ const MediaDisplayRightBar = () => {
                     </TealButton>
                   </AppToolTip>
                 </RightBarActionBox>
-                <RightBarActionBox spacing={1} onClick={deselectAll}>
+                <RightBarActionBox
+                  spacing={1}
+                  onClick={() => {
+                    trashMedia(selectMediaIds)
+                    deselectAll()
+                  }}
+                >
                   <AppToolTip tooltip="trash">
                     <RedButton size="sm" variant="outline">
                       <HStack spacing={1}>

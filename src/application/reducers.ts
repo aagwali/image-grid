@@ -4,7 +4,7 @@ import { groupBy, isEmpty, isNil, prop } from "rambda"
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../storeConfig"
-import { getMediaByContextLabel } from "./services"
+import { getMediaByContextLabel, triggerTrashMedia } from "./services"
 import { ControlStatus, MediumItem } from "./types"
 
 //#region CONTEXT
@@ -80,6 +80,13 @@ export const mediaSlice = createSlice({
       .addMatcher(getMediaByContextLabel.matchFulfilled, (media, action) => {
         mediaAdapter.setAll(media, action.payload)
         mediaSlice.caseReducers.setLoaded(media)
+      })
+      .addMatcher(triggerTrashMedia.matchPending, (media, action) => {
+        const optimisticTrashedMedium = action.meta.arg.originalArgs
+        mediaAdapter.updateMany(
+          media,
+          optimisticTrashedMedium.map((id) => ({ id, changes: { trashed: true, isAssociable: false } })),
+        )
       })
   },
 })

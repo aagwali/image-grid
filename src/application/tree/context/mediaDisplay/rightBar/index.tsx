@@ -9,13 +9,14 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../../store
 import AppToolTip from "../../../../appTooltip"
 import { getHotkeys } from "../../../../privates"
 import { mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
-import { triggerDownloadMedia, triggerTrashMedia } from "../../../../services"
+import { triggerDownloadMedia, triggerRestoreMedia, triggerTrashMedia } from "../../../../services"
 import {
   AccordionButtonBox,
   AccordionButtonTitle,
   DeselectAllIcon,
   DownloadIcon,
   RedButton,
+  RestoreIcon,
   RightBarAction,
   RightBarActionBox,
   SelectAllIcon,
@@ -36,17 +37,23 @@ const MediaDisplayRightBar = () => {
   const filteredMediaIds = filteredMedia.map(prop("id"))
 
   const selectionExists = !isEmpty(selectMediaIds)
+  const isBin = location.search.includes("bin")
 
   const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: filteredMediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
 
   const [downloadMedia] = triggerDownloadMedia.useMutation()
   const [trashMedia] = triggerTrashMedia.useMutation()
+  const [restoreMedia] = triggerRestoreMedia.useMutation()
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
     if (hotkey === RightBarShortcuts.Deselect) deselectAll()
     if (hotkey === RightBarShortcuts.SelectAll) selectAll()
+    if (hotkey === RightBarShortcuts.Restore) {
+      restoreMedia(selectMediaIds)
+      deselectAll()
+    }
     if (hotkey === RightBarShortcuts.Trash) {
       trashMedia(selectMediaIds)
       deselectAll()
@@ -95,38 +102,60 @@ const MediaDisplayRightBar = () => {
             </AccordionButtonBox>
             <AccordionPanel>
               <Stack mt={0} spacing={4}>
-                <RightBarActionBox
-                  spacing={1}
-                  onClick={() => {
-                    console.log("Fix me - server response must be json/text")
-                    // downloadMedia(selectMediaIds)
-                  }}
-                >
-                  <AppToolTip tooltip="download media">
-                    <TealButton size="sm" variant="outline">
-                      <HStack spacing={1}>
-                        <DownloadIcon />
-                        <Text children={"Download"} />
-                      </HStack>
-                    </TealButton>
-                  </AppToolTip>
-                </RightBarActionBox>
-                <RightBarActionBox
-                  spacing={1}
-                  onClick={() => {
-                    trashMedia(selectMediaIds)
-                    deselectAll()
-                  }}
-                >
-                  <AppToolTip tooltip="trash">
-                    <RedButton size="sm" variant="outline">
-                      <HStack spacing={1}>
-                        <TrashIcon />
-                        <Text children={"Move to bin"} />
-                      </HStack>
-                    </RedButton>
-                  </AppToolTip>
-                </RightBarActionBox>
+                {!isBin && (
+                  <RightBarActionBox
+                    spacing={1}
+                    onClick={() => {
+                      console.log("Fix me - server response must be json/text")
+                      // downloadMedia(selectMediaIds)
+                    }}
+                  >
+                    <AppToolTip tooltip="download media">
+                      <TealButton size="sm" variant="outline">
+                        <HStack spacing={1}>
+                          <DownloadIcon />
+                          <Text children={"Download"} />
+                        </HStack>
+                      </TealButton>
+                    </AppToolTip>
+                  </RightBarActionBox>
+                )}
+                {!isBin && (
+                  <RightBarActionBox
+                    spacing={1}
+                    onClick={() => {
+                      trashMedia(selectMediaIds)
+                      deselectAll()
+                    }}
+                  >
+                    <AppToolTip tooltip="trash">
+                      <RedButton size="sm" variant="outline">
+                        <HStack spacing={1}>
+                          <TrashIcon />
+                          <Text children={"Move to bin"} />
+                        </HStack>
+                      </RedButton>
+                    </AppToolTip>
+                  </RightBarActionBox>
+                )}
+                {isBin && (
+                  <RightBarActionBox
+                    spacing={1}
+                    onClick={() => {
+                      restoreMedia(selectMediaIds)
+                      deselectAll()
+                    }}
+                  >
+                    <AppToolTip tooltip="restore">
+                      <TealButton size="sm" variant="outline">
+                        <HStack spacing={1}>
+                          <RestoreIcon />
+                          <Text children={"Restore"} />
+                        </HStack>
+                      </TealButton>
+                    </AppToolTip>
+                  </RightBarActionBox>
+                )}
               </Stack>
             </AccordionPanel>
           </AccordionItem>

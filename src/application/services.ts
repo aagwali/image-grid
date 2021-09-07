@@ -8,7 +8,7 @@ export const mediashareApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.MEDIASHARE_API_URL,
   }),
-  keepUnusedDataFor: 0, // limit data cache to Context component lifecycle
+  keepUnusedDataFor: 0,
   tagTypes: ["Context", "References", "Media"],
   endpoints: (build) => ({
     [ContextEndpoints.GetContextByLabel]: build.query<any, string>({
@@ -28,6 +28,14 @@ export const mediashareApi = createApi({
       }),
       invalidatesTags: ["Media"],
     }),
+    [ContextEndpoints.RestoreFromTrash]: build.mutation<any, string[]>({
+      query: (mediumIds) => ({
+        url: `/media/bulk-restore`,
+        method: "POST",
+        body: mediumIds,
+      }),
+      invalidatesTags: ["Media"],
+    }),
     [ContextEndpoints.PostDownloadMedia]: build.mutation<any, string[]>({
       query: (mediumIds) => ({
         url: `/media/download`,
@@ -42,3 +50,4 @@ export const getMediaByContextLabel = mediashareApi.endpoints[ContextEndpoints.G
 export const getContextByLabel = mediashareApi.endpoints[ContextEndpoints.GetContextByLabel]
 export const triggerDownloadMedia = mediashareApi.endpoints[ContextEndpoints.PostDownloadMedia]
 export const triggerTrashMedia = mediashareApi.endpoints[ContextEndpoints.PutInTrash]
+export const triggerRestoreMedia = mediashareApi.endpoints[ContextEndpoints.RestoreFromTrash]

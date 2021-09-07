@@ -6,9 +6,10 @@ import { AccordionButton, AccordionItem, Box, Button, HStack, Text, theme } from
 import DeselectAll from "../../../../assets/images/deselectAll.svg"
 import Download from "../../../../assets/images/download.svg"
 import MsLogoBack from "../../../../assets/images/msLogoBackground.svg"
+import Restore from "../../../../assets/images/restore.svg"
 import SelectAll from "../../../../assets/images/selectAll.svg"
 import SpinnerSvg from "../../../../assets/images/spinner.svg"
-import Trash from "../../../../assets/images/trashCanMini.svg"
+import Trash from "../../../../assets/images/trashCan.svg"
 
 //#region MEDIA
 
@@ -183,6 +184,10 @@ export const DeselectAllIcon = styled(ActionIcon)`
 
 export const TrashIcon = styled(ActionIcon)`
   background: url("${Trash}") center no-repeat;
+`
+
+export const RestoreIcon = styled(ActionIcon)`
+  background: url("${Restore}") center no-repeat;
 `
 
 export const DownloadIcon = styled(ActionIcon)`

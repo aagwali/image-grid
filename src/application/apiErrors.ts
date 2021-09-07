@@ -41,6 +41,10 @@ const handleFailedQueries = (endpointName: ContextEndpoints): void => {
       description = "Move to bin failed"
       displayExit(ExitType.Warning, description)
       break
+    case ContextEndpoints.RestoreFromTrash:
+      description = "Restore failed"
+      displayExit(ExitType.Warning, description)
+      break
 
     default: {
       ;((_incompleteSwitchCase: never) => "")(endpointName)

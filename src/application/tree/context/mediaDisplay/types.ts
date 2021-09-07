@@ -10,4 +10,5 @@ export enum RightBarShortcuts {
   SelectAll = "ctrl+a",
   Download = "ctrl+shift+d",
   Trash = "ctrl+x",
+  Restore = "ctrl+r",
 }

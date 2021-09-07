@@ -41,6 +41,7 @@ export enum ContextEndpoints {
   GetContextByLabel = "getContextByLabel",
   PostDownloadMedia = "postDownloadMedia",
   PutInTrash = "putInTrash",
+  RestoreFromTrash = "restore",
 }
 
 export enum NeutralState {

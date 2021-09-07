@@ -16,6 +16,12 @@ import Trash from "../../../../assets/images/trashCan.svg"
 export const MediaBox = styled(Box)`
   width: 100%;
   background: #fafafa;
+  ${({ bin }) => {
+    if (bin === "true")
+      return css`
+        background: ${theme.colors.red[50]};
+      `
+  }};
 `
 
 export const LogoBox = styled(Box)`
@@ -27,6 +33,12 @@ export const LogoBox = styled(Box)`
     if (loaded === "true")
       return css`
         background: url("${MsLogoBack}") center no-repeat;
+      `
+  }};
+  ${({ bin }) => {
+    if (bin === "true")
+      return css`
+        border-color: ${theme.colors.red[200]};
       `
   }};
 `

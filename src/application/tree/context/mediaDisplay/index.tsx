@@ -18,7 +18,6 @@ import { LogoBox, MediaBox } from "./styles"
 const MediaDisplay = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
   const { actions } = mediaDisplaySlice
-  const location = useLocation()
 
   const { loaded: mediaLoaded } = getState(prop("media"))
   const { selectMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges, whiteReplacement } =
@@ -27,6 +26,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
   const [headerCellRatio, headearRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
+  const isBin = useLocation().search.includes("bin")
 
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
 
@@ -46,8 +46,8 @@ const MediaDisplay = (_: RouteComponentProps) => {
     <Stack spacing={0} direction="row">
       <MediaDisplayLeftBar forceUpdate={forceUpdate} />
 
-      <MediaBox>
-        <LogoBox loaded={mediaLoaded ? "true" : "false"}>
+      <MediaBox bin={isBin.toString()}>
+        <LogoBox bin={isBin.toString()} loaded={mediaLoaded.toString()}>
           <DynamicGrid
             contentSize={contentSize}
             scrollRatio={scrollRatio}

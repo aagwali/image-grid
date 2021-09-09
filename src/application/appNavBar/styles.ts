@@ -24,6 +24,9 @@ export const HoverIcon = styled(Box)`
     border-bottom-width: 2px;
     border-color: ${theme.colors.gray[400]};
   }
+  :active {
+    border-bottom-width: 0px;
+  }
 `
 
 export const MsLogoIcon = styled(HoverIcon)`

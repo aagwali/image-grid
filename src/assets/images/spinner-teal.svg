@@ -1,0 +1,30 @@
+<svg stroke="#319795" width="28" height="28" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes animateCircle {
+        0% {
+            transform: rotate(-90deg);
+        }
+        50% {
+            transform: rotate(90deg);
+            stroke-dashoffset: 70;
+        }
+        100% {
+            transform: rotate(630deg);
+            stroke-dashoffset: 165;
+        }
+    }
+    circle {
+        animation: animateCircle 2000ms linear infinite;
+        fill: transparent;
+        stroke-width: 2;
+        stroke-dasharray: 165;
+        stroke-dashoffset: 165;
+        stroke-linecap: round;
+        transform-origin: 50% 50%;
+        will-change: transform, stroke-dashoffset;
+        stroke: #4FD1C5;
+    }
+  </style>
+
+  <circle  cy="20" cx="20" r="15" />
+</svg>

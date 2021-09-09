@@ -5,9 +5,9 @@ import { theme } from "@chakra-ui/react"
 import { navigate } from "@reach/router"
 import { AnyAction, isRejectedWithValue, Middleware, MiddlewareAPI } from "@reduxjs/toolkit"
 
-import { ContextEndpoints, ExitType } from "./types"
+import { ContextEndpoints, ExitType, RejectedApiRequestMeta } from "./types"
 
-const toastOptions: ToastOptions = {
+export const toastOptions: ToastOptions = {
   position: "bottom-center",
   style: { textAlign: "center", fontWeight: theme.fontWeights.bold },
 }
@@ -23,10 +23,10 @@ const displayExit = (status: ExitType, description: string): void => {
   }
 }
 
-const handleFailedQueries = (endpointName: ContextEndpoints): void => {
+const handleFailedQueries = (requestMeta: RejectedApiRequestMeta): void => {
   let description = ""
 
-  switch (endpointName) {
+  switch (requestMeta.arg.endpointName) {
     case ContextEndpoints.GetContextByLabel:
       description = "Unable to get context"
       displayExit(ExitType.Error, description)
@@ -43,15 +43,22 @@ const handleFailedQueries = (endpointName: ContextEndpoints): void => {
       description = "Restore failed. Reverting Changes."
       displayExit(ExitType.Warning, description)
       break
+    case ContextEndpoints.Upload:
+      description =
+        requestMeta.baseQueryMeta.response.status === 409
+          ? `Upload failed - File name already exists : ${requestMeta.arg.originalArgs.fileName}`
+          : `Upload failed : ${requestMeta.arg.originalArgs.fileName}`
+      displayExit(ExitType.Warning, description)
+      break
 
     default: {
-      ;((_incompleteSwitchCase: never) => "")(endpointName)
+      ;((_incompleteSwitchCase: never) => "")(requestMeta.arg.endpointName)
     }
   }
 }
 
 export const apiErrorsMiddleware: Middleware =
   (_api: MiddlewareAPI) => (next: Dispatch<AnyAction>) => async (action: any) => {
-    if (isRejectedWithValue(action)) handleFailedQueries(action.meta.arg.endpointName)
+    if (isRejectedWithValue(action)) handleFailedQueries(action.meta)
     return next(action)
   }

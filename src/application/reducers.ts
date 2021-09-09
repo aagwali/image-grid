@@ -4,12 +4,18 @@ import { groupBy, isEmpty, isNil, prop } from "rambda"
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../storeConfig"
-import { getContextByLabel, getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia } from "./services"
+import {
+  getContextByLabel,
+  getMediaByContextLabel,
+  triggerRestoreMedia,
+  triggerTrashMedia,
+  triggerUploadMedia,
+} from "./services"
 import { Context, ControlStatus, MediumItem } from "./types"
 
 //#region CONTEXT
 
-const initialContext: Context = {
+export const initialContext: Context = {
   id: "initial value",
   label: "initial value",
 }
@@ -17,10 +23,9 @@ const initialContext: Context = {
 export const contextSlice = createSlice({
   name: "context",
   initialState: initialContext,
-  // is usefull ?
-  reducers: { initiateContext: (context, { payload }: PayloadAction<typeof context>) => payload },
+  reducers: { resetContext: () => initialContext },
   extraReducers: (builder) =>
-    builder.addMatcher(getContextByLabel.matchFulfilled, (context, { payload: fetchedContext }) => fetchedContext),
+    builder.addMatcher(getContextByLabel.matchFulfilled, (_, { payload: fetchedContext }) => fetchedContext),
 })
 //#endregion
 
@@ -82,18 +87,20 @@ export const mediaSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // remove this action ?
-      .addCase(contextSlice.actions.initiateContext, (media, _) => {
+      .addMatcher(getContextByLabel.matchPending, (media, _) => {
         mediaAdapter.removeAll(media)
         media.loaded = false
       })
-      .addMatcher(getMediaByContextLabel.matchPending, (media, _) => {
+      .addMatcher(getMediaByContextLabel.matchPending, (media) => {
         media.loaded = false
       })
       .addMatcher(getMediaByContextLabel.matchFulfilled, (media, { payload: fetchedMedia }) => {
         mediaAdapter.removeAll(media)
         mediaAdapter.setAll(media, fetchedMedia)
         media.loaded = true
+      })
+      .addMatcher(triggerUploadMedia.matchFulfilled, (media, { payload: fetchedMedium }) => {
+        mediaAdapter.addOne(media, fetchedMedium)
       })
       .addMatcher(triggerTrashMedia.matchPending, (media, action) => {
         const optimisticTrashedMedium = action.meta.arg.originalArgs
@@ -125,6 +132,7 @@ const initialMediaDisplay = {
   scrollRatio: 0,
   whiteReplacement: false,
   lastFilter: "",
+  uploadProgress: 0,
   cellMatrix: {
     columnCount: 10,
     cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
@@ -141,7 +149,10 @@ export const mediaDisplaySlice = createSlice({
     }),
   },
   extraReducers: (builder) => {
-    builder.addCase(contextSlice.actions.initiateContext, () => ({ ...initialMediaDisplay }))
+    builder.addCase(contextSlice.actions.resetContext, (mediaDisplay) => ({
+      ...initialMediaDisplay,
+      uploadProgress: mediaDisplay.uploadProgress,
+    }))
   },
 })
 //#endregion

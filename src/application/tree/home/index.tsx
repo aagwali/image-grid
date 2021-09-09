@@ -14,17 +14,16 @@ const Home = (_: RouteComponentProps) => {
 
   const [inputText, updateInputText] = useState("")
 
-  const initiateContext = (input: string) => () => {
-    dispatch(actions.initiateContext({ id: "", label: input }))
+  const navigateToContext = (input: string) => () => {
+    dispatch(actions.resetContext())
     navigate(`context/${input}`)
   }
-
   return (
     <Center>
       <Hotkeys
         keyName="enter"
         filter={T} // get hotkey from input
-        onKeyDown={initiateContext(inputText)}
+        onKeyDown={navigateToContext(inputText)}
       />
       <Center>
         <InputGroup>

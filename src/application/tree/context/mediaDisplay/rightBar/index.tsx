@@ -7,9 +7,10 @@ import { useLocation } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../appTooltip"
+import DropZone from "../../../../dropzone"
 import { getHotkeys } from "../../../../privates"
 import { mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
-import { triggerRestoreMedia, triggerTrashMedia } from "../../../../services"
+import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../../../../services"
 import {
   AccordionButtonBox,
   AccordionButtonTitle,
@@ -34,6 +35,7 @@ const MediaDisplayRightBar = () => {
   const location = useLocation()
 
   const { selectMediaIds } = getState(prop("mediaDisplay"))
+  const { label } = getState(prop("context"))
   const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
 
@@ -42,9 +44,11 @@ const MediaDisplayRightBar = () => {
 
   const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: filteredMediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
+  const updateUploadProgress = (uploadProgress: number) => dispatch(actions.updateMediaDisplay({ uploadProgress }))
 
   const [trashMedia] = triggerTrashMedia.useMutation()
   const [restoreMedia] = triggerRestoreMedia.useMutation()
+  const [uploadMedia] = triggerUploadMedia.useMutation()
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
@@ -164,6 +168,7 @@ const MediaDisplayRightBar = () => {
           </AccordionItem>
         )}
       </Accordion>
+      {!isBin && <DropZone label={label} uploadMedia={uploadMedia} updateUploadProgress={updateUploadProgress} />}
     </SideBarBox>
   )
 }

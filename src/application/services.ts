@@ -29,13 +29,20 @@ export const mediashareApi = createApi({
       }),
       invalidatesTags: (_, error) => (error ? ["Media"] : []),
     }),
-    [ContextEndpoints.RestoreFromTrash]: build.mutation<any, string[]>({
+    [ContextEndpoints.RestoreFromTrash]: build.mutation<MediumItem[], string[]>({
       query: (mediumIds) => ({
         url: `/media/bulk-restore`,
         method: "POST",
         body: mediumIds,
       }),
       invalidatesTags: (_, error) => (error ? ["Media"] : []),
+    }),
+    [ContextEndpoints.Upload]: build.mutation<MediumItem, { label: string; formData: FormData; fileName: string }>({
+      query: ({ label, formData, fileName }) => ({
+        url: `/context/${label}/upload`,
+        method: "POST",
+        body: formData,
+      }),
     }),
   }),
 })
@@ -44,3 +51,4 @@ export const getContextByLabel = mediashareApi.endpoints[ContextEndpoints.GetCon
 export const getMediaByContextLabel = mediashareApi.endpoints[ContextEndpoints.GetMediaByContextLabel]
 export const triggerTrashMedia = mediashareApi.endpoints[ContextEndpoints.PutInTrash]
 export const triggerRestoreMedia = mediashareApi.endpoints[ContextEndpoints.RestoreFromTrash]
+export const triggerUploadMedia = mediashareApi.endpoints[ContextEndpoints.Upload]

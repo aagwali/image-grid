@@ -51,8 +51,13 @@ export enum ContextEndpoints {
   GetContextByLabel = "getContextByLabel",
   PutInTrash = "putInTrash",
   RestoreFromTrash = "restore",
+  Upload = "upload",
 }
 
-export enum NeutralState {
-  NoError = "no error to handle",
+export type RejectedApiRequestMeta = {
+  arg: {
+    originalArgs: any
+    endpointName: ContextEndpoints
+  }
+  baseQueryMeta: { response: { status: number } }
 }

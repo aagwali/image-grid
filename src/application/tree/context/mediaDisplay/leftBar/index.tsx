@@ -1,5 +1,6 @@
+import debounce from "debounce"
 import { all, any, identity, intersection, isEmpty, prop } from "rambda"
-import React from "react"
+import React, { useState } from "react"
 import Hotkeys from "react-hot-keys"
 
 import {
@@ -10,6 +11,7 @@ import {
   Center,
   Checkbox,
   HStack,
+  InputGroup,
   Radio,
   RadioGroup,
   Stack,
@@ -28,12 +30,14 @@ import { ControlStatus, QualityStatus } from "../../../../types"
 import {
   AccordionButtonBox,
   AccordionButtonTitle,
+  CloseIcon,
   DisabledCheck,
   DisplayAccordion,
   DisplayCheckboxGroup,
   FiltersAccordion,
   LeftBarLabel,
   LeftBarLabelTitle,
+  SearchInput,
   SeparatorBox,
   SideBarBox,
 } from "../styles"
@@ -43,9 +47,11 @@ import {
   isAllQualityFilterChecked,
   isControlFilterActive,
   isStatusFilterActive,
+  setTextFilter,
   toggleAllQualityFilters,
   toggleControlFilter,
   toggleOffControlFilters,
+  toggleOffTextFilters,
   toggleStatusFilter,
   updateFilter_,
 } from "./privates"
@@ -117,6 +123,8 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
     )
 
   const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects)
+
+  const [inputSearch, setInputSearch] = useState("")
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
@@ -190,13 +198,35 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
           </AccordionPanel>
         </DisplayAccordion>
 
-        <FiltersAccordion borderWidth={0}>
+        <FiltersAccordion>
           <AccordionButtonBox>
             <AccordionIcon />
             <AccordionButtonTitle flex="1" textAlign="left" children={"Filters"} />
           </AccordionButtonBox>
           <AccordionPanel>
             <Stack spacing={4}>
+              <HStack spacing={0} style={{ position: "relative" }}>
+                <InputGroup>
+                  <SearchInput
+                    autoFocus={true}
+                    size={"xs"}
+                    placeholder="Filter on file name"
+                    value={inputSearch}
+                    onChange={(e: any) => {
+                      setInputSearch(e.target.value)
+                      debounce(() => {
+                        updateFilter(setTextFilter(e.target.value, search))
+                      }, 500)()
+                    }}
+                  />
+                </InputGroup>
+                <CloseIcon
+                  onClick={() => {
+                    updateFilter(toggleOffTextFilters(search))
+                    setInputSearch("")
+                  }}
+                />
+              </HStack>
               <DisplayCheckboxGroup>
                 <Checkbox
                   size={"sm"}

@@ -1,5 +1,5 @@
 import { parse } from "query-string"
-import { groupBy, isEmpty, isNil, prop } from "rambda"
+import { any, groupBy, isEmpty, isNil, prop } from "rambda"
 
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
@@ -54,14 +54,26 @@ export const mediaFilteredSelector = createSelector(
   [mediaSelector.selectAll, (_: State, search: string) => search],
   (media, search) => {
     const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+
     const rawStatusFilters = queryObjectParameters.status ?? []
     const statusFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
+
     const controlFilter = queryObjectParameters.control as string | null
+
+    const rawTextFilter = queryObjectParameters.textFilter ?? []
+    const textFilters = Array.isArray(rawTextFilter) ? rawTextFilter : [rawTextFilter]
 
     const binDisplay = queryObjectParameters.bin
 
     const filteredMedia = media.filter((medium) => {
       const binFilterKeep = binDisplay ? medium.trashed : !medium.trashed
+
+      const textFilterKeep = isEmpty(textFilters)
+        ? true
+        : any(
+            (textFilter) => medium.fileName.includes(textFilter),
+            textFilters.filter((x) => x !== ""),
+          )
 
       const statusFilterKeep = isEmpty(statusFilters) ? true : statusFilters.includes(medium.status)
       const controlFilterKeep = !controlFilter
@@ -70,7 +82,7 @@ export const mediaFilteredSelector = createSelector(
         ? !isNil(medium.controlId)
         : isNil(medium.controlId)
 
-      return binFilterKeep && controlFilterKeep && statusFilterKeep
+      return binFilterKeep && controlFilterKeep && statusFilterKeep && textFilterKeep
     })
 
     return filteredMedia

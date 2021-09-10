@@ -1,5 +1,5 @@
 import { parse, ParsedQuery, ParseOptions, stringify } from "query-string"
-import { isEmpty, omit, prop } from "rambda"
+import { isEmpty, omit, prop, trim, uniq } from "rambda"
 
 import { navigate } from "@reach/router"
 
@@ -8,6 +8,7 @@ import { mediaFilteredSelector } from "../../../../reducers"
 import { ControlStatus, QualityStatus } from "../../../../types"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
+const routerParseOptions2 = { arrayFormat: "separator", arrayFormatSeparator: "," } as ParseOptions
 
 export const getStatusFilters = (search: string): string[] => {
   const queryObjectParameters = parse(search, routerParseOptions)
@@ -23,10 +24,23 @@ export const isAllQualityFilterChecked = (search: string): boolean =>
 export const isStatusFilterActive = (search: string, status: string): boolean =>
   getStatusFilters(search).includes(status)
 
+export const toggleOffTextFilters = (search: string): string =>
+  stringify(omit("textFilter", parse(search, routerParseOptions)), routerParseOptions)
+
+export const setTextFilter = (textInput: string, search: string): string => {
+  const queryObjectParameters = parse(search, routerParseOptions)
+
+  const updateFilters = uniq(textInput.split(",").map(trim))
+
+  if (updateFilters[0] === "") return toggleOffTextFilters(search)
+
+  return stringify({ ...queryObjectParameters, textFilter: updateFilters }, routerParseOptions)
+}
+
 export const toggleStatusFilter = (status: string, search: string): string => {
   const queryObjectParameters = parse(search, routerParseOptions)
-  const rawFilters = queryObjectParameters.status ?? []
-  const statusFilters = Array.isArray(rawFilters) ? rawFilters : [rawFilters]
+  const rawStatusFilters = queryObjectParameters.status ?? []
+  const statusFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
 
   const updateFilters = statusFilters.includes(status)
     ? statusFilters.filter((y) => y !== status)

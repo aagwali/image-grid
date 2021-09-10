@@ -35,7 +35,6 @@ const ToolBarButtons = ({
         <HStack>
           <QualityText children={"SD"} />
           <Switch
-            colorScheme="teal"
             size="sm"
             onChange={() => {
               updateIsHd(!isHd)

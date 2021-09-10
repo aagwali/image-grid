@@ -8,6 +8,7 @@ import { Center, HStack, Progress, VStack } from "@chakra-ui/react"
 
 import { useAppSelector as getState } from "../../storeConfig"
 import { toastOptions } from "../apiErrors"
+import AppToolTip from "../appTooltip"
 import { DropArea, DropText, ProgressText, ProgressValue, UploadBox, UploadIcon } from "./styles"
 
 let context = { current: "" }
@@ -45,22 +46,24 @@ const DropZone = ({ label, uploadMedia, updateUploadProgress }: any) => {
 
   return (
     <Center>
-      <UploadBox spacing={3}>
-        {isUploading && (
-          <VStack spacing={0}>
-            <ProgressText children={context.current} />
-            <ProgressValue children={`${uploadProgress} %`} />
-            <Progress w={140} colorScheme="teal" size="xs" value={uploadProgress} />
-          </VStack>
-        )}
-        <DropArea {...getRootProps({ accept: isDragAccept.toString(), uploading: isUploading.toString() })}>
-          <HStack>
-            <UploadIcon uploading={isUploading.toString()} />
-            <DropText uploading={isUploading.toString()} children={"Upload"} />
-          </HStack>
-          <input {...getInputProps()} />
-        </DropArea>
-      </UploadBox>
+      <AppToolTip tooltip="upload">
+        <UploadBox spacing={3}>
+          {isUploading && (
+            <VStack spacing={0}>
+              <ProgressText children={context.current} />
+              <ProgressValue children={`${uploadProgress} %`} />
+              <Progress w={140} size="xs" value={uploadProgress} />
+            </VStack>
+          )}
+          <DropArea {...getRootProps({ accept: isDragAccept.toString(), uploading: isUploading.toString() })}>
+            <HStack>
+              <UploadIcon uploading={isUploading.toString()} />
+              <DropText uploading={isUploading.toString()} children={"Upload"} />
+            </HStack>
+            <input {...getInputProps()} />
+          </DropArea>
+        </UploadBox>
+      </AppToolTip>
     </Center>
   )
 }

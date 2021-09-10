@@ -40,7 +40,6 @@ const SizeSlider = ({
         max={contentSizeRange[1]}
         step={step}
         defaultValue={contentSize}
-        colorScheme="teal"
         onChangeEnd={(selectedSize) => {
           setDisplay(selectedSize)
         }}

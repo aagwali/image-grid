@@ -12,6 +12,26 @@ export const theme = extendTheme({
         colorScheme: "teal",
       },
     },
+    Input: {
+      defaultProps: {
+        colorScheme: "teal",
+      },
+    },
+    Slider: {
+      defaultProps: {
+        colorScheme: "teal",
+      },
+    },
+    Switch: {
+      defaultProps: {
+        colorScheme: "teal",
+      },
+    },
+    Progress: {
+      defaultProps: {
+        colorScheme: "teal",
+      },
+    },
   },
   fonts: {
     body: "mulish",

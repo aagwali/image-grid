@@ -55,7 +55,7 @@ const LightBoxContainer = () => {
   const { actions } = mediaDisplaySlice
   const dispatch = useAppDispatch()
 
-  const { lightBoxMediumId, selectMediaIds, whiteReplacement } = getState(prop("mediaDisplay"))
+  const { lightBoxMediumId, selectedMediaIds, whiteReplacement } = getState(prop("mediaDisplay"))
   const medium = getState((s) => mediaSelector.selectById(s, lightBoxMediumId))
 
   const [lightBoxItemSize, updateLightBoxItemSize] = useState(Number(process.env.LIGHTBOX_ITEM_SIZE) / 2.5 ?? 500)
@@ -66,8 +66,10 @@ const LightBoxContainer = () => {
   const mediaIds = getState(mediaSelector.selectIds) as string[]
   const [previousMediumId, nextMediumId] = pickAdjacentMedia(mediaIds, lightBoxMediumId)
 
-  const selectMedium = (medium: typeof selectMediaIds[0]) => (event: MouseEvent | KeyboardEvent) =>
-    dispatch(actions.updateMediaDisplay({ selectMediaIds: getSelectedMedia(selectMediaIds, mediaIds, medium, event) }))
+  const selectMedium = (medium: typeof selectedMediaIds[0]) => (event: MouseEvent | KeyboardEvent) =>
+    dispatch(
+      actions.updateMediaDisplay({ selectedMediaIds: getSelectedMedia(selectedMediaIds, mediaIds, medium, event) }),
+    )
 
   if (lightBoxMediumId === "none") return <React.Fragment />
 
@@ -93,7 +95,7 @@ const LightBoxContainer = () => {
             updateIsHd={updateIsHd}
             lightBoxItemSize={lightBoxItemSize}
             updateLightBoxItemSize={updateLightBoxItemSize}
-            checked={selectMediaIds.includes(lightBoxMediumId)}
+            checked={selectedMediaIds.includes(lightBoxMediumId)}
             selectMedium={selectMedium(lightBoxMediumId)}
           />,
         ]}

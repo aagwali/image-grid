@@ -1,6 +1,16 @@
 import styled, { css } from "styled-components"
 
-import { AccordionButton, AccordionItem, Box, Button, HStack, Input, Text, theme } from "@chakra-ui/react"
+import {
+  AccordionButton,
+  AccordionItem,
+  Box,
+  Button,
+  HStack,
+  Input,
+  PopoverContent,
+  Text,
+  theme,
+} from "@chakra-ui/react"
 
 import Cross from "../../../../assets/images/cross.svg"
 import DeselectAll from "../../../../assets/images/deselectAll.svg"
@@ -71,10 +81,18 @@ export const AccordionButtonBox = styled(AccordionButton)`
   }
 `
 
-export const AccordionButtonTitle = styled(Text)`
+export const SideBarTitle = styled(Text)`
   font-size: 14px;
   font-weight: ${theme.fontWeights.semibold};
 `
+
+export const SideBarSubTitle = styled(Text)`
+  font-weight: ${theme.fontWeights.bold};
+  font-size: ${theme.fontSizes.xs};
+  color: ${theme.colors.teal[600]};
+  user-select: none;
+`
+
 //#endregion
 
 //#region LEFT BAR
@@ -150,6 +168,7 @@ export const DisplayCheckboxGroup = styled(Box)``
 //#region RIGHT BAR
 
 export const RightBarActionBox = styled(HStack)`
+  background: ${theme.colors.white};
   ${({ enabled }) => {
     if (enabled === "false")
       return css`
@@ -194,6 +213,19 @@ export const RedButton = styled(RightBarButton)`
   }
   :active {
     background: ${theme.colors.red[50]};
+    box-shadow: none;
+  }
+`
+
+export const PopOverConfirm = styled(PopoverContent)`
+  border-width: 1px;
+  border-color: ${theme.colors.gray[300]};
+  border-radius: 2px;
+  margin-right: ${theme.space[5]};
+  :active {
+    box-shadow: none;
+  }
+  :focus {
     box-shadow: none;
   }
 `

@@ -1,19 +1,19 @@
 import { indexOf, last, sort, uniq } from "rambda"
 
 export const getSelectedMedia = (
-  selectMediaIds: string[],
+  selectedMediaIds: string[],
   mediaIds: string[],
   mediumId: string,
   event: MouseEvent | KeyboardEvent,
 ) => {
   const selectedIndex = indexOf(mediumId, mediaIds)
-  const lastSelectedIndex = indexOf(last(selectMediaIds), mediaIds)
+  const lastSelectedIndex = indexOf(last(selectedMediaIds), mediaIds)
 
   const sortedIndexes = sort((a, b) => a - b, [selectedIndex, lastSelectedIndex])
 
-  if (event.shiftKey) return uniq([...selectMediaIds, ...mediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
+  if (event.shiftKey) return uniq([...selectedMediaIds, ...mediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
 
-  return selectMediaIds.includes(mediumId)
-    ? selectMediaIds.filter((selectedId) => selectedId !== mediumId)
-    : [...selectMediaIds, mediumId]
+  return selectedMediaIds.includes(mediumId)
+    ? selectedMediaIds.filter((selectedId) => selectedId !== mediumId)
+    : [...selectedMediaIds, mediumId]
 }

@@ -13,7 +13,6 @@ export const getQualityBadge = (tootltipData: string): string => {
   if (tootltipData === "selectAll") return "Ctrl A"
   if (tootltipData === "deselectAll") return "Ctrl D"
   if (tootltipData === "download media") return "Ctrl Shift D"
-  if (tootltipData === "trash") return "Ctrl X"
   if (tootltipData === "restore") return "Ctrl R"
   if (tootltipData === "pending") return "Quality has not been validated"
   if (tootltipData === "validated") return "Quality is validated"

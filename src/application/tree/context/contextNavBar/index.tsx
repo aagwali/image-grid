@@ -18,7 +18,7 @@ const ContextNavigationBar = () => {
   const isBin = useLocation().search.includes("bin")
   const isActive = (x: string) => (!isBin && location.pathname.includes(x) ? "true" : "false")
 
-  const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
+  const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: [] }))
 
   return (
     <HStack ml={1} spacing={3}>

@@ -1,21 +1,39 @@
-import { isEmpty, prop } from "rambda"
+import { intersection, isEmpty, prop } from "rambda"
 import React from "react"
 import Hotkeys from "react-hot-keys"
 
-import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, HStack, Stack, Text } from "@chakra-ui/react"
+import {
+  Accordion,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Center,
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
+  Stack,
+  Text,
+} from "@chakra-ui/react"
 import { useLocation } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../appTooltip"
 import DropZone from "../../../../dropzone"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
+import { mediaDisplaySlice, mediaFilteredSelector, mediaGroupedByFilters } from "../../../../reducers"
 import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../../../../services"
 import {
   AccordionButtonBox,
-  AccordionButtonTitle,
   DeselectAllIcon,
   DownloadIcon,
+  PopOverConfirm,
   RedButton,
   RestoreIcon,
   RightBarAction,
@@ -23,6 +41,8 @@ import {
   SelectAllIcon,
   SeparatorBox,
   SideBarBox,
+  SideBarSubTitle,
+  SideBarTitle,
   TealButton,
   TrashIcon,
 } from "../styles"
@@ -34,16 +54,20 @@ const MediaDisplayRightBar = () => {
   const { actions } = mediaDisplaySlice
   const location = useLocation()
 
-  const { selectMediaIds } = getState(prop("mediaDisplay"))
+  const { selectedMediaIds } = getState(prop("mediaDisplay"))
   const { label } = getState(prop("context"))
+  const itemsByFilterData = getState(mediaGroupedByFilters)
+
   const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
 
-  const selectionExists = !isEmpty(selectMediaIds)
+  const selectionExists = !isEmpty(selectedMediaIds)
   const isBin = location.search.includes("bin")
 
-  const selectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: filteredMediaIds }))
-  const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectMediaIds: [] }))
+  const pendingIdsInSelection = intersection(itemsByFilterData.pending?.map(prop("id")) ?? [], selectedMediaIds)
+
+  const selectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: filteredMediaIds }))
+  const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: [] }))
   const updateUploadProgress = (uploadProgress: number) => dispatch(actions.updateMediaDisplay({ uploadProgress }))
 
   const [trashMedia] = triggerTrashMedia.useMutation()
@@ -55,15 +79,12 @@ const MediaDisplayRightBar = () => {
     if (hotkey === RightBarShortcuts.Deselect) deselectAll()
     if (hotkey === RightBarShortcuts.SelectAll) selectAll()
     if (hotkey === RightBarShortcuts.Restore) {
-      restoreMedia(selectMediaIds)
+      restoreMedia(selectedMediaIds)
       deselectAll()
     }
-    if (hotkey === RightBarShortcuts.Trash) {
-      trashMedia(selectMediaIds)
-      deselectAll()
-    }
-    if (hotkey === RightBarShortcuts.Download && !isEmpty(selectMediaIds)) {
-      downloadMedia(selectMediaIds)
+
+    if (hotkey === RightBarShortcuts.Download && !isEmpty(selectedMediaIds)) {
+      downloadMedia(selectedMediaIds)
       deselectAll()
     }
   }
@@ -77,10 +98,10 @@ const MediaDisplayRightBar = () => {
         <AccordionItem borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
-            <AccordionButtonTitle
+            <SideBarTitle
               flex="1"
               textAlign="left"
-              children={`Selection ${selectMediaIds.length} / ${filteredMediaIds.length}`}
+              children={`Selection ${selectedMediaIds.length} / ${filteredMediaIds.length}`}
             />
           </AccordionButtonBox>
           <AccordionPanel>
@@ -105,7 +126,7 @@ const MediaDisplayRightBar = () => {
           <AccordionItem borderWidth={0}>
             <AccordionButtonBox>
               <AccordionIcon />
-              <AccordionButtonTitle flex="1" textAlign="left" children={"Actions"} />
+              <SideBarTitle flex="1" textAlign="left" children={"Actions"} />
             </AccordionButtonBox>
             <AccordionPanel>
               <Stack mt={0} spacing={4}>
@@ -113,7 +134,7 @@ const MediaDisplayRightBar = () => {
                   <RightBarActionBox
                     spacing={1}
                     onClick={() => {
-                      downloadMedia(selectMediaIds)
+                      downloadMedia(selectedMediaIds)
                       deselectAll()
                     }}
                   >
@@ -127,29 +148,70 @@ const MediaDisplayRightBar = () => {
                     </AppToolTip>
                   </RightBarActionBox>
                 )}
+
                 {!isBin && (
-                  <RightBarActionBox
-                    spacing={1}
-                    onClick={() => {
-                      trashMedia(selectMediaIds)
-                      deselectAll()
-                    }}
-                  >
-                    <AppToolTip tooltip="trash">
-                      <RedButton size="sm" variant="outline">
-                        <HStack spacing={1}>
-                          <TrashIcon />
-                          <Text children={"Move to bin"} />
-                        </HStack>
-                      </RedButton>
-                    </AppToolTip>
-                  </RightBarActionBox>
+                  <Popover>
+                    <PopoverTrigger>
+                      <RightBarActionBox spacing={1}>
+                        <RedButton size="sm" variant="outline">
+                          <HStack spacing={1}>
+                            <TrashIcon />
+                            <Text children={"Move to bin"} />
+                          </HStack>
+                        </RedButton>
+                      </RightBarActionBox>
+                    </PopoverTrigger>
+                    <Portal>
+                      <PopOverConfirm>
+                        <PopoverArrow />
+                        <PopoverHeader bg="gray.50">
+                          <SideBarTitle children={"Move to bin confirmation"} />
+                        </PopoverHeader>
+                        <PopoverCloseButton />
+                        <PopoverBody>
+                          <Box m={2}>
+                            {pendingIdsInSelection.length !== 0 && (
+                              <SideBarSubTitle
+                                children={`${pendingIdsInSelection.length} pending medias will be moved to bin`}
+                              />
+                            )}
+                            {selectedMediaIds.length - pendingIdsInSelection.length !== 0 && (
+                              <SideBarSubTitle
+                                children={`${
+                                  selectedMediaIds.length - pendingIdsInSelection.length
+                                } validated medias will remain unchanged`}
+                              />
+                            )}
+                          </Box>
+                        </PopoverBody>
+                        <PopoverFooter bg="gray.50">
+                          <Center>
+                            <RightBarActionBox
+                              spacing={1}
+                              onClick={() => {
+                                trashMedia(intersection(selectedMediaIds, pendingIdsInSelection))
+                                deselectAll()
+                              }}
+                            >
+                              <RedButton size="sm" variant="outline">
+                                <HStack spacing={1}>
+                                  <TrashIcon />
+                                  <Text children={"Move to bin"} />
+                                </HStack>
+                              </RedButton>
+                            </RightBarActionBox>
+                          </Center>
+                        </PopoverFooter>
+                      </PopOverConfirm>
+                    </Portal>
+                  </Popover>
                 )}
+
                 {isBin && (
                   <RightBarActionBox
                     spacing={1}
                     onClick={() => {
-                      restoreMedia(selectMediaIds)
+                      restoreMedia(selectedMediaIds)
                       deselectAll()
                     }}
                   >

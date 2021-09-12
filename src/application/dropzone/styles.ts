@@ -2,7 +2,7 @@ import styled, { css } from "styled-components"
 
 import { Box, Center, Text, theme, VStack } from "@chakra-ui/react"
 
-import Spinner from "../../assets/images/spinner-teal.svg"
+import Spinner from "../../assets/images/spinnerMini.svg"
 import Upload from "../../assets/images/upload.svg"
 
 export const UploadBox = styled(VStack)`
@@ -15,9 +15,9 @@ export const DropArea = styled(Center)`
   height: 75px;
   width: 150px;
 
-  border-width: 2px;
+  border-width: 1px;
   border-radius: 3px;
-  border-color: ${theme.colors.gray[200]};
+  border-color: ${theme.colors.gray[300]};
   background-color: ${theme.colors.gray[50]};
   cursor: pointer;
   -webkit-transition: all ease 500ms;
@@ -38,21 +38,22 @@ export const DropArea = styled(Center)`
     if (uploading === "true")
       return css`
         pointer-events: none;
-        height: 150px;
-        width: 150px;
+        /* height: 150px;
+        width: 150px; */
         border-color: ${theme.colors.gray[300]};
         border-width: 2px;
         border-radius: 4px;
-        box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[200]};
+        box-shadow: 0.6px 0.6px 4px ${theme.colors.gray[200]};
       `
   }};
 
   :hover {
     height: 150px;
+    border-width: 2px;
     width: 150px;
     border-color: ${theme.colors.teal[200]};
     background-color: #f3fffd;
-    box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[200]};
+    border-style: dashed;
   }
 
   :active {
@@ -70,7 +71,7 @@ export const DropText = styled(Text)`
   ${({ uploading }) => {
     if (uploading === "true")
       return css`
-        color: ${theme.colors.teal[300]};
+        color: ${theme.colors.gray[300]};
       `
   }};
 `

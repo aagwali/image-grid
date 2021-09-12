@@ -38,7 +38,7 @@ export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.m
 
 const mediaSelectedSelector = createSelector(
   [prop("mediaDisplay"), (state: State) => (id: string) => mediaSelector.selectById(state, id)], // curried
-  ({ selectMediaIds }, selectMediaById) => selectMediaIds.map(selectMediaById),
+  ({ selectedMediaIds }, selectMediaById) => selectedMediaIds.map(selectMediaById),
 )
 
 export const mediaGroupedByFilters = createSelector(mediaSelector.selectAll, (media) => {
@@ -135,7 +135,7 @@ export const mediaSlice = createSlice({
 
 //#region MEDIA GRID
 const initialMediaDisplay = {
-  selectMediaIds: [] as string[],
+  selectedMediaIds: [] as string[],
   contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
   transparency: false,
   cardHeader: false,

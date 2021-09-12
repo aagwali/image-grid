@@ -20,7 +20,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const { actions } = mediaDisplaySlice
 
   const { loaded: mediaLoaded } = getState(prop("media"))
-  const { selectMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges, whiteReplacement } =
+  const { selectedMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges, whiteReplacement } =
     getState(prop("mediaDisplay"))
 
   const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
@@ -31,9 +31,11 @@ const MediaDisplay = (_: RouteComponentProps) => {
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
-  const selectionHandler = (medium: typeof selectMediaIds[0]) => (event: MouseEvent) =>
+  const selectionHandler = (medium: typeof selectedMediaIds[0]) => (event: MouseEvent) =>
     dispatch(
-      actions.updateMediaDisplay({ selectMediaIds: getSelectedMedia(selectMediaIds, filteredMediaIds, medium, event) }),
+      actions.updateMediaDisplay({
+        selectedMediaIds: getSelectedMedia(selectedMediaIds, filteredMediaIds, medium, event),
+      }),
     )
   const openLightBox = (mediumId: string) => (e: MouseEvent) => {
     e.stopPropagation()
@@ -63,7 +65,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
                 subtitle={`${medium.width} x ${medium.height}`}
                 transparency={transparency}
                 imageSize={contentSize}
-                checked={selectMediaIds.includes(medium.id)}
+                checked={selectedMediaIds.includes(medium.id)}
                 getUrlBySize={(size: number) => getImageServerUrl(medium.id, size, whiteReplacement)} // cf. paddedSize
                 openLightBox={openLightBox(medium.id)}
                 selectionHandler={selectionHandler(medium.id)}

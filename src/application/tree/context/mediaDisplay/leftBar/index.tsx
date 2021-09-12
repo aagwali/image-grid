@@ -29,7 +29,6 @@ import { mediaDisplaySlice, mediaGroupedByFilters } from "../../../../reducers"
 import { ControlStatus, QualityStatus } from "../../../../types"
 import {
   AccordionButtonBox,
-  AccordionButtonTitle,
   CloseIcon,
   DisabledCheck,
   DisplayAccordion,
@@ -40,6 +39,7 @@ import {
   SearchInput,
   SeparatorBox,
   SideBarBox,
+  SideBarTitle,
 } from "../styles"
 import { LeftBarShortcuts } from "../types"
 import {
@@ -82,7 +82,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
   const { actions } = mediaDisplaySlice
   const { search } = useLocation()
 
-  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectMediaIds, whiteReplacement } = getState(
+  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectedMediaIds, whiteReplacement } = getState(
     prop("mediaDisplay"),
   )
 
@@ -116,7 +116,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
   const updateFilterSideEffects = (newSearch: string, filteredMediaIds: string[]) =>
     dispatch(
       actions.updateMediaDisplay({
-        selectMediaIds: intersection(filteredMediaIds, selectMediaIds),
+        selectedMediaIds: intersection(filteredMediaIds, selectedMediaIds),
         scrollRatio: 0,
         lastFilter: newSearch,
       }),
@@ -143,7 +143,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
         <DisplayAccordion borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
-            <AccordionButtonTitle flex="1" textAlign="left" children={"Display options"} />
+            <SideBarTitle flex="1" textAlign="left" children={"Display options"} />
           </AccordionButtonBox>
           <AccordionPanel>
             <Stack mt={3} spacing={8}>
@@ -201,7 +201,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
         <FiltersAccordion>
           <AccordionButtonBox>
             <AccordionIcon />
-            <AccordionButtonTitle flex="1" textAlign="left" children={"Filters"} />
+            <SideBarTitle flex="1" textAlign="left" children={"Filters"} />
           </AccordionButtonBox>
           <AccordionPanel>
             <Stack spacing={4}>

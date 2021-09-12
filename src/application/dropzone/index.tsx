@@ -26,7 +26,7 @@ const DropZone = ({ label, uploadMedia, updateUploadProgress }: any) => {
         const formData = new FormData()
         formData.append("file", file)
         formData.append("fullPath", file.name)
-        const result = await uploadMedia({ label, formData, fileName: file.name })
+        const result = await uploadMedia({ label: context.current, formData, fileName: file.name })
         updateUploadProgress(Math.floor((done++ / files.length) * 100))
         if (done === files.length + 1) toast.success("File upload ended", toastOptions)
 

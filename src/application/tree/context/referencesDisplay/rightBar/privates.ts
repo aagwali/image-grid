@@ -1,4 +1,4 @@
-export const downloadMedia = (mediumIds: string[], label: string) => {
+export const downloadMedia = (mediumIds: string[]) => {
   const xhttp = new XMLHttpRequest()
 
   const baseUrl = process.env.MEDIASHARE_API_URL ?? ""
@@ -8,7 +8,7 @@ export const downloadMedia = (mediumIds: string[], label: string) => {
     if (xhttp.readyState === 4 && xhttp.status === 200) {
       a = document.createElement("a")
       a.href = window.URL.createObjectURL(xhttp.response)
-      a.download = label
+      a.download = "filename"
       a.style.display = "none"
       document.body && document.body.appendChild(a)
       a.click()

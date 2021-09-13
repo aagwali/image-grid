@@ -25,7 +25,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
 
   const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
-  const [headerCellRatio, headearRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
+  const [headerCellRatio, headerRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
   const isBin = useLocation().search.includes("bin")
 
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
@@ -70,7 +70,7 @@ const MediaDisplay = (_: RouteComponentProps) => {
                 openLightBox={openLightBox(medium.id)}
                 selectionHandler={selectionHandler(medium.id)}
                 status={medium.status}
-                headerHeightRatio={headearRatio}
+                headerHeightRatio={headerRatio}
                 controlId={medium.controlId}
                 badges={badges}
               />

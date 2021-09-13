@@ -10,3 +10,5 @@ export const getBadgeLabel = (status: any): any => {
 
   return "Badge label error"
 }
+
+export const getBoundedSize = (size: number, minBound: number): number => (size <= minBound ? minBound : size)

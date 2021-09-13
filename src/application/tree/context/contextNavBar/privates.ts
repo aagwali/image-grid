@@ -9,6 +9,7 @@ export const navigateWithFilter = (page: string, lastMediaFilter: string = "") =
 
   if (page === "medias") return `${page}?${newQueryParameters}`
   if (page === "bin") return `medias?${newQueryParameters}${token}bin=true`
+  if (page === "references") return `${page}`
 
   return "navigationError"
 }

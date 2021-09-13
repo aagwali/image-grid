@@ -7,11 +7,12 @@ import { State } from "../storeConfig"
 import {
   getContextByLabel,
   getMediaByContextLabel,
+  getReferencesByContextLabel,
   triggerRestoreMedia,
   triggerTrashMedia,
   triggerUploadMedia,
 } from "./services"
-import { Context, ControlStatus, MediumItem } from "./types"
+import { Context, ControlStatus, MediumItem, ReferenceItem } from "./types"
 
 //#region CONTEXT
 
@@ -133,7 +134,30 @@ export const mediaSlice = createSlice({
 
 //#endregion
 
-//#region MEDIA GRID
+//#region REFERENCES
+
+const referencesAdapter = createEntityAdapter<ReferenceItem>({
+  sortComparer: (a, b) => a.id.localeCompare(b.id),
+})
+
+export const referencesSelector = referencesAdapter.getSelectors((state: State) => state.references)
+
+export const referencesSlice = createSlice({
+  name: "references",
+  initialState: referencesAdapter.getInitialState({ loaded: false }),
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addMatcher(getReferencesByContextLabel.matchFulfilled, (references, { payload: fetchedReferences }) => {
+      referencesAdapter.removeAll(references)
+      referencesAdapter.setAll(references, fetchedReferences)
+      references.loaded = true
+    })
+  },
+})
+
+//#endregion
+
+//#region MEDIA DISPLAY
 const initialMediaDisplay = {
   selectedMediaIds: [] as string[],
   contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
@@ -165,6 +189,31 @@ export const mediaDisplaySlice = createSlice({
       ...initialMediaDisplay,
       uploadProgress: mediaDisplay.uploadProgress,
     }))
+  },
+})
+//#endregion
+
+//#region REFERENCES DISPLAY
+const initialReferencesDisplay = {
+  contentSize: Number(process.env.REF_ITEM_DEFAULT_SIZE) || 100,
+  selectedReferencesIds: [] as string[],
+  mediaTransparency: false,
+  mediaCardHeader: false,
+  mediaBadges: false,
+  lightBoxMediumId: "none", // how to not connect to media display
+  scrollRatio: 0,
+  mediaWhiteReplacement: false,
+  lastFilter: "",
+}
+
+export const referencesDisplaySlice = createSlice({
+  name: "referencesDisplay",
+  initialState: initialReferencesDisplay,
+  reducers: {
+    updateReferencesDisplay: (referencesDisplay, { payload }: PayloadAction<Partial<typeof referencesDisplay>>) => ({
+      ...referencesDisplay,
+      ...payload,
+    }),
   },
 })
 //#endregion

@@ -35,6 +35,10 @@ const handleFailedQueries = (requestMeta: RejectedApiRequestMeta): void => {
       description = "Unable to get medias"
       displayExit(ExitType.Warning, description)
       break
+    case ContextEndpoints.GetReferencesByContextLabel:
+      description = "Unable to get references"
+      displayExit(ExitType.Warning, description)
+      break
     case ContextEndpoints.PutInTrash:
       description = "Move to bin failed. Reverting Changes."
       displayExit(ExitType.Warning, description)

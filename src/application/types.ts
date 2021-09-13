@@ -46,8 +46,37 @@ export type MediumItem = {
   isAssociable: boolean
 }
 
+export type RawReference = {
+  familyId: number
+  mediaAssociations: {
+    msMediaId: string
+    slot: number
+  }[]
+  mode: number
+}
+
+export type PaginatedResponse<T> = {
+  items: T[]
+  total_pages: number
+  current_page: number
+}
+
+export type ReferenceItem = {
+  id: string
+  mediaAssociations: {
+    msMediaId: string
+    slot: number
+  }[]
+}
+
+export type AssociationItem = {
+  id: string
+  mediaChildren: MediumItem[] & { slot: number }
+}
+
 export enum ContextEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
+  GetReferencesByContextLabel = "getReferencesByContextLabel",
   GetContextByLabel = "getContextByLabel",
   PutInTrash = "putInTrash",
   RestoreFromTrash = "restore",

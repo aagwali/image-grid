@@ -80,20 +80,32 @@ export const CardHeaderBox = styled(Center)`
   border-bottom-width: 1px;
   border-bottom-color: ${theme.colors.gray[300]};
   background: ${theme.colors.gray[50]};
+  text-overflow: ellipsis;
 `
 
-export const CardTitle = styled(Text)`
-  ${({ size }) => css`
-    font-weight: ${theme.fontWeights.semibold};
-    font-size: ${Math.floor(size / 17)}px;
-    pointer-events: none;
+export const ImageTitle = styled(Text)`
+  pointer-events: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-left: 10px;
+  margin-right: 10px;
+  line-height: 1;
+  ${(props) => css`
+    line-height: ${props.size <= 100 ? 1 : props.size <= 180 ? 1.5 : 2};
   `};
 `
 
-export const CardSubTitle = styled(Text)`
-  ${({ size }) => css`
-    font-size: ${Math.floor(size / 20)}px;
-    pointer-events: none;
+export const CardTitle = styled(ImageTitle)`
+  font-weight: ${theme.fontWeights.semibold};
+  ${(props) => css`
+    font-size: ${Math.floor(props["text-size"] / 17)}px;
+  `};
+`
+
+export const CardSubTitle = styled(ImageTitle)`
+  ${(props) => css`
+    font-size: ${Math.floor(props["text-size"] / 20)}px;
   `};
 `
 

@@ -1,4 +1,4 @@
-import { Context, MediumItem, RawContext, RawMedium } from "./types"
+import { Context, MediumItem, PaginatedResponse, RawContext, RawMedium, RawReference, ReferenceItem } from "./types"
 
 export const getImageServerUrl = (id: string, size: number, whiteReplacement: boolean) => {
   const replaceColor = whiteReplacement ? "rc:ffffff-FF0000/" : ""
@@ -10,13 +10,20 @@ export const toAppContext = (response: RawContext): Context => ({ id: response.i
 
 export const toMediumItem = (response: RawMedium[]): MediumItem[] =>
   response.map((x) => ({
-    ...x,
+    id: x.id,
+    fileName: x.fileName,
     width: x.metadata?.width,
     height: x.metadata?.height,
     status: x.computedQualityControl,
     controlId: x.dmapId,
     trashed: x.trashed,
     isAssociable: x.isAssociable,
+  }))
+
+export const toReferenceItem = (response: PaginatedResponse<RawReference>): ReferenceItem[] =>
+  response.items.map((x) => ({
+    id: String(x.familyId),
+    mediaAssociations: x.mediaAssociations,
   }))
 
 export const getHotkeys = (shortcuts: Record<string, string>): string =>

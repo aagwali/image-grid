@@ -35,6 +35,7 @@ import {
   DownloadIcon,
   PopOverConfirm,
   RedButton,
+  ReferenceDisplayTitle,
   RestoreIcon,
   RightBarAction,
   RightBarActionBox,
@@ -42,7 +43,6 @@ import {
   SeparatorBox,
   SideBarBox,
   SideBarSubTitle,
-  SideBarTitle,
   TealButton,
   TrashIcon,
 } from "../styles"
@@ -84,7 +84,7 @@ const MediaDisplayRightBar = () => {
     }
 
     if (hotkey === RightBarShortcuts.Download && !isEmpty(selectedMediaIds)) {
-      downloadMedia(selectedMediaIds, label)
+      downloadMedia(selectedMediaIds)
       deselectAll()
     }
   }
@@ -98,7 +98,7 @@ const MediaDisplayRightBar = () => {
         <AccordionItem borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
-            <SideBarTitle
+            <ReferenceDisplayTitle
               flex="1"
               textAlign="left"
               children={`Selection ${selectedMediaIds.length} / ${filteredMediaIds.length}`}
@@ -126,7 +126,7 @@ const MediaDisplayRightBar = () => {
           <AccordionItem borderWidth={0}>
             <AccordionButtonBox>
               <AccordionIcon />
-              <SideBarTitle flex="1" textAlign="left" children={"Actions"} />
+              <ReferenceDisplayTitle flex="1" textAlign="left" children={"Actions"} />
             </AccordionButtonBox>
             <AccordionPanel>
               <Stack mt={0} spacing={4}>
@@ -134,7 +134,7 @@ const MediaDisplayRightBar = () => {
                   <RightBarActionBox
                     spacing={1}
                     onClick={() => {
-                      downloadMedia(selectedMediaIds, label)
+                      downloadMedia(selectedMediaIds)
                       deselectAll()
                     }}
                   >
@@ -165,7 +165,7 @@ const MediaDisplayRightBar = () => {
                       <PopOverConfirm>
                         <PopoverArrow />
                         <PopoverHeader bg="gray.50">
-                          <SideBarTitle children={"Move to bin confirmation"} />
+                          <ReferenceDisplayTitle children={"Move to bin confirmation"} />
                         </PopoverHeader>
                         <PopoverCloseButton />
                         <PopoverBody>

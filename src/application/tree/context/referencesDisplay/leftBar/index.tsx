@@ -1,22 +1,9 @@
 import debounce from "debounce"
-import { all, any, identity, intersection, isEmpty, prop } from "rambda"
+import { all, any, identity, isEmpty, prop } from "rambda"
 import React, { useState } from "react"
 import Hotkeys from "react-hot-keys"
 
-import {
-  Accordion,
-  AccordionIcon,
-  AccordionPanel,
-  Box,
-  Center,
-  Checkbox,
-  HStack,
-  InputGroup,
-  Radio,
-  RadioGroup,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Accordion, AccordionIcon, AccordionPanel, Box, Checkbox, Stack, Text } from "@chakra-ui/react"
 import { useLocation } from "@reach/router"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
@@ -25,36 +12,21 @@ import SizeSlider from "../../../../dynamicGrid/sizeSlider"
 import { getBadgeLabel } from "../../../../imageCard/privates"
 import { CardBadge, Ellipsis } from "../../../../imageCard/styles"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice, mediaGroupedByFilters } from "../../../../reducers"
-import { ControlStatus, QualityStatus } from "../../../../types"
+import { mediaGroupedByFilters, referencesDisplaySlice } from "../../../../reducers"
+import { ControlStatus } from "../../../../types"
 import {
   AccordionButtonBox,
-  CloseIcon,
-  DisabledCheck,
   DisplayAccordion,
   DisplayCheckboxGroup,
   FiltersAccordion,
   LeftBarLabel,
   LeftBarLabelTitle,
-  SearchInput,
+  ReferenceDisplayTitle,
   SeparatorBox,
   SideBarBox,
-  SideBarTitle,
 } from "../styles"
 import { LeftBarShortcuts } from "../types"
-import {
-  getStatusFilters,
-  isAllQualityFilterChecked,
-  isControlFilterActive,
-  isStatusFilterActive,
-  setTextFilter,
-  toggleAllQualityFilters,
-  toggleControlFilter,
-  toggleOffControlFilters,
-  toggleOffTextFilters,
-  toggleStatusFilter,
-  updateFilter_,
-} from "./privates"
+import { getStatusFilters, isAllQualityFilterChecked, isControlFilterActive } from "./privates"
 
 const FilterItem = ({ itemsByFilterData, item }: any) => (
   <Box
@@ -77,52 +49,50 @@ const FilterItem = ({ itemsByFilterData, item }: any) => (
   </Box>
 )
 
-const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
+const MediaDisplayLeftBar = () => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaDisplaySlice
+  const { actions } = referencesDisplaySlice
   const { search } = useLocation()
 
-  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectedMediaIds, whiteReplacement } = getState(
-    prop("mediaDisplay"),
-  )
+  const { mediaTransparency, contentSize, mediaCardHeader, mediaBadges, selectedReferencesIds, mediaWhiteReplacement } =
+    getState(prop("referencesDisplay"))
 
   const itemsByFilterData = getState(mediaGroupedByFilters)
 
-  const allCheckedDisplay = all(identity, [cardHeader, badges, transparency, whiteReplacement])
+  const allCheckedDisplay = all(identity, [mediaCardHeader, mediaBadges, mediaTransparency, mediaWhiteReplacement])
   const isIndeterminateDisplay =
-    any(identity, [cardHeader, badges, transparency, whiteReplacement]) && !allCheckedDisplay
+    any(identity, [mediaCardHeader, mediaBadges, mediaTransparency, mediaWhiteReplacement]) && !allCheckedDisplay
   const allCheckedQualityFilters = isAllQualityFilterChecked(search)
   const isIndeterminateQualityFilters = !isEmpty(getStatusFilters(search)) && !allCheckedQualityFilters
   const controlIsIndeterminate =
     isControlFilterActive(search, ControlStatus.Validated) || isControlFilterActive(search, ControlStatus.Pending)
 
-  const toggleCardHeader = () => dispatch(actions.updateMediaDisplay({ cardHeader: !cardHeader }))
-  const toggleCardBadges = () => dispatch(actions.updateMediaDisplay({ badges: !badges }))
+  const toggleCardHeader = () => dispatch(actions.updateReferencesDisplay({ mediaCardHeader: !mediaCardHeader }))
+  const toggleCardBadges = () => dispatch(actions.updateReferencesDisplay({ mediaBadges: !mediaBadges }))
   const toggleDisplayOptions = (checked: boolean) =>
     dispatch(
-      actions.updateMediaDisplay({
-        cardHeader: checked,
-        badges: checked,
-        transparency: checked,
-        whiteReplacement: checked,
+      actions.updateReferencesDisplay({
+        mediaCardHeader: checked,
+        mediaBadges: checked,
+        mediaTransparency: checked,
+        mediaWhiteReplacement: checked,
       }),
     )
-  const toggleTransparency = () => dispatch(actions.updateMediaDisplay({ transparency: !transparency }))
-  const toggleWhiteClipping = () => dispatch(actions.updateMediaDisplay({ whiteReplacement: !whiteReplacement }))
-  const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaDisplay({ contentSize: x }))
+  const toggleTransparency = () => dispatch(actions.updateReferencesDisplay({ mediaTransparency: !mediaTransparency }))
+  const toggleWhiteClipping = () =>
+    dispatch(actions.updateReferencesDisplay({ mediaWhiteReplacement: !mediaWhiteReplacement }))
+  const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateReferencesDisplay({ contentSize: x }))
 
-  const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
-
-  const updateFilterSideEffects = (newSearch: string, filteredMediaIds: string[]) =>
-    dispatch(
-      actions.updateMediaDisplay({
-        selectedMediaIds: intersection(filteredMediaIds, selectedMediaIds),
-        scrollRatio: 0,
-        lastFilter: newSearch,
-      }),
-    )
-
-  const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects)
+  // Convert with select ref filter
+  // const updateFilterSideEffects = (newSearch: string, filteredMediaIds: string[]) =>
+  //   dispatch(
+  //     actions.updateReferencesDisplay({
+  //       selectedMediaIds: intersection(filteredMediaIds, selectedMediaIds),
+  //       scrollRatio: 0,
+  //       lastFilter: newSearch,
+  //     }),
+  //   )
+  // const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects)
 
   const [inputSearch, setInputSearch] = useState("")
 
@@ -143,25 +113,10 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
         <DisplayAccordion borderWidth={0}>
           <AccordionButtonBox>
             <AccordionIcon />
-            <SideBarTitle flex="1" textAlign="left" children={"Display options"} />
+            <ReferenceDisplayTitle flex="1" textAlign="left" children={"Display options"} />
           </AccordionButtonBox>
           <AccordionPanel>
-            <Stack mt={3} spacing={8}>
-              <Stack>
-                <Center>
-                  <AppToolTip tooltip="zoom">
-                    <LeftBarLabelTitle children={"Images Zoom"} />
-                  </AppToolTip>
-                </Center>
-                <SizeSlider
-                  sliderStepCount={10}
-                  contentSizeRange={[130, 330]}
-                  contentSize={contentSize}
-                  updateContentSize={updateContentSize}
-                  updateCellMatrix={updateCellMatrix}
-                  forceUpdate={forceUpdate}
-                />
-              </Stack>
+            <Stack spacing={8}>
               <DisplayCheckboxGroup>
                 <Checkbox
                   size={"sm"}
@@ -172,22 +127,22 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                   <LeftBarLabelTitle children={"Images information"} />
                 </Checkbox>
                 <Stack pl={6} spacing={1}>
-                  <Checkbox isChecked={cardHeader} size={"sm"} onChange={toggleCardHeader}>
+                  <Checkbox isChecked={mediaCardHeader} size={"sm"} onChange={toggleCardHeader}>
                     <AppToolTip tooltip="filename">
                       <LeftBarLabel children={"Media info"} />
                     </AppToolTip>
                   </Checkbox>
-                  <Checkbox isChecked={badges} size={"sm"} onChange={toggleCardBadges}>
+                  <Checkbox isChecked={mediaBadges} size={"sm"} onChange={toggleCardBadges}>
                     <AppToolTip tooltip="badges">
                       <LeftBarLabel children={"Badges"} />
                     </AppToolTip>
                   </Checkbox>
-                  <Checkbox isChecked={transparency} size={"sm"} onChange={toggleTransparency}>
+                  <Checkbox isChecked={mediaTransparency} size={"sm"} onChange={toggleTransparency}>
                     <AppToolTip tooltip="transparency">
                       <LeftBarLabel children={"Transparency"} />
                     </AppToolTip>
                   </Checkbox>
-                  <Checkbox isChecked={whiteReplacement} size={"sm"} onChange={toggleWhiteClipping}>
+                  <Checkbox isChecked={mediaWhiteReplacement} size={"sm"} onChange={toggleWhiteClipping}>
                     <AppToolTip tooltip="clipping">
                       <LeftBarLabel children={"White clipping"} />
                     </AppToolTip>
@@ -201,11 +156,11 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
         <FiltersAccordion>
           <AccordionButtonBox>
             <AccordionIcon />
-            <SideBarTitle flex="1" textAlign="left" children={"Filters"} />
+            <ReferenceDisplayTitle flex="1" textAlign="left" children={"Filters"} />
           </AccordionButtonBox>
           <AccordionPanel>
             <Stack spacing={4}>
-              <HStack spacing={0} style={{ position: "relative" }}>
+              {/* <HStack spacing={0} style={{ position: "relative" }}>
                 <InputGroup>
                   <SearchInput
                     autoFocus={true}
@@ -300,7 +255,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
                     />
                   </Stack>
                 </RadioGroup>
-              </DisplayCheckboxGroup>
+              </DisplayCheckboxGroup> */}
             </Stack>
           </AccordionPanel>
         </FiltersAccordion>

@@ -44,24 +44,42 @@ export const LogoBox = styled(Box)`
 export const ReferenceItemBox = styled(Box)`
   margin: 10px;
   box-shadow: 1.5px 1.5px 1px ${theme.colors.gray[300]};
+  border-radius: 2px;
+  border-width: 1px;
+  border-color: ${theme.colors.gray[400]};
+  overflow-x: auto;
+
+  ${({ checked }) =>
+    checked &&
+    css`
+      border-color: ${theme.colors.teal[300]};
+      border-width: 2px;
+      border-radius: 3px;
+      box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[200]};
+    `};
+
+  :hover {
+    ${({ checked }) =>
+      !checked &&
+      css`
+        box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[500]};
+      `};
+  }
 `
 
 export const ReferenceHeader = styled(HStack)`
   height: 40px;
-  width: 100%;
   padding: 10px;
-  border-width: 1px;
-  border-color: ${theme.colors.gray[400]};
-  border-radius: 2px 2px 0px 0px;
+  border-bottom-width: 1px;
+  border-color: ${theme.colors.gray[300]};
   background: ${theme.colors.gray[50]};
+  user-select: none;
+  cursor: pointer;
 `
 
 export const ReferenceBody = styled(HStack)`
   direction: "row";
   padding: 6px;
-  border-width: 0px 1px 1px 1px;
-  border-radius: 0px 0px 2px 2px;
-  border-color: ${theme.colors.gray[400]};
   background: ${theme.colors.white};
 
   ${({ size, ratio }) => css`

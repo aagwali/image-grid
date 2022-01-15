@@ -12,7 +12,7 @@ import SizeSlider from "../../../../dynamicGrid/sizeSlider"
 import { getBadgeLabel } from "../../../../imageCard/privates"
 import { CardBadge, Ellipsis } from "../../../../imageCard/styles"
 import { getHotkeys } from "../../../../privates"
-import { mediaGroupedByFilters, referencesDisplaySlice } from "../../../../reducers"
+import { mediaByFilterSelector, referencesDisplaySlice } from "../../../../reducers"
 import { ControlStatus } from "../../../../types"
 import {
   AccordionButtonBox,
@@ -49,15 +49,15 @@ const FilterItem = ({ itemsByFilterData, item }: any) => (
   </Box>
 )
 
-const MediaDisplayLeftBar = () => {
+const ReferenceDisplayLeftBar = () => {
   const dispatch = useAppDispatch()
   const { actions } = referencesDisplaySlice
   const { search } = useLocation()
 
-  const { mediaTransparency, contentSize, mediaCardHeader, mediaBadges, selectedReferencesIds, mediaWhiteReplacement } =
+  const { mediaTransparency, contentSize, mediaCardHeader, mediaBadges, selectedReferenceIds, mediaWhiteReplacement } =
     getState(prop("referencesDisplay"))
 
-  const itemsByFilterData = getState(mediaGroupedByFilters)
+  const itemsByFilterData = getState(mediaByFilterSelector)
 
   const allCheckedDisplay = all(identity, [mediaCardHeader, mediaBadges, mediaTransparency, mediaWhiteReplacement])
   const isIndeterminateDisplay =
@@ -81,7 +81,6 @@ const MediaDisplayLeftBar = () => {
   const toggleTransparency = () => dispatch(actions.updateReferencesDisplay({ mediaTransparency: !mediaTransparency }))
   const toggleWhiteClipping = () =>
     dispatch(actions.updateReferencesDisplay({ mediaWhiteReplacement: !mediaWhiteReplacement }))
-  const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateReferencesDisplay({ contentSize: x }))
 
   // Convert with select ref filter
   // const updateFilterSideEffects = (newSearch: string, filteredMediaIds: string[]) =>
@@ -264,4 +263,4 @@ const MediaDisplayLeftBar = () => {
   )
 }
 
-export default MediaDisplayLeftBar
+export default ReferenceDisplayLeftBar

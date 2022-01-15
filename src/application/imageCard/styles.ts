@@ -35,6 +35,7 @@ export const CardBox = styled(Box)`
   animation: ${fadeIn} 1.5s;
   background: ${theme.colors.white};
   box-shadow: 1.5px 1.5px 1px ${theme.colors.gray[300]};
+  user-select: none;
 
   ${(props) =>
     props["data-loaded"] &&
@@ -56,7 +57,7 @@ export const CardBox = styled(Box)`
     ${({ checked }) =>
       !checked &&
       css`
-        box-shadow: 0.6px 0.6px 4px ${theme.colors.teal[600]};
+        box-shadow: 0.6px 0.6px 4px ${theme.colors.pink[400]};
       `};
 
     .enlargeImage {

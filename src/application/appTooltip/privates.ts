@@ -17,5 +17,6 @@ export const getQualityBadge = (tootltipData: string): string => {
   if (tootltipData === "pending") return "Quality has not been validated"
   if (tootltipData === "validated") return "Quality is validated"
   if (tootltipData === "upload") return "Clic or drop medias here to start upload"
-  return "Tooltip error"
+  if (tootltipData === "dissociate content") return "Ctrl Alt D"
+  return tootltipData
 }

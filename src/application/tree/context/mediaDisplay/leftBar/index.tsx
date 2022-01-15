@@ -25,7 +25,7 @@ import SizeSlider from "../../../../dynamicGrid/sizeSlider"
 import { getBadgeLabel } from "../../../../imageCard/privates"
 import { CardBadge, Ellipsis } from "../../../../imageCard/styles"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice, mediaGroupedByFilters } from "../../../../reducers"
+import { mediaByFilterSelector, mediaDisplaySlice } from "../../../../reducers"
 import { ControlStatus, QualityStatus } from "../../../../types"
 import {
   AccordionButtonBox,
@@ -86,7 +86,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
     prop("mediaDisplay"),
   )
 
-  const itemsByFilterData = getState(mediaGroupedByFilters)
+  const itemsByFilterData = getState(mediaByFilterSelector)
 
   const allCheckedDisplay = all(identity, [cardHeader, badges, transparency, whiteReplacement])
   const isIndeterminateDisplay =

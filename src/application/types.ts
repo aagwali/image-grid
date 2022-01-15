@@ -47,6 +47,7 @@ export type MediumItem = {
 }
 
 export type RawReference = {
+  id: string
   familyId: number
   mediaAssociations: {
     msMediaId: string
@@ -55,14 +56,9 @@ export type RawReference = {
   mode: number
 }
 
-export type PaginatedResponse<T> = {
-  items: T[]
-  total_pages: number
-  current_page: number
-}
-
 export type ReferenceItem = {
   id: string
+  familyId: string
   mediaAssociations: {
     msMediaId: string
     slot: number
@@ -81,6 +77,7 @@ export enum ContextEndpoints {
   PutInTrash = "putInTrash",
   RestoreFromTrash = "restore",
   Upload = "upload",
+  PatchReference = "patchReference",
 }
 
 export type RejectedApiRequestMeta = {
@@ -89,4 +86,10 @@ export type RejectedApiRequestMeta = {
     endpointName: ContextEndpoints
   }
   baseQueryMeta: { response: { status: number } }
+}
+
+export type PaginatedResponse<T> = {
+  items: T[]
+  total_pages: number
+  current_page: number
 }

@@ -8,10 +8,11 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../storeCon
 import DynamicList from "../../../dynamicList"
 import ImageCard from "../../../imageCard"
 import { getImageServerUrl } from "../../../privates"
-import { mediaDisplaySlice, mediaSelector, referencesSelector } from "../../../reducers"
+import { mediaSelector, referencesDisplaySlice, referencesSelector } from "../../../reducers"
 import { MediumItem, ReferenceItem } from "../../../types"
-import MediaDisplayLeftBar from "./leftBar"
-import MediaDisplayRightBar from "./rightBar"
+import ReferenceDisplayLeftBar from "./leftBar"
+import { getSelectedReferences } from "./privates"
+import ReferenceDisplayRightBar from "./rightBar"
 import {
   LogoBox,
   ReferenceBody,
@@ -23,24 +24,32 @@ import {
 
 const ReferencesDisplay = (_: RouteComponentProps) => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaDisplaySlice
+  const { actions } = referencesDisplaySlice
 
   const { loaded: referencesLoaded } = getState(prop("references"))
-  const { mediaBadges, mediaTransparency, mediaWhiteReplacement, mediaCardHeader, contentSize } = getState(
-    prop("referencesDisplay"),
-  )
-  const mediaHeaderRatio = mediaCardHeader ? 0.25 : 0
-  const headerCellRatio = mediaCardHeader ? 1.93 : 1.68
-  const bodyCellRatio = mediaCardHeader ? 1.35 : 1.1
-
+  const { mediaBadges, mediaTransparency, mediaWhiteReplacement, mediaCardHeader, contentSize, selectedReferenceIds } =
+    getState(prop("referencesDisplay"))
   const references = getState(referencesSelector.selectAll)
   const state = getState(identity)
+
+  const mediaHeaderRatio = mediaCardHeader ? 0.25 : 0
+  const headerCellRatio = mediaCardHeader ? 2 : 1.75
+  const bodyCellRatio = mediaCardHeader ? 1.35 : 1.1
+
+  const filteredReferencesIds = references.map(prop("id"))
+
+  const selectionHandler = (referenceId: typeof selectedReferenceIds[0]) => (event: MouseEvent) =>
+    dispatch(
+      actions.updateReferencesDisplay({
+        selectedReferenceIds: getSelectedReferences(selectedReferenceIds, filteredReferencesIds, referenceId, event),
+      }),
+    )
 
   const getMediaById = (mediumId: string) => mediaSelector.selectById(state, mediumId)
 
   return (
     <Stack spacing={0} direction="row">
-      <MediaDisplayLeftBar />
+      <ReferenceDisplayLeftBar />
 
       <ReferencesBox>
         <LogoBox loaded={referencesLoaded.toString()}>
@@ -50,9 +59,12 @@ const ReferencesDisplay = (_: RouteComponentProps) => {
             contentSize={contentSize}
             headerHeightRatio={headerCellRatio}
             renderItem={(reference: ReferenceItem) => (
-              <ReferenceItemBox>
-                <ReferenceHeader>
-                  <ReferenceDisplayTitle children={reference.id} />
+              <ReferenceItemBox
+                checked={selectedReferenceIds.includes(reference.id)}
+                onClick={selectionHandler(reference.id)}
+              >
+                <ReferenceHeader className="referenceHeader">
+                  <ReferenceDisplayTitle children={reference.familyId} />
                 </ReferenceHeader>
 
                 <ReferenceBody spacing={0} size={contentSize} ratio={bodyCellRatio}>
@@ -60,9 +72,8 @@ const ReferencesDisplay = (_: RouteComponentProps) => {
                     const medium = getMediaById(association.msMediaId) as MediumItem
 
                     return (
-                      <Box w="100px">
+                      <Box w="100px" key={association.msMediaId}>
                         <ImageCard
-                          key={association.msMediaId}
                           title={medium.fileName}
                           subtitle={`${medium.width} x ${medium.height}`}
                           transparency={mediaTransparency}
@@ -70,7 +81,9 @@ const ReferencesDisplay = (_: RouteComponentProps) => {
                           checked={false}
                           getUrlBySize={(size: number) => getImageServerUrl(medium.id, size, mediaWhiteReplacement)} // cf. paddedSize
                           openLightBox={() => {}}
-                          selectionHandler={() => {}}
+                          selectionHandler={(e) => {
+                            e.stopPropagation()
+                          }}
                           status={medium.status}
                           headerHeightRatio={mediaHeaderRatio}
                           controlId={medium.controlId}
@@ -86,7 +99,7 @@ const ReferencesDisplay = (_: RouteComponentProps) => {
         </LogoBox>
       </ReferencesBox>
 
-      <MediaDisplayRightBar />
+      <ReferenceDisplayRightBar />
     </Stack>
   )
 }

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-import { toAppContext, toMediumItem, toReferenceItem } from "./privates"
-import { ContextEndpoints, MediumItem, ReferenceItem } from "./types"
+import { paginatedToReferenceItem, toAppContext, toMediumItem } from "./privates"
+import { ContextEndpoints, MediumItem, RawReference, ReferenceItem } from "./types"
 
 export const mediashareApi = createApi({
   reducerPath: "mediashareServer",
@@ -24,7 +24,7 @@ export const mediashareApi = createApi({
     [ContextEndpoints.GetReferencesByContextLabel]: build.query<ReferenceItem[], string>({
       query: (label) => ({ url: `context/${label}/references?page=1&size=50000`, cache: "no-cache" }),
       providesTags: ["References"],
-      transformResponse: toReferenceItem,
+      transformResponse: paginatedToReferenceItem,
     }),
     [ContextEndpoints.PutInTrash]: build.mutation<MediumItem[], string[]>({
       query: (mediumIds) => ({
@@ -49,6 +49,17 @@ export const mediashareApi = createApi({
         body: formData,
       }),
     }),
+    [ContextEndpoints.PatchReference]: build.mutation<
+      ReferenceItem,
+      { referenceIds: string[]; value: Partial<RawReference> }
+    >({
+      query: (payload) => ({
+        url: `/references/bulk-patch`,
+        method: "PATCH",
+        body: payload,
+        transformResponse: paginatedToReferenceItem,
+      }),
+    }),
   }),
 })
 
@@ -58,3 +69,4 @@ export const getReferencesByContextLabel = mediashareApi.endpoints[ContextEndpoi
 export const triggerTrashMedia = mediashareApi.endpoints[ContextEndpoints.PutInTrash]
 export const triggerRestoreMedia = mediashareApi.endpoints[ContextEndpoints.RestoreFromTrash]
 export const triggerUploadMedia = mediashareApi.endpoints[ContextEndpoints.Upload]
+export const triggerPatchReference = mediashareApi.endpoints[ContextEndpoints.PatchReference]

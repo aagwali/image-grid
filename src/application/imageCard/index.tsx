@@ -46,23 +46,25 @@ const ImageCard = ({
     <PaddingBox onClick={selectionHandler} padding={5}>
       <CardBox checked={checked} data-loaded={loaded} data-transparency={transparency}>
         {headerHeightRatio !== 0 && (
-          <CardHeaderBox height={paddedSize * headerHeightRatio}>
-            <VStack spacing={0}>
-              <Center w={paddedSize}>
-                <CardTitle children={title} size={paddedSize} text-size={minTextSize} />
-              </Center>
-              <Center w={paddedSize}>
-                <CardSubTitle children={subtitle} size={paddedSize} text-size={minTextSize} />
-              </Center>
-            </VStack>
-          </CardHeaderBox>
+          <AppToolTip tooltip={title}>
+            <CardHeaderBox height={paddedSize * headerHeightRatio}>
+              <VStack spacing={0}>
+                <Center w={paddedSize}>
+                  <CardTitle children={title} size={paddedSize} text-size={minTextSize} />
+                </Center>
+                <Center w={paddedSize}>
+                  <CardSubTitle children={subtitle} size={paddedSize} text-size={minTextSize} />
+                </Center>
+              </VStack>
+            </CardHeaderBox>
+          </AppToolTip>
         )}
 
         {error ? (
           <CardImageErrorBox boxSize={paddedSize} />
         ) : (
           <CardImageBox>
-            <EnlargeBox className="enlargeImage" size={paddedSize} onClick={openLightBox}>
+            <EnlargeBox className="enlargeImage" size={getBoundedSize(imageSize, 160)} onClick={openLightBox}>
               <Image src={EnlargeSvg} />
             </EnlargeBox>
 

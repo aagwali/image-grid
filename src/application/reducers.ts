@@ -1,21 +1,19 @@
-import { parse } from "query-string"
-import { any, groupBy, isEmpty, isNil, prop } from "rambda"
-
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../storeConfig"
+import { getFilteredMedia, getMediaGroupedByFilter, rawToReferenceItem } from "./privates"
 import {
   getContextByLabel,
   getMediaByContextLabel,
   getReferencesByContextLabel,
+  triggerPatchReference,
   triggerRestoreMedia,
   triggerTrashMedia,
   triggerUploadMedia,
 } from "./services"
-import { Context, ControlStatus, MediumItem, ReferenceItem } from "./types"
+import { Context, MediumItem, ReferenceItem } from "./types"
 
 //#region CONTEXT
-
 export const initialContext: Context = {
   id: "initial value",
   label: "initial value",
@@ -34,61 +32,6 @@ export const contextSlice = createSlice({
 const mediaAdapter = createEntityAdapter<MediumItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })
-
-export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
-
-const mediaSelectedSelector = createSelector(
-  [prop("mediaDisplay"), (state: State) => (id: string) => mediaSelector.selectById(state, id)], // curried
-  ({ selectedMediaIds }, selectMediaById) => selectedMediaIds.map(selectMediaById),
-)
-
-export const mediaGroupedByFilters = createSelector(mediaSelector.selectAll, (media) => {
-  const mediaGroupedByStatus = groupBy(prop("status"), media)
-  const mediaGroupedByControlStatus = groupBy(
-    (medium) => (isNil(medium.controlId) ? ControlStatus.Pending : ControlStatus.Validated),
-    media,
-  )
-  return { ...mediaGroupedByStatus, ...mediaGroupedByControlStatus }
-})
-
-export const mediaFilteredSelector = createSelector(
-  [mediaSelector.selectAll, (_: State, search: string) => search],
-  (media, search) => {
-    const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
-
-    const rawStatusFilters = queryObjectParameters.status ?? []
-    const statusFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
-
-    const controlFilter = queryObjectParameters.control as string | null
-
-    const rawTextFilter = queryObjectParameters.textFilter ?? []
-    const textFilters = Array.isArray(rawTextFilter) ? rawTextFilter : [rawTextFilter]
-
-    const binDisplay = queryObjectParameters.bin
-
-    const filteredMedia = media.filter((medium) => {
-      const binFilterKeep = binDisplay ? medium.trashed : !medium.trashed
-
-      const textFilterKeep = isEmpty(textFilters)
-        ? true
-        : any(
-            (textFilter) => medium.fileName.includes(textFilter),
-            textFilters.filter((x) => x !== ""),
-          )
-
-      const statusFilterKeep = isEmpty(statusFilters) ? true : statusFilters.includes(medium.status)
-      const controlFilterKeep = !controlFilter
-        ? true
-        : controlFilter === ControlStatus.Validated
-        ? !isNil(medium.controlId)
-        : isNil(medium.controlId)
-
-      return binFilterKeep && controlFilterKeep && statusFilterKeep && textFilterKeep
-    })
-
-    return filteredMedia
-  },
-)
 
 export const mediaSlice = createSlice({
   name: "media",
@@ -116,46 +59,28 @@ export const mediaSlice = createSlice({
         mediaAdapter.addOne(media, fetchedMedium)
       })
       .addMatcher(triggerTrashMedia.matchPending, (media, action) => {
-        const optimisticTrashedMedium = action.meta.arg.originalArgs
+        const trashedMedium = action.meta.arg.originalArgs
         mediaAdapter.updateMany(
           media,
-          optimisticTrashedMedium.map((id) => ({ id, changes: { trashed: true, isAssociable: false } })),
+          trashedMedium.map((id) => ({ id, changes: { trashed: true, isAssociable: false } })),
         )
       })
       .addMatcher(triggerRestoreMedia.matchPending, (media, action) => {
-        const optimisticRestoredMedium = action.meta.arg.originalArgs
+        const restoredMedium = action.meta.arg.originalArgs
         mediaAdapter.updateMany(
           media,
-          optimisticRestoredMedium.map((id) => ({ id, changes: { trashed: false, isAssociable: true } })),
+          restoredMedium.map((id) => ({ id, changes: { trashed: false, isAssociable: true } })),
         )
       })
   },
 })
 
-//#endregion
-
-//#region REFERENCES
-
-const referencesAdapter = createEntityAdapter<ReferenceItem>({
-  sortComparer: (a, b) => a.id.localeCompare(b.id),
-})
-
-export const referencesSelector = referencesAdapter.getSelectors((state: State) => state.references)
-
-export const referencesSlice = createSlice({
-  name: "references",
-  initialState: referencesAdapter.getInitialState({ loaded: false }),
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addMatcher(getReferencesByContextLabel.matchFulfilled, (references, { payload: fetchedReferences }) => {
-      referencesAdapter.removeAll(references)
-      referencesAdapter.setAll(references, fetchedReferences)
-      references.loaded = true
-    })
-  },
-})
-
-//#endregion
+export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
+export const mediaByFilterSelector = createSelector(mediaSelector.selectAll, getMediaGroupedByFilter)
+export const mediaFilteredSelector = createSelector(
+  [mediaSelector.selectAll, (_: State, search: string) => search],
+  getFilteredMedia,
+)
 
 //#region MEDIA DISPLAY
 const initialMediaDisplay = {
@@ -193,10 +118,40 @@ export const mediaDisplaySlice = createSlice({
 })
 //#endregion
 
+//#endregion
+
+//#region REFERENCES
+
+const referencesAdapter = createEntityAdapter<ReferenceItem>({
+  sortComparer: (a, b) => a.id.localeCompare(b.id),
+})
+
+export const referencesSlice = createSlice({
+  name: "references",
+  initialState: referencesAdapter.getInitialState({ loaded: false }),
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addMatcher(getReferencesByContextLabel.matchFulfilled, (references, { payload: fetchedReferences }) => {
+      referencesAdapter.removeAll(references)
+      referencesAdapter.setAll(references, fetchedReferences)
+      references.loaded = true
+    })
+    builder.addMatcher(triggerPatchReference.matchPending, (references, action) => {
+      const patch = action.meta.arg.originalArgs
+      referencesAdapter.updateMany(
+        references,
+        patch.referenceIds.map((id) => ({ id, changes: rawToReferenceItem(patch.value) })),
+      )
+    })
+  },
+})
+
+export const referencesSelector = referencesAdapter.getSelectors((state: State) => state.references)
+
 //#region REFERENCES DISPLAY
 const initialReferencesDisplay = {
   contentSize: Number(process.env.REF_ITEM_DEFAULT_SIZE) || 100,
-  selectedReferencesIds: [] as string[],
+  selectedReferenceIds: [] as string[],
   mediaTransparency: false,
   mediaCardHeader: false,
   mediaBadges: false,
@@ -216,4 +171,6 @@ export const referencesDisplaySlice = createSlice({
     }),
   },
 })
+//#endregion
+
 //#endregion

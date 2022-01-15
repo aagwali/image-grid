@@ -27,7 +27,7 @@ import { useAppDispatch, useAppSelector as getState } from "../../../../../store
 import AppToolTip from "../../../../appTooltip"
 import DropZone from "../../../../dropzone"
 import { getHotkeys } from "../../../../privates"
-import { mediaDisplaySlice, mediaFilteredSelector, mediaGroupedByFilters } from "../../../../reducers"
+import { mediaByFilterSelector, mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
 import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../../../../services"
 import {
   AccordionButtonBox,
@@ -56,7 +56,7 @@ const MediaDisplayRightBar = () => {
 
   const { selectedMediaIds } = getState(prop("mediaDisplay"))
   const { label } = getState(prop("context"))
-  const itemsByFilterData = getState(mediaGroupedByFilters)
+  const itemsByFilterData = getState(mediaByFilterSelector)
 
   const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))

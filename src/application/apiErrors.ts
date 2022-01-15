@@ -54,6 +54,10 @@ const handleFailedQueries = (requestMeta: RejectedApiRequestMeta): void => {
           : `Upload failed : ${requestMeta.arg.originalArgs.fileName}`
       displayExit(ExitType.Warning, description)
       break
+    case ContextEndpoints.PatchReference:
+      description = "Reference update failed. Reverting Changes."
+      displayExit(ExitType.Warning, description)
+      break
 
     default: {
       ;((_incompleteSwitchCase: never) => "")(requestMeta.arg.endpointName)

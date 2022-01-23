@@ -1,10 +1,12 @@
 import { parse, ParsedQuery, ParseOptions, stringify } from "query-string"
-import { isEmpty, omit, prop, trim, uniq } from "rambda"
-import { NavigateFunction } from "react-router-dom"
+import { all, any, identity, intersection, isEmpty, omit, prop, trim, uniq } from "rambda"
+import { useState } from "react"
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom"
 
-import { State } from "../../../../../storeConfig"
-import { mediaFilteredSelector } from "../../../../reducers"
+import { State, useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
+import { mediaByFilterSelector, mediaDisplaySlice, mediaFilteredSelector } from "../../../../reducers"
 import { ControlStatus, QualityStatus } from "../../../../types"
+import { LeftBarShortcuts } from "../types"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
 
@@ -90,3 +92,88 @@ export const updateFilter_ =
 
     navigate(`${searchToken}${newSearch}`)
   }
+
+export const getContainerProps = () => {
+  const dispatch = useAppDispatch()
+  const { actions } = mediaDisplaySlice
+  const { search } = useLocation()
+  const navigate = useNavigate()
+
+  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectedMediaIds, whiteReplacement } = getState(
+    prop("mediaDisplay"),
+  )
+
+  const itemsByFilterData = getState(mediaByFilterSelector)
+
+  const allCheckedDisplay = all(identity, [cardHeader, badges, transparency, whiteReplacement])
+  const isIndeterminateDisplay =
+    any(identity, [cardHeader, badges, transparency, whiteReplacement]) && !allCheckedDisplay
+  const allCheckedQualityFilters = isAllQualityFilterChecked(search)
+  const isIndeterminateQualityFilters = !isEmpty(getStatusFilters(search)) && !allCheckedQualityFilters
+  const controlIsIndeterminate =
+    isControlFilterActive(search, ControlStatus.Validated) || isControlFilterActive(search, ControlStatus.Pending)
+
+  const toggleCardHeader = () => dispatch(actions.updateMediaDisplay({ cardHeader: !cardHeader }))
+  const toggleCardBadges = () => dispatch(actions.updateMediaDisplay({ badges: !badges }))
+  const toggleDisplayOptions = (checked: boolean) =>
+    dispatch(
+      actions.updateMediaDisplay({
+        cardHeader: checked,
+        badges: checked,
+        transparency: checked,
+        whiteReplacement: checked,
+      }),
+    )
+  const toggleTransparency = () => dispatch(actions.updateMediaDisplay({ transparency: !transparency }))
+  const toggleWhiteClipping = () => dispatch(actions.updateMediaDisplay({ whiteReplacement: !whiteReplacement }))
+  const updateContentSize = (x: typeof contentSize) => dispatch(actions.updateMediaDisplay({ contentSize: x }))
+
+  const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
+
+  const updateFilterSideEffects = (newSearch: string, filteredMediaIds: string[]) =>
+    dispatch(
+      actions.updateMediaDisplay({
+        selectedMediaIds: intersection(filteredMediaIds, selectedMediaIds),
+        scrollRatio: 0,
+        lastFilter: newSearch,
+      }),
+    )
+
+  const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects, navigate)
+
+  const [inputSearch, setInputSearch] = useState("")
+
+  const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
+    event.preventDefault()
+    if (hotkey === LeftBarShortcuts.Transparency) toggleTransparency()
+    if (hotkey === LeftBarShortcuts.Clipping) toggleWhiteClipping()
+    if (hotkey === LeftBarShortcuts.DisplayInfos) toggleCardHeader()
+    if (hotkey === LeftBarShortcuts.DisplayBadges) toggleCardBadges()
+  }
+
+  return {
+    search,
+    transparency,
+    contentSize,
+    cardHeader,
+    badges,
+    whiteReplacement,
+    itemsByFilterData,
+    allCheckedDisplay,
+    isIndeterminateDisplay,
+    allCheckedQualityFilters,
+    isIndeterminateQualityFilters,
+    controlIsIndeterminate,
+    inputSearch,
+    toggleCardHeader,
+    toggleCardBadges,
+    toggleDisplayOptions,
+    toggleTransparency,
+    toggleWhiteClipping,
+    updateContentSize,
+    updateCellMatrix,
+    updateFilter,
+    setInputSearch,
+    handleHotkey,
+  }
+}

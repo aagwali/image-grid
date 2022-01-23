@@ -1,15 +1,13 @@
 import { isEmpty, prop } from "rambda"
 import React from "react"
 import Hotkeys from "react-hot-keys"
-import { useLocation } from "react-router-dom"
 
 import { Accordion, AccordionIcon, AccordionItem, AccordionPanel, HStack, Stack, Text } from "@chakra-ui/react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
 import AppToolTip from "../../../../components/appTooltip"
-import DropZone from "../../../../components/dropzone"
 import { getHotkeys } from "../../../../privates"
-import { mediaByFilterSelector, referencesDisplaySlice, referencesSelector } from "../../../../reducers"
+import { referencesDisplaySlice, referencesSelector } from "../../../../reducers"
 import { triggerPatchReference } from "../../../../services"
 import {
   AccordionButtonBox,
@@ -28,11 +26,8 @@ import { RightBarShortcuts } from "../types"
 const ReferenceDisplayRightBar = () => {
   const dispatch = useAppDispatch()
   const { actions } = referencesDisplaySlice
-  const location = useLocation()
 
   const { selectedReferenceIds } = getState(prop("referencesDisplay"))
-  const { label } = getState(prop("context"))
-  const itemsByFilterData = getState(mediaByFilterSelector)
 
   const filteredReferences = getState(referencesSelector.selectAll)
   const filteredReferencesIds = filteredReferences.map(prop("id"))

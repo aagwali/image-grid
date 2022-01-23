@@ -1,26 +1,14 @@
-import { prop, T } from "rambda"
-import React, { useState } from "react"
+import { T } from "rambda"
+import React from "react"
 import Hotkeys from "react-hot-keys"
 
 import { Center, Input, InputGroup } from "@chakra-ui/react"
 
-import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
-import { Url } from "../../components/navigateSetter"
-import { contextSlice } from "../../reducers"
+import { getContainerProps } from "./privates"
 
-const Home = (_: any) => {
-  const dispatch = useAppDispatch()
-  const { actions } = contextSlice
+const Home = () => {
+  const { inputText, updateInputText, navigateToContext } = getContainerProps()
 
-  const { label } = getState(prop("context"))
-
-  const [inputText, updateInputText] = useState(label)
-
-  const navigateToContext = (input: string) => () => {
-    dispatch(actions.resetContext(input))
-
-    Url.navigate(`context/${input}`)
-  }
   return (
     <Center>
       <Hotkeys

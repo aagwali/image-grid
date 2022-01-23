@@ -15,14 +15,14 @@ import { Context, MediumItem, ReferenceItem } from "./types"
 
 //#region CONTEXT
 export const initialContext: Context = {
-  id: "initial value",
-  label: "initial value",
+  id: "",
+  label: "",
 }
 
 export const contextSlice = createSlice({
   name: "context",
   initialState: initialContext,
-  reducers: { resetContext: () => initialContext },
+  reducers: { resetContext: (context, { payload: label }) => ({ id: initialContext.id, label }) },
   extraReducers: (builder) =>
     builder.addMatcher(getContextByLabel.matchFulfilled, (_, { payload: fetchedContext }) => fetchedContext),
 })

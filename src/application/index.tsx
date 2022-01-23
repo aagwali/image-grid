@@ -1,18 +1,18 @@
 import "react-toastify/dist/ReactToastify.css"
 
 import React from "react"
+import { Route } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 
 import { Box, HStack } from "@chakra-ui/react"
-import { Redirect, RouteComponentProps } from "@reach/router"
 
-import NavigationBar from "./appNavBar"
-import AppRouter from "./appRouter"
-import Context from "./tree/context"
-import Home from "./tree/home"
-import LightBoxContainer from "./tree/lightBoxContainer"
+import NavigationBar from "./components/appNavBar"
+import AppRouter from "./components/appRouter"
+import LightBoxContainer from "./components/lightBoxContainer"
+import Context from "./componentsTree/context"
+import Home from "./componentsTree/home"
 
-const Application = (_: RouteComponentProps) => (
+const Application = (_: any) => (
   <React.Fragment>
     <LightBoxContainer />
     <ToastContainer />
@@ -22,9 +22,8 @@ const Application = (_: RouteComponentProps) => (
 
       <Box w="100vw">
         <AppRouter>
-          <Redirect from="/" to="home" noThrow />
-          <Home path="/home" />
-          <Context path="/context/:contextLabel/*" />
+          <Route path="/" element={<Home />} />
+          <Route path="/context/:contextLabel/*" element={<Context />} />
         </AppRouter>
       </Box>
     </HStack>

@@ -2,9 +2,9 @@ import { Dispatch } from "react"
 import { toast, ToastOptions } from "react-toastify"
 
 import { theme } from "@chakra-ui/react"
-import { navigate } from "@reach/router"
 import { AnyAction, isRejectedWithValue, Middleware, MiddlewareAPI } from "@reduxjs/toolkit"
 
+import { Url } from "./components/navigateSetter"
 import { ContextEndpoints, ExitType, RejectedApiRequestMeta } from "./types"
 
 export const toastOptions: ToastOptions = {
@@ -18,7 +18,7 @@ const displayExit = (status: ExitType, description: string): void => {
   }
 
   if (status === ExitType.Error) {
-    navigate("/")
+    Url.navigate("/")
     toast.error(description, toastOptions)
   }
 }

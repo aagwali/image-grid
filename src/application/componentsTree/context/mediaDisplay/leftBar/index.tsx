@@ -37,8 +37,8 @@ import {
   LeftBarLabel,
   LeftBarLabelTitle,
   SearchInput,
-  SeparatorBox,
-  SideBarBox,
+  Separator,
+  SideBar,
   SideBarTitle,
 } from "../styles"
 import { LeftBarShortcuts } from "../types"
@@ -136,9 +136,9 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
   }
 
   return (
-    <SideBarBox>
-      <SeparatorBox />
+    <SideBar>
       <Hotkeys keyName={getHotkeys(LeftBarShortcuts)} onKeyDown={handleHotkey} />
+      <Separator />
 
       <Accordion allowToggle>
         <DisplayAccordion borderWidth={0}>
@@ -306,7 +306,7 @@ const MediaDisplayLeftBar = ({ forceUpdate }: any) => {
           </AccordionPanel>
         </FiltersAccordion>
       </Accordion>
-    </SideBarBox>
+    </SideBar>
   )
 }
 

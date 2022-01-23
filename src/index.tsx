@@ -25,7 +25,7 @@ const render = () =>
         </Authentication>
       </ChakraProvider>
     </Provider>,
-    document.getElementById("app"),
+    document.getElementById("init"),
   )
 
 render()

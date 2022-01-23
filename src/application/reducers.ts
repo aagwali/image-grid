@@ -22,7 +22,7 @@ export const initialContext: Context = {
 export const contextSlice = createSlice({
   name: "context",
   initialState: initialContext,
-  reducers: { resetContext: (context, { payload: label }) => ({ id: initialContext.id, label }) },
+  reducers: { resetContext: (_, { payload: label }) => ({ id: initialContext.id, label }) },
   extraReducers: (builder) =>
     builder.addMatcher(getContextByLabel.matchFulfilled, (_, { payload: fetchedContext }) => fetchedContext),
 })

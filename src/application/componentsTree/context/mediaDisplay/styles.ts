@@ -57,11 +57,11 @@ export const LogoBox = styled(Box)`
 
 //#region SIDE BAR COMMON
 
-export const SideBarBox = styled(Box)`
+export const SideBar = styled(Box)`
   width: ${theme.space[72]};
 `
 
-export const SeparatorBox = styled(Box)`
+export const Separator = styled(Box)`
   height: ${theme.space[4]};
   background: ${theme.colors.gray[50]};
   border-top-width: 0.75px;

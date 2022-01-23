@@ -2,8 +2,8 @@ import styled, { css } from "styled-components"
 
 import { Box, Center, Text, theme, VStack } from "@chakra-ui/react"
 
-import Spinner from "../../../assets/images/spinnerMini.svg"
-import Upload from "../../../assets/images/upload.svg"
+import Spinner from "../../../../../../assets/images/spinnerMini.svg"
+import Upload from "../../../../../../assets/images/upload.svg"
 
 export const UploadBox = styled(VStack)`
   position: absolute;

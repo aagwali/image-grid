@@ -6,7 +6,7 @@ import { NavigateFunction, useLocation, useNavigate } from "react-router-dom"
 
 import { State, useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
 import { ControlStatus, QualityStatus } from "../../../../../types"
-import { mediaByFilterSelector, mediaDisplaySlice, mediaFilteredSelector } from "../reducers"
+import { mediaDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
 import { LeftBarShortcuts } from "../types"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
@@ -86,7 +86,7 @@ export const updateFilter_ =
     navigate: NavigateFunction,
   ) =>
   (newSearch: string) => {
-    const filteredMedia = mediaFilteredSelector(state, newSearch)
+    const filteredMedia = mediasFilteredByUrlSelector(state, newSearch)
     const filteredMediaIds = filteredMedia.map(prop("id"))
     updateFilterSideEffects(newSearch, filteredMediaIds)
     const searchToken = isEmpty(newSearch) ? "" : "?"
@@ -104,7 +104,7 @@ export const getContainerProps = () => {
     prop("mediasDisplay"),
   )
 
-  const itemsByFilterData = getState(mediaByFilterSelector)
+  const itemsByFilterData = getState(mediaStatusDictionarySelector)
 
   const allCheckedDisplay = all(identity, [cardHeader, badges, transparency, whiteReplacement])
   const isIndeterminateDisplay =

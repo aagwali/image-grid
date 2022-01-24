@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
 import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../../../../../services"
-import { mediaByFilterSelector, mediaDisplaySlice, mediaFilteredSelector } from "../reducers"
+import { mediaDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
 import { RightBarShortcuts } from "../types"
 import { downloadMedia } from "./download/privates"
 
@@ -14,9 +14,9 @@ export const getContainerProps = () => {
 
   const { selectedMediaIds } = getState(prop("mediasDisplay"))
   const { label } = getState(prop("context"))
-  const itemsByFilterData = getState(mediaByFilterSelector)
+  const itemsByFilterData = getState(mediaStatusDictionarySelector)
 
-  const filteredMedia = getState((x) => mediaFilteredSelector(x, location.search))
+  const filteredMedia = getState((x) => mediasFilteredByUrlSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
 
   const selectionExists = !isEmpty(selectedMediaIds)

@@ -19,7 +19,7 @@ const Dissociate = ({ dissociate, deselectAll }: DissociateProps) => (
       <TealButton size="sm" variant="outline">
         <HStack spacing={1}>
           <RestoreIcon />
-          <Text children={"Dissociate medias"} />
+          <Text children={"You did it"} />
         </HStack>
       </TealButton>
     </ToolTip>

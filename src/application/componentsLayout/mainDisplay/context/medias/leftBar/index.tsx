@@ -3,7 +3,7 @@ import Hotkeys from "react-hot-keys"
 
 import { Accordion, Stack } from "@chakra-ui/react"
 
-import AccordionItem from "../../../../../components/accordionItem"
+import PanelItems from "../../../../../components/accordionItem"
 import { getHotkeys } from "../../../../../privates"
 import { Separator, SideBar } from "../../styles"
 import { LeftBarShortcuts } from "../types"
@@ -47,7 +47,7 @@ const MediaLeftBar = ({ forceUpdate }: any) => {
 
       <Separator />
       <Accordion allowToggle>
-        <AccordionItem title={"Display options"}>
+        <PanelItems title={"Display options"}>
           <Stack mt={3} spacing={8}>
             <ImagesSize
               contentSize={contentSize}
@@ -70,9 +70,9 @@ const MediaLeftBar = ({ forceUpdate }: any) => {
               toggleWhiteClipping={toggleWhiteClipping}
             />
           </Stack>
-        </AccordionItem>
+        </PanelItems>
 
-        <AccordionItem title={"Filters"}>
+        <PanelItems title={"Filters"}>
           <Stack spacing={6}>
             <TextFilter
               inputSearch={inputSearch}
@@ -96,7 +96,7 @@ const MediaLeftBar = ({ forceUpdate }: any) => {
               updateFilter={updateFilter}
             />
           </Stack>
-        </AccordionItem>
+        </PanelItems>
       </Accordion>
     </SideBar>
   )

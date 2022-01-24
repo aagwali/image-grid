@@ -1,7 +1,6 @@
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../../../../../storeConfig"
-import { getFilteredMedia, getMediaGroupedByFilter } from "../../../../privates"
 import {
   getContextByLabel,
   getMediaByContextLabel,
@@ -11,6 +10,7 @@ import {
 } from "../../../../services"
 import { MediumItem } from "../../../../types"
 import { contextSlice } from "../reducers"
+import { getFilteredMedia, getMediaGroupedByFilter } from "./privates"
 
 const mediaAdapter = createEntityAdapter<MediumItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
@@ -59,8 +59,8 @@ export const mediaSlice = createSlice({
 })
 
 export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
-export const mediaByFilterSelector = createSelector(mediaSelector.selectAll, getMediaGroupedByFilter)
-export const mediaFilteredSelector = createSelector(
+export const mediaStatusDictionarySelector = createSelector(mediaSelector.selectAll, getMediaGroupedByFilter)
+export const mediasFilteredByUrlSelector = createSelector(
   [mediaSelector.selectAll, (_: State, search: string) => search],
   getFilteredMedia,
 )

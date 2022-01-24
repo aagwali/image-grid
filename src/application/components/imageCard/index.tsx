@@ -4,7 +4,7 @@ import { Center, Image, VStack } from "@chakra-ui/react"
 
 import EnlargeSvg from "../../../assets/images/enlarge.svg"
 import { ControlStatus } from "../../types"
-import AppToolTip from "../appTooltip"
+import ToolTip from "../tooltip"
 import { getBadgeLabel, getBoundedSize } from "./privates"
 import {
   CardBadge,
@@ -46,7 +46,7 @@ const ImageCard = ({
     <PaddingBox onClick={selectionHandler} padding={5}>
       <CardBox checked={checked} data-loaded={loaded} data-transparency={transparency}>
         {headerHeightRatio !== 0 && (
-          <AppToolTip tooltip={title}>
+          <ToolTip tooltip={title}>
             <CardHeaderBox height={paddedSize * headerHeightRatio}>
               <VStack spacing={0}>
                 <Center w={paddedSize}>
@@ -57,7 +57,7 @@ const ImageCard = ({
                 </Center>
               </VStack>
             </CardHeaderBox>
-          </AppToolTip>
+          </ToolTip>
         )}
 
         {error ? (
@@ -80,24 +80,24 @@ const ImageCard = ({
         )}
         {badges && (
           <CardBadgesBox spacing={0.5}>
-            <AppToolTip tooltip={status}>
+            <ToolTip tooltip={status}>
               <CardBadge size={getBoundedSize(imageSize, 160)} badge={status}>
                 <Ellipsis size={getBoundedSize(imageSize, 160)}>{getBadgeLabel(status)} </Ellipsis>
               </CardBadge>
-            </AppToolTip>
+            </ToolTip>
 
             {controlId ? (
-              <AppToolTip tooltip={ControlStatus.Validated}>
+              <ToolTip tooltip={ControlStatus.Validated}>
                 <CardBadge size={getBoundedSize(imageSize, 160)} badge={ControlStatus.Validated}>
                   <Ellipsis size={getBoundedSize(imageSize, 160)}>{getBadgeLabel(ControlStatus.Validated)}</Ellipsis>
                 </CardBadge>
-              </AppToolTip>
+              </ToolTip>
             ) : (
-              <AppToolTip tooltip={ControlStatus.Pending}>
+              <ToolTip tooltip={ControlStatus.Pending}>
                 <CardBadge size={getBoundedSize(imageSize, 160)} badge={ControlStatus.Pending}>
                   <Ellipsis size={getBoundedSize(imageSize, 160)}> {getBadgeLabel(ControlStatus.Pending)} </Ellipsis>
                 </CardBadge>
-              </AppToolTip>
+              </ToolTip>
             )}
           </CardBadgesBox>
         )}

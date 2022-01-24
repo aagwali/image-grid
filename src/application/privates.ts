@@ -1,5 +1,8 @@
 import { parse } from "query-string"
 import { any, filter, groupBy, isEmpty, isNil, prop, reject } from "rambda"
+import { ToastOptions } from "react-toastify"
+
+import { theme } from "@chakra-ui/react"
 
 import {
   Context,
@@ -93,4 +96,9 @@ export const getFilteredMedia = (media: MediumItem[], search: string): MediumIte
   })
 
   return filteredMedia
+}
+
+export const toastOptions: ToastOptions = {
+  position: "bottom-center",
+  style: { textAlign: "center", fontWeight: theme.fontWeights.bold },
 }

@@ -2,14 +2,10 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
 import { configureStore } from "@reduxjs/toolkit"
 
-import { apiErrorsMiddleware } from "./application/apiErrors"
-import {
-  contextSlice,
-  mediaDisplaySlice,
-  mediaSlice,
-  referencesDisplaySlice,
-  referencesSlice,
-} from "./application/reducers"
+import { mediaDisplaySlice, mediaSlice } from "./application/componentsTree/context/medias/reducers"
+import { contextSlice } from "./application/componentsTree/context/reducers"
+import { referencesDisplaySlice, referencesSlice } from "./application/componentsTree/context/references/reducers"
+import { apiErrorsMiddleware } from "./application/exits"
 import { mediashareApi } from "./application/services"
 
 const configureAppStore = () =>

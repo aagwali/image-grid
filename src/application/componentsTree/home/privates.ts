@@ -3,7 +3,7 @@ import { useState } from "react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
 import { Url } from "../../components/navigateSetter"
-import { contextSlice } from "../../reducers"
+import { contextSlice } from "../context/reducers"
 
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()

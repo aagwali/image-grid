@@ -7,9 +7,9 @@ import Lightbox from "react-image-lightbox"
 import { HStack, Switch } from "@chakra-ui/react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
-import { getSelectedMedia } from "../../componentsTree/context/mediaDisplay/privates"
+import { getSelectedMedia } from "../../componentsTree/context/medias/privates"
+import { mediaDisplaySlice, mediaSelector } from "../../componentsTree/context/medias/reducers"
 import { getImageServerUrl } from "../../privates"
-import { mediaDisplaySlice, mediaSelector } from "../../reducers"
 import { pickAdjacentMedia } from "./privates"
 import { ImageTitle, LeftToolsBox, QualityText, SelectedButton, ToolBarBox } from "./styles"
 

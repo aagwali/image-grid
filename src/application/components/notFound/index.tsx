@@ -6,7 +6,7 @@ import { VStack } from "@chakra-ui/react"
 
 import { ErrorNumber, ErrorText, HomeLink } from "./styles"
 
-const NotFound = (_: any) => (
+const NotFound = () => (
   <VStack h="100vh" justifyContent="center">
     <ErrorText> Page not found </ErrorText>
     <ErrorNumber> 404 </ErrorNumber>

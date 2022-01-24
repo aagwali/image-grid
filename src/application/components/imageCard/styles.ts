@@ -191,8 +191,8 @@ export const CardBadge = styled(Center)`
 
     if (badge === QualityStatus.Manual)
       return css`
-        border-color: ${theme.colors.teal[400]};
-        color: ${theme.colors.teal[400]};
+        border-color: ${theme.colors.purple[400]};
+        color: ${theme.colors.purple[400]};
       `
 
     //control is done

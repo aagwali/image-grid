@@ -8,14 +8,7 @@ import ToolTip from "../tooltip"
 import { BadgeItem } from "./styles"
 
 const BadgeFilterItem = ({ itemsByFilterData, item }: any) => (
-  <BadgeItem
-    style={{
-      width: "140px",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-    }}
-  >
+  <BadgeItem>
     <ToolTip tooltip={item}>
       <CardBadge size={225} badge={item}>
         <Ellipsis size={225}> {getBadgeLabel(item)} </Ellipsis>

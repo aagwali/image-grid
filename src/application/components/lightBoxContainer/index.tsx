@@ -7,8 +7,8 @@ import Lightbox from "react-image-lightbox"
 import { HStack, Switch } from "@chakra-ui/react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
-import { getSelectedMedia } from "../../mainDisplay/context/medias/privates"
-import { mediaDisplaySlice, mediaSelector } from "../../mainDisplay/context/medias/reducers"
+import { getSelectedMedia } from "../../componentsLayout/mainDisplay/context/medias/privates"
+import { mediaDisplaySlice, mediaSelector } from "../../componentsLayout/mainDisplay/context/medias/reducers"
 import { getImageServerUrl } from "../../privates"
 import { pickAdjacentMedia } from "./privates"
 import { ImageTitle, LeftToolsBox, QualityText, SelectedButton, ToolBarBox } from "./styles"
@@ -55,7 +55,7 @@ const LightBoxContainer = () => {
   const { actions } = mediaDisplaySlice
   const dispatch = useAppDispatch()
 
-  const { lightBoxMediumId, selectedMediaIds, whiteReplacement } = getState(prop("mediaDisplay"))
+  const { lightBoxMediumId, selectedMediaIds, whiteReplacement } = getState(prop("mediasDisplay"))
   const medium = getState((s) => mediaSelector.selectById(s, lightBoxMediumId))
 
   const [lightBoxItemSize, updateLightBoxItemSize] = useState(Number(process.env.LIGHTBOX_ITEM_SIZE) / 2.5 ?? 500)

@@ -2,10 +2,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
 import { configureStore } from "@reduxjs/toolkit"
 
+import { mediaDisplaySlice, mediaSlice } from "./application/componentsLayout/mainDisplay/context/medias/reducers"
+import { contextSlice } from "./application/componentsLayout/mainDisplay/context/reducers"
+import {
+  referencesDisplaySlice,
+  referencesSlice,
+} from "./application/componentsLayout/mainDisplay/context/references/reducers"
 import { apiErrorsMiddleware } from "./application/exits"
-import { mediaDisplaySlice, mediaSlice } from "./application/mainDisplay/context/medias/reducers"
-import { contextSlice } from "./application/mainDisplay/context/reducers"
-import { referencesDisplaySlice, referencesSlice } from "./application/mainDisplay/context/references/reducers"
 import { mediashareApi } from "./application/services"
 
 const configureAppStore = () =>
@@ -19,7 +22,7 @@ const configureAppStore = () =>
       [mediashareApi.reducerPath]: mediashareApi.reducer,
     },
     middleware: (getDefault) => getDefault().concat(mediashareApi.middleware).concat(apiErrorsMiddleware),
-    devTools: true, // true : low performances with large store
+    devTools: false, // true : low performances with large store
   })
 
 export const store = configureAppStore()

@@ -16,7 +16,7 @@ import {
 } from "./types"
 
 export const getImageServerUrl = (id: string, size: number, whiteReplacement: boolean) => {
-  const replaceColor = whiteReplacement ? "rc:ffffff-FF0000/" : ""
+  const replaceColor = whiteReplacement ? "/rc:ffffff-FF0000/" : ""
 
   return `${process.env.IMAGE_SERVER_MEDIA_URL}${replaceColor}/r:${size}x${size}/${process.env.MEDIASHARE_API_IMAGE_URL}/media/${id}/blob`
 }

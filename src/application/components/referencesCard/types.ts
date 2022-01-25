@@ -1,12 +1,12 @@
-import { MediumItem, ReferenceItem } from "../../types"
+import { MediaItem, ReferenceItem } from "../../types"
 
 export type ReferenceCardProps = {
   reference: ReferenceItem
   contentSize: number
   selectedReferenceIds: string[]
-  selectionHandler: (mediumId: string) => (e: MouseEvent) => any
+  selectionHandler: (mediaId: string) => (e: MouseEvent) => any
   bodyCellRatio: number
-  getMediaById: (mediumId: string) => MediumItem | undefined
+  getMediaById: (mediaId: string) => MediaItem | undefined
   mediaTransparency: boolean
   mediaWhiteReplacement: boolean
   mediaHeaderRatio: number

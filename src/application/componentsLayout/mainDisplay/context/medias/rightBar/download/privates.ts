@@ -1,4 +1,4 @@
-export const downloadMedia = (mediumIds: string[], label: string) => {
+export const downloadMedia = (mediaIds: string[], label: string) => {
   const xhttp = new XMLHttpRequest()
 
   const baseUrl = process.env.MEDIASHARE_API_URL ?? ""
@@ -19,5 +19,5 @@ export const downloadMedia = (mediumIds: string[], label: string) => {
   xhttp.setRequestHeader("Content-Type", "application/json")
   // You should set responseType as blob for binary responses
   xhttp.responseType = "blob"
-  xhttp.send(JSON.stringify(mediumIds))
+  xhttp.send(JSON.stringify(mediaIds))
 }

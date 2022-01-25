@@ -2,8 +2,8 @@ import { intersection, isEmpty, prop } from "rambda"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
-import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../../../../../services"
 import { mediaDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
+import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../services"
 import { RightBarShortcuts } from "../types"
 import { downloadMedia } from "./download/privates"
 

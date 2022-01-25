@@ -21,6 +21,6 @@ export interface SizeSliderProps {
 }
 
 export enum SizeSliderShortcuts {
-  MediumSizeUp = "ctrl+up",
-  MediumSizeDown = "ctrl+down",
+  MediaSizeUp = "ctrl+up",
+  MediaSizeDown = "ctrl+down",
 }

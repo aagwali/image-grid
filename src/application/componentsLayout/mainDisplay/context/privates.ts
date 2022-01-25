@@ -1,18 +1,23 @@
 import { skipToken } from "@reduxjs/toolkit/dist/query"
 
-import { getContextByLabel, getMediaByContextLabel, getReferencesByContextLabel } from "../../../services"
+import { Context, RawContext } from "../../../types"
+import { getMediaByContextLabel } from "./medias/services"
+import { getReferencesByContextLabel } from "./references/services"
+import { getContextByLabel } from "./services"
+
+export const toAppContext = (response: RawContext): Context => ({ id: response.id, label: response.label })
 
 export const getContainerProps = (contextLabel: string) => {
-  const { isFetching } = getContextByLabel.useQuery(contextLabel ?? skipToken)
-  const [getMedias, useGetMedias] = getMediaByContextLabel.useLazyQuery()
-  const [getReferences, useGetReferences] = getReferencesByContextLabel.useLazyQuery()
+  const { isFetching: getContextIsFetching } = getContextByLabel.useQuery(contextLabel ?? skipToken)
+  const [getMedias, getMediasHook] = getMediaByContextLabel.useLazyQuery()
+  const [getReferences, getReferencesHook] = getReferencesByContextLabel.useLazyQuery()
 
   return {
     contextLabel,
-    getContextIsFetching: isFetching,
+    getContextIsFetching,
     getMedias,
-    getMediasHook: useGetMedias,
+    getMediasHook,
     getReferences,
-    getReferencesHook: useGetReferences,
+    getReferencesHook,
   }
 }

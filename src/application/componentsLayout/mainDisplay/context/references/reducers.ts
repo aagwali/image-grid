@@ -1,9 +1,9 @@
 import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../../../../../storeConfig"
-import { rawToReferenceItem } from "../../../../privates"
-import { getReferencesByContextLabel, triggerPatchReference } from "../../../../services"
 import { ReferenceItem } from "../../../../types"
+import { rawToReferenceItem } from "./privates"
+import { getReferencesByContextLabel, triggerPatchReference } from "./services"
 
 const referencesAdapter = createEntityAdapter<ReferenceItem>({
   sortComparer: (a, b) => a.id.localeCompare(b.id),
@@ -34,7 +34,7 @@ export const referencesSelector = referencesAdapter.getSelectors((state: State) 
 const initialReferencesDisplay = {
   contentSize: Number(process.env.REF_ITEM_DEFAULT_SIZE) || 100,
   selectedReferenceIds: [] as string[],
-  lightBoxMediumId: "none", // how to not connect to media display
+  lightBoxMediaId: "none", // how to not connect to media display
   scrollRatio: 0,
   lastFilter: "",
 }

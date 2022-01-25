@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-import { getContextByLabel } from "../../../services"
 import { Context } from "../../../types"
+import { getContextByLabel } from "./services"
 
 export const initialContext: Context = {
   id: "",

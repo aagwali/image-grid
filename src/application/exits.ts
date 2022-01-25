@@ -5,7 +5,10 @@ import { AnyAction, isRejectedWithValue, Middleware, MiddlewareAPI } from "@redu
 
 import { Url } from "./components/navigateSetter"
 import { toastOptions } from "./privates"
-import { ContextEndpoints, ExitType, RejectedApiRequestMeta } from "./types"
+import { ExitType, MediashareEndpoints, RejectedApiRequestMeta } from "./types"
+
+const switchIsExhaustive = (_: never) =>
+  "Placed as default case, argument raises a ts(2345) error for every missing case"
 
 const displayExit = (status: ExitType, description: string): void => {
   if (status === ExitType.Warning) {
@@ -21,42 +24,43 @@ const displayExit = (status: ExitType, description: string): void => {
 const handleFailedQueries = (requestMeta: RejectedApiRequestMeta): void => {
   let description = ""
 
-  switch (requestMeta.arg.endpointName) {
-    case ContextEndpoints.GetContextByLabel:
+  const endpoints = requestMeta.arg.endpointName
+
+  switch (endpoints) {
+    case MediashareEndpoints.GetContextByLabel:
       description = "Unable to get context"
       displayExit(ExitType.Error, description)
       break
-    case ContextEndpoints.GetMediaByContextLabel:
+    case MediashareEndpoints.GetMediaByContextLabel:
       description = "Unable to get medias"
       displayExit(ExitType.Warning, description)
       break
-    case ContextEndpoints.GetReferencesByContextLabel:
+    case MediashareEndpoints.GetReferencesByContextLabel:
       description = "Unable to get references"
       displayExit(ExitType.Warning, description)
       break
-    case ContextEndpoints.PutInTrash:
+    case MediashareEndpoints.PutInTrash:
       description = "Move to bin failed. Reverting Changes."
       displayExit(ExitType.Warning, description)
       break
-    case ContextEndpoints.RestoreFromTrash:
+    case MediashareEndpoints.RestoreFromTrash:
       description = "Restore failed. Reverting Changes."
       displayExit(ExitType.Warning, description)
       break
-    case ContextEndpoints.Upload:
+    case MediashareEndpoints.Upload:
       description =
         requestMeta.baseQueryMeta.response.status === 409
           ? `Upload failed - File name already exists : ${requestMeta.arg.originalArgs.fileName}`
           : `Upload failed : ${requestMeta.arg.originalArgs.fileName}`
       displayExit(ExitType.Warning, description)
       break
-    case ContextEndpoints.PatchReference:
+    case MediashareEndpoints.PatchReference:
       description = "Reference update failed. Reverting Changes."
       displayExit(ExitType.Warning, description)
       break
 
-    default: {
-      ;((_incompleteSwitchCase: never) => "")(requestMeta.arg.endpointName)
-    }
+    default:
+      switchIsExhaustive(endpoints)
   }
 }
 

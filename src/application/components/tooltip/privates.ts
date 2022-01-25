@@ -2,7 +2,7 @@ import { QualityStatus } from "../../types"
 
 export const getQualityBadge = (tootltipData: string): string => {
   if (tootltipData === QualityStatus.High) return "Image size is good"
-  if (tootltipData === QualityStatus.Medium) return "Zoom deactivation is required"
+  if (tootltipData === QualityStatus.Media) return "Zoom deactivation is required"
   if (tootltipData === QualityStatus.Low) return "Image cannot be used"
   if (tootltipData === QualityStatus.Manual) return "Visual control is needed"
   if (tootltipData === "filename") return "Ctrl I"

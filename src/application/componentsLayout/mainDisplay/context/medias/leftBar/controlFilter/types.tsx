@@ -1,8 +1,8 @@
-import { MediumItem } from "../../../../../../types"
+import { MediaItem } from "../../../../../../types"
 
 export type ControlFiltersProps = {
   controlIsIndeterminate: boolean
   search: string
-  itemsByFilterData: Record<string, MediumItem[]>
+  itemsByFilterData: Record<string, MediaItem[]>
   updateFilter: (newSearch: string) => void
 }

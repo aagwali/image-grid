@@ -1,18 +1,13 @@
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../../../../../storeConfig"
-import {
-  getContextByLabel,
-  getMediaByContextLabel,
-  triggerRestoreMedia,
-  triggerTrashMedia,
-  triggerUploadMedia,
-} from "../../../../services"
-import { MediumItem } from "../../../../types"
+import { MediaItem } from "../../../../types"
 import { contextSlice } from "../reducers"
+import { getContextByLabel } from "../services"
 import { getFilteredMedia, getMediaGroupedByFilter } from "./privates"
+import { getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "./services"
 
-const mediaAdapter = createEntityAdapter<MediumItem>({
+const mediaAdapter = createEntityAdapter<MediaItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })
 
@@ -38,21 +33,21 @@ export const mediaSlice = createSlice({
         mediaAdapter.setAll(media, fetchedMedia)
         media.loaded = true
       })
-      .addMatcher(triggerUploadMedia.matchFulfilled, (media, { payload: fetchedMedium }) => {
-        mediaAdapter.addOne(media, fetchedMedium)
+      .addMatcher(triggerUploadMedia.matchFulfilled, (media, { payload: fetchedMedia }) => {
+        mediaAdapter.addOne(media, fetchedMedia)
       })
       .addMatcher(triggerTrashMedia.matchPending, (media, action) => {
-        const trashedMedium = action.meta.arg.originalArgs
+        const trashedMedia = action.meta.arg.originalArgs
         mediaAdapter.updateMany(
           media,
-          trashedMedium.map((id) => ({ id, changes: { trashed: true, isAssociable: false } })),
+          trashedMedia.map((id) => ({ id, changes: { trashed: true, isAssociable: false } })),
         )
       })
       .addMatcher(triggerRestoreMedia.matchPending, (media, action) => {
-        const restoredMedium = action.meta.arg.originalArgs
+        const restoredMedia = action.meta.arg.originalArgs
         mediaAdapter.updateMany(
           media,
-          restoredMedium.map((id) => ({ id, changes: { trashed: false, isAssociable: true } })),
+          restoredMedia.map((id) => ({ id, changes: { trashed: false, isAssociable: true } })),
         )
       })
   },
@@ -71,7 +66,7 @@ const initialMediaDisplay = {
   transparency: false,
   cardHeader: false,
   badges: false,
-  lightBoxMediumId: "none",
+  lightBoxMediaId: "none",
   scrollRatio: 0,
   whiteReplacement: false,
   lastFilter: "",

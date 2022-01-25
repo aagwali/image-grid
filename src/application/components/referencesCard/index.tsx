@@ -9,7 +9,7 @@ import {
   ReferenceItemBox,
 } from "../../componentsLayout/mainDisplay/context/references/styles"
 import { getImageServerUrl } from "../../privates"
-import { MediumItem } from "../../types"
+import { MediaItem } from "../../types"
 import ImageCard from "../imageCard"
 import { ReferenceCardProps } from "./types"
 
@@ -32,24 +32,24 @@ const ReferenceCard = ({
 
     <ReferenceBody spacing={0} size={contentSize} ratio={bodyCellRatio}>
       {reference.mediaAssociations.map((association) => {
-        const medium = getMediaById(association.msMediaId) as MediumItem
+        const media = getMediaById(association.msMediaId) as MediaItem
 
         return (
           <Box w="100px" key={association.msMediaId}>
             <ImageCard
-              title={medium.fileName}
-              subtitle={`${medium.width} x ${medium.height}`}
+              title={media.fileName}
+              subtitle={`${media.width} x ${media.height}`}
               transparency={mediaTransparency}
               imageSize={contentSize}
               checked={false}
-              getUrlBySize={(size: number) => getImageServerUrl(medium.id, size, mediaWhiteReplacement)} // cf. paddedSize
+              getUrlBySize={(size: number) => getImageServerUrl(media.id, size, mediaWhiteReplacement)} // cf. paddedSize
               openLightBox={() => {}}
               selectionHandler={(e) => {
                 e.stopPropagation()
               }}
-              status={medium.status}
+              status={media.status}
               headerHeightRatio={mediaHeaderRatio}
-              controlId={medium.controlId}
+              controlId={media.controlId}
               badges={mediaBadges}
             />
           </Box>

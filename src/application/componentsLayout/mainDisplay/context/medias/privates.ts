@@ -4,37 +4,49 @@ import React, { useReducer } from "react"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
-import { ControlStatus, MediumItem } from "../../../../types"
+import { ControlStatus, MediaItem, RawMedia } from "../../../../types"
 import { mediaDisplaySlice, mediasFilteredByUrlSelector } from "./reducers"
+
+export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
+  response.map((x) => ({
+    id: x.id,
+    fileName: x.fileName,
+    width: x.metadata?.width,
+    height: x.metadata?.height,
+    status: x.computedQualityControl,
+    controlId: x.dmapId,
+    trashed: x.trashed,
+    isAssociable: x.isAssociable,
+  }))
 
 export const getSelectedMedia = (
   selectedMediaIds: string[],
   mediaIds: string[],
-  mediumId: string,
+  mediaId: string,
   event: MouseEvent | KeyboardEvent,
 ) => {
-  const selectedIndex = indexOf(mediumId, mediaIds)
+  const selectedIndex = indexOf(mediaId, mediaIds)
   const lastSelectedIndex = indexOf(last(selectedMediaIds), mediaIds)
 
   const sortedIndexes = sort((a, b) => a - b, [selectedIndex, lastSelectedIndex])
 
   if (event.shiftKey) return uniq([...selectedMediaIds, ...mediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
 
-  return selectedMediaIds.includes(mediumId)
-    ? selectedMediaIds.filter((selectedId) => selectedId !== mediumId)
-    : [...selectedMediaIds, mediumId]
+  return selectedMediaIds.includes(mediaId)
+    ? selectedMediaIds.filter((selectedId) => selectedId !== mediaId)
+    : [...selectedMediaIds, mediaId]
 }
 
-export const getMediaGroupedByFilter = (media: MediumItem[]): Record<string, MediumItem[]> => {
+export const getMediaGroupedByFilter = (media: MediaItem[]): Record<string, MediaItem[]> => {
   const mediaGroupedByStatus = groupBy(prop("status"), media)
   const mediaGroupedByControlStatus = groupBy(
-    (medium) => (isNil(medium.controlId) ? ControlStatus.Pending : ControlStatus.Validated),
+    (media) => (isNil(media.controlId) ? ControlStatus.Pending : ControlStatus.Validated),
     media,
   )
   return { ...mediaGroupedByStatus, ...mediaGroupedByControlStatus }
 }
 
-export const getFilteredMedia = (media: MediumItem[], search: string): MediumItem[] => {
+export const getFilteredMedia = (media: MediaItem[], search: string): MediaItem[] => {
   const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
 
   const rawStatusFilters = queryObjectParameters.status ?? []
@@ -47,22 +59,22 @@ export const getFilteredMedia = (media: MediumItem[], search: string): MediumIte
 
   const binDisplay = queryObjectParameters.bin
 
-  const filteredMedia = media.filter((medium) => {
-    const binFilterKeep = binDisplay ? medium.trashed : !medium.trashed
+  const filteredMedia = media.filter((media) => {
+    const binFilterKeep = binDisplay ? media.trashed : !media.trashed
 
     const textFilterKeep = isEmpty(textFilters)
       ? true
       : any(
-          (textFilter) => medium.fileName.includes(textFilter),
+          (textFilter) => media.fileName.includes(textFilter),
           textFilters.filter((x) => x !== ""),
         )
 
-    const statusFilterKeep = isEmpty(statusFilters) ? true : statusFilters.includes(medium.status)
+    const statusFilterKeep = isEmpty(statusFilters) ? true : statusFilters.includes(media.status)
     const controlFilterKeep = !controlFilter
       ? true
       : controlFilter === ControlStatus.Validated
-      ? !isNil(medium.controlId)
-      : isNil(medium.controlId)
+      ? !isNil(media.controlId)
+      : isNil(media.controlId)
 
     return binFilterKeep && controlFilterKeep && statusFilterKeep && textFilterKeep
   })
@@ -86,15 +98,15 @@ export const getContainerProps = () => {
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
-  const selectionHandler = (medium: typeof selectedMediaIds[0]) => (event: MouseEvent) =>
+  const selectionHandler = (media: typeof selectedMediaIds[0]) => (event: MouseEvent) =>
     dispatch(
       actions.updateMediaDisplay({
-        selectedMediaIds: getSelectedMedia(selectedMediaIds, filteredMediaIds, medium, event),
+        selectedMediaIds: getSelectedMedia(selectedMediaIds, filteredMediaIds, media, event),
       }),
     )
-  const openLightBox = (mediumId: string) => (e: MouseEvent) => {
+  const openLightBox = (mediaId: string) => (e: MouseEvent) => {
     e.stopPropagation()
-    dispatch(actions.updateMediaDisplay({ lightBoxMediumId: mediumId }))
+    dispatch(actions.updateMediaDisplay({ lightBoxMediaId: mediaId }))
   }
 
   const [, forceUpdate] = useReducer(add(1), 0)

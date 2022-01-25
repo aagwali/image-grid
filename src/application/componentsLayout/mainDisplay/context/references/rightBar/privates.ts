@@ -1,8 +1,8 @@
 import { isEmpty, prop } from "rambda"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
-import { triggerPatchReference } from "../../../../../services"
 import { referencesDisplaySlice, referencesSelector } from "../reducers"
+import { triggerPatchReference } from "../services"
 import { RightBarShortcuts } from "../types"
 
 export const getContainerProps = () => {

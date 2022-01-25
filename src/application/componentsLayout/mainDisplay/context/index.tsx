@@ -5,7 +5,7 @@ import { Stack } from "@chakra-ui/react"
 
 import Router from "../../../components/router"
 import { Header } from "./header"
-import MediaDisplay from "./medias"
+import MediasDisplay from "./medias"
 import NavigationTabs from "./navigationTabs"
 import { getContainerProps } from "./privates"
 import ReferencesDisplay from "./references"
@@ -25,7 +25,7 @@ const Context = ({ routeParams: { contextLabel } }: any) => {
       <Header contextLabel={contextLabel} />
       <NavigationTabs />
       <Router>
-        <Route path="medias" element={<MediaDisplay />} />
+        <Route path="medias" element={<MediasDisplay />} />
         <Route path="references" element={<ReferencesDisplay />} />
         <Route path="/" element={<Navigate to="medias" />} />
       </Router>

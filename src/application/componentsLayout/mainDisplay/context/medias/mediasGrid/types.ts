@@ -1,6 +1,6 @@
 import React from "react"
 
-import { MediumItem } from "../../../../../types"
+import { MediaItem } from "../../../../../types"
 
 export type MediaGridProps = {
   isBin: boolean
@@ -13,13 +13,13 @@ export type MediaGridProps = {
     columnCount: number
     cellSize: number
   }
-  filteredMedia: MediumItem[]
+  filteredMedia: MediaItem[]
   headerCellRatio: number
   transparency: boolean
   selectedMediaIds: string[]
   whiteReplacement: boolean
-  openLightBox: (mediumId: string) => (e: MouseEvent) => void
-  selectionHandler: (mediumId: string) => (e: MouseEvent) => any
+  openLightBox: (mediaId: string) => (e: MouseEvent) => void
+  selectionHandler: (mediaId: string) => (e: MouseEvent) => any
   headerRatio: number
   badges: boolean
   forceUpdate: React.DispatchWithoutAction

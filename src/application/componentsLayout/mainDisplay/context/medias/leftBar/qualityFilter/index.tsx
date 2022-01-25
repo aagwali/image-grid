@@ -34,10 +34,10 @@ export const QualityFilters = ({
         children={<BadgeFilterItem itemsByFilterData={itemsByFilterData} item={QualityStatus.High} />}
       />
       <Checkbox
-        isChecked={isStatusFilterActive(search, QualityStatus.Medium)}
+        isChecked={isStatusFilterActive(search, QualityStatus.Media)}
         size={"sm"}
-        onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Medium, search))}
-        children={<BadgeFilterItem itemsByFilterData={itemsByFilterData} item={QualityStatus.Medium} />}
+        onChange={() => updateFilter(toggleStatusFilter(QualityStatus.Media, search))}
+        children={<BadgeFilterItem itemsByFilterData={itemsByFilterData} item={QualityStatus.Media} />}
       />
       <Checkbox
         isChecked={isStatusFilterActive(search, QualityStatus.Low)}

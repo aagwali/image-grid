@@ -5,7 +5,7 @@ export enum ExitType {
 
 export enum QualityStatus {
   High = "OK",
-  Medium = "NO_ZOOM",
+  Media = "NO_ZOOM",
   Low = "KO",
   Manual = "TO_BE_CHECKED",
 }
@@ -25,7 +25,7 @@ export type Context = {
   label: string
 }
 
-export type RawMedium = {
+export type RawMedia = {
   id: string
   fileName: string
   metadata: { width: number; height: number }
@@ -35,7 +35,7 @@ export type RawMedium = {
   isAssociable: boolean
 }
 
-export type MediumItem = {
+export type MediaItem = {
   id: string
   fileName: string
   width: number
@@ -67,10 +67,10 @@ export type ReferenceItem = {
 
 export type AssociationItem = {
   id: string
-  mediaChildren: MediumItem[] & { slot: number }
+  mediaChildren: MediaItem[] & { slot: number }
 }
 
-export enum ContextEndpoints {
+export enum MediashareEndpoints {
   GetMediaByContextLabel = "getMediaByContextLabel",
   GetReferencesByContextLabel = "getReferencesByContextLabel",
   GetContextByLabel = "getContextByLabel",
@@ -83,7 +83,7 @@ export enum ContextEndpoints {
 export type RejectedApiRequestMeta = {
   arg: {
     originalArgs: any
-    endpointName: ContextEndpoints
+    endpointName: MediashareEndpoints
   }
   baseQueryMeta: { response: { status: number } }
 }

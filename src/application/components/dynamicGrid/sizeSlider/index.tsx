@@ -25,9 +25,9 @@ const SizeSlider = ({
 
   const handleHotkey = (hotkey: string, event: KeyboardEvent) => {
     event.preventDefault()
-    if (hotkey === SizeSliderShortcuts.MediumSizeUp && contentSize < contentSizeRange[1]) setDisplay(contentSize + step)
+    if (hotkey === SizeSliderShortcuts.MediaSizeUp && contentSize < contentSizeRange[1]) setDisplay(contentSize + step)
 
-    if (hotkey === SizeSliderShortcuts.MediumSizeDown && contentSize > contentSizeRange[0])
+    if (hotkey === SizeSliderShortcuts.MediaSizeDown && contentSize > contentSizeRange[0])
       setDisplay(contentSize - step)
   }
 

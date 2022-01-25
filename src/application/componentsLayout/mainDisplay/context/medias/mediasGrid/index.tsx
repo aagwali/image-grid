@@ -3,7 +3,7 @@ import React from "react"
 import DynamicGrid from "../../../../../components/dynamicGrid"
 import ImageCard from "../../../../../components/imageCard"
 import { getImageServerUrl } from "../../../../../privates"
-import { MediumItem } from "../../../../../types"
+import { MediaItem } from "../../../../../types"
 import { LogoBox, MediaBox } from "./styles"
 import { MediaGridProps } from "./types"
 
@@ -37,19 +37,19 @@ const MediasGrid = ({
         items={filteredMedia}
         itemsLoaded={mediaLoaded}
         headerHeightRatio={headerCellRatio}
-        renderItem={(medium: MediumItem) => (
+        renderItem={(media: MediaItem) => (
           <ImageCard
-            title={medium.fileName}
-            subtitle={`${medium.width} x ${medium.height}`}
+            title={media.fileName}
+            subtitle={`${media.width} x ${media.height}`}
             transparency={transparency}
             imageSize={contentSize}
-            checked={selectedMediaIds.includes(medium.id)}
-            getUrlBySize={(size: number) => getImageServerUrl(medium.id, size, whiteReplacement)} // cf. paddedSize
-            openLightBox={openLightBox(medium.id)}
-            selectionHandler={selectionHandler(medium.id)}
-            status={medium.status}
+            checked={selectedMediaIds.includes(media.id)}
+            getUrlBySize={(size: number) => getImageServerUrl(media.id, size, whiteReplacement)} // cf. paddedSize
+            openLightBox={openLightBox(media.id)}
+            selectionHandler={selectionHandler(media.id)}
+            status={media.status}
             headerHeightRatio={headerRatio}
-            controlId={medium.controlId}
+            controlId={media.controlId}
             badges={badges}
           />
         )}

@@ -1,19 +1,9 @@
 import React, { useState } from "react"
 
-import {
-  Center,
-  HStack,
-  Image,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  VStack,
-} from "@chakra-ui/react"
+import { Center, HStack, Image, Popover, PopoverArrow, PopoverBody, PopoverTrigger, VStack } from "@chakra-ui/react"
 
 import EnlargeSvg from "../../../assets/images/enlarge.svg"
-import { ColorBadges, ControlStatus } from "../../types"
+import { ColorBadges, ControlStatus, UserStars } from "../../types"
 import ToolTip from "../tooltip"
 import { getBadgeLabel, getBoundedSize } from "./privates"
 import {
@@ -30,7 +20,8 @@ import {
   Ellipsis,
   EnlargeBox,
   PaddingBox,
-  PopoverContent_,
+  PopoverContentColors,
+  PopoverContentStars,
 } from "./styles"
 import { ImageCardProps } from "./types"
 
@@ -49,6 +40,7 @@ const ImageCard = ({
   badges,
   userBadge,
   setColorBadge,
+  setUserStars,
 }: ImageCardProps) => {
   const [error, setError] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -117,7 +109,7 @@ const ImageCard = ({
                       ref={initRef}
                     ></CardBadge>
                   </PopoverTrigger>
-                  <PopoverContent_ size={boundedSize}>
+                  <PopoverContentColors size={boundedSize}>
                     <PopoverArrow />
                     <PopoverBody>
                       <HStack style={{ cursor: "pointer" }}>
@@ -159,21 +151,92 @@ const ImageCard = ({
                         ></CardBadge>
                       </HStack>
                     </PopoverBody>
-                  </PopoverContent_>
+                  </PopoverContentColors>
                 </>
               )}
             </Popover>
 
-            <Popover trigger="hover">
-              <PopoverTrigger>
-                <CardBadge size={boundedSize} badge={ControlStatus.Validated}>
-                  <Ellipsis size={boundedSize}>{getBadgeLabel(ControlStatus.Validated)}</Ellipsis>
-                </CardBadge>
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody>Are you sure you want to have that milkshake?</PopoverBody>
-              </PopoverContent>
+            <Popover trigger="hover" autoFocus={false}>
+              {({ onClose }) => (
+                <>
+                  <PopoverTrigger>
+                    <CardBadge
+                      size={boundedSize}
+                      badge={userBadge?.stars ?? UserStars.None}
+                      onClick={(e: any) => {
+                        setUserStars(UserStars.None)(e)
+                        onClose()
+                      }}
+                      style={{ cursor: "pointer" }}
+                      ref={initRef}
+                    >
+                      {`${userBadge?.stars ?? ""}★`}
+                    </CardBadge>
+                  </PopoverTrigger>
+                  <PopoverContentStars size={boundedSize}>
+                    <PopoverArrow />
+                    <PopoverBody>
+                      <HStack style={{ cursor: "pointer" }}>
+                        <CardBadge
+                          size={boundedSize}
+                          badge={UserStars.One}
+                          onClick={(e: any) => {
+                            setUserStars(UserStars.One)(e)
+                            onClose()
+                          }}
+                          ref={initRef}
+                        >
+                          ★
+                        </CardBadge>
+                        <CardBadge
+                          size={boundedSize}
+                          badge={UserStars.Two}
+                          onClick={(e: any) => {
+                            setUserStars(UserStars.Two)(e)
+                            onClose()
+                          }}
+                          ref={initRef}
+                        >
+                          ★
+                        </CardBadge>
+                        <CardBadge
+                          size={boundedSize}
+                          badge={UserStars.Three}
+                          onClick={(e: any) => {
+                            setUserStars(UserStars.Three)(e)
+                            onClose()
+                          }}
+                          ref={initRef}
+                        >
+                          ★
+                        </CardBadge>
+                        <CardBadge
+                          size={boundedSize}
+                          badge={UserStars.Four}
+                          onClick={(e: any) => {
+                            setUserStars(UserStars.Four)(e)
+                            onClose()
+                          }}
+                          ref={initRef}
+                        >
+                          ★
+                        </CardBadge>
+                        <CardBadge
+                          size={boundedSize}
+                          badge={UserStars.Five}
+                          onClick={(e: any) => {
+                            setUserStars(UserStars.Five)(e)
+                            onClose()
+                          }}
+                          ref={initRef}
+                        >
+                          ★
+                        </CardBadge>
+                      </HStack>
+                    </PopoverBody>
+                  </PopoverContentStars>
+                </>
+              )}
             </Popover>
           </CardUserBadgesBox>
         )}

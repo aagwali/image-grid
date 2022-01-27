@@ -27,6 +27,7 @@ const MediasGrid = ({
   userBadges,
   forceUpdate,
   setColorBadge,
+  setUserStars,
 }: MediaGridProps) => (
   <MediaBox bin={isBin.toString()}>
     <LogoBox bin={isBin.toString()} loaded={mediaLoaded.toString()}>
@@ -55,6 +56,7 @@ const MediasGrid = ({
             badges={badges}
             userBadge={userBadges[media.id]}
             setColorBadge={setColorBadge(media.id)}
+            setUserStars={setUserStars(media.id)}
           />
         )}
         forceUpdate={forceUpdate}

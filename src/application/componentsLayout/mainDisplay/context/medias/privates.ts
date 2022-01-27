@@ -4,7 +4,7 @@ import React, { useReducer } from "react"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
-import { ColorBadges, ControlStatus, MediaItem, RawMedia, UserBadges } from "../../../../types"
+import { ColorBadges, ControlStatus, MediaItem, RawMedia, UserBadges, UserStars } from "../../../../types"
 import { mediasDisplaySlice, mediasFilteredByUrlSelector } from "./reducers"
 
 export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
@@ -85,6 +85,9 @@ export const getFilteredMedia = (media: MediaItem[], search: string): MediaItem[
 const setMultipleColorBadges = (ids: string[], colorBadge: ColorBadges, userBadges: Record<string, UserBadges>): {} =>
   ids.reduce((acc, id) => ({ ...acc, [id]: { color: colorBadge, stars: userBadges[id]?.stars } }), {})
 
+const setMultipleUserStars = (ids: string[], userStars: UserStars, userBadges: Record<string, UserBadges>): {} =>
+  ids.reduce((acc, id) => ({ ...acc, [id]: { stars: userStars, color: userBadges[id]?.color } }), {})
+
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
 
@@ -144,6 +147,28 @@ export const getContainerProps = () => {
         )
   }
 
+  const setUserStars = (mediaId: string) => (userStars: UserStars) => (e: MouseEvent) => {
+    e.stopPropagation()
+
+    !isEmpty(selectedMediaIds) && selectedMediaIds.includes(mediaId)
+      ? dispatch(
+          actions.updateMediaDisplay({
+            userBadges: {
+              ...userBadges,
+              ...setMultipleUserStars([...selectedMediaIds, mediaId], userStars, userBadges),
+            },
+          }),
+        )
+      : dispatch(
+          actions.updateMediaDisplay({
+            userBadges: {
+              ...userBadges,
+              ...setMultipleUserStars([mediaId], userStars, userBadges),
+            },
+          }),
+        )
+  }
+
   const [, forceUpdate] = useReducer(add(1), 0)
 
   return {
@@ -166,5 +191,6 @@ export const getContainerProps = () => {
     openLightBox,
     forceUpdate,
     setColorBadge,
+    setUserStars,
   }
 }

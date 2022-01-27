@@ -5,7 +5,7 @@ import { Box, Center, HStack, PopoverContent, Text, theme } from "@chakra-ui/rea
 import CheckerBoardSvg from "../../../assets/images/checkerboard.svg"
 import DocErrorSvg from "../../../assets/images/docError.svg"
 import SpinnerSvg from "../../../assets/images/spinner.svg"
-import { ColorBadges, ControlStatus, QualityStatus } from "../../types"
+import { ColorBadges, ControlStatus, QualityStatus, UserStars } from "../../types"
 
 const fadeIn = keyframes`
   from {
@@ -303,17 +303,40 @@ export const CardBadge = styled(Center)`
           border-color: ${theme.colors.teal[300]};
         }
       `
+    if (badge === UserStars.None)
+      return css`
+        font-size: ${size / 18}px;
+        color: ${theme.colors.gray[300]};
+        width: ${size / 7}px;
+        border-color: ${theme.colors.gray[200]};
+        :hover {
+          border-color: ${theme.colors.teal[300]};
+        }
+      `
 
     // gray as undefined
     return css`
-      border-color: ${theme.colors.gray[300]};
-      color: ${theme.colors.gray[300]};
+      font-size: ${size / 18}px;
+      color: ${theme.colors.teal[400]};
+      width: ${size / 7}px;
+      border-color: ${theme.colors.gray[200]};
+      background-color: ${theme.colors.gray[100]};
+      :hover {
+        border-color: ${theme.colors.teal[300]};
+      }
     `
   }};
 `
 
-export const PopoverContent_ = styled(PopoverContent)`
+export const PopoverContentColors = styled(PopoverContent)`
   width: ${({ size }) => `${size * 0.8}px`};
+  :focus {
+    box-shadow: none;
+  }
+`
+
+export const PopoverContentStars = styled(PopoverContent)`
+  width: ${({ size }) => `${size * 0.95}px`};
   :focus {
     box-shadow: none;
   }

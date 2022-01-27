@@ -35,6 +35,15 @@ export type RawMedia = {
   isAssociable: boolean
 }
 
+export enum UserStars {
+  None = "",
+  One = "1",
+  Two = "2",
+  Three = "3",
+  Four = "4",
+  Five = "5",
+}
+
 export enum ColorBadges {
   Grey = "grey",
   Red = "red",
@@ -45,7 +54,7 @@ export enum ColorBadges {
 
 export type UserBadges = {
   color?: ColorBadges
-  stars?: 1 | 2 | 3 | 4 | 5
+  stars?: UserStars
 }
 
 export type MediaItem = {

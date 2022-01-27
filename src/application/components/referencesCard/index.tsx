@@ -54,6 +54,7 @@ const ReferenceCard = ({
               badges={mediaBadges}
               userBadge={userBadges[media.id]}
               setColorBadge={(x) => (z) => {}}
+              setUserStars={(x) => (z) => {}}
             />
           </Box>
         )

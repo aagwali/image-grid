@@ -2,14 +2,14 @@ import { intersection, isEmpty, prop } from "rambda"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
-import { mediaDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
+import { mediasDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
 import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../services"
 import { RightBarShortcuts } from "../types"
 import { downloadMedia } from "./download/privates"
 
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaDisplaySlice
+  const { actions } = mediasDisplaySlice
   const location = useLocation()
 
   const { selectedMediaIds } = getState(prop("mediasDisplay"))

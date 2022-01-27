@@ -1,4 +1,4 @@
-import { MediaItem, ReferenceItem } from "../../types"
+import { MediaItem, ReferenceItem, UserBadges } from "../../types"
 
 export type ReferenceCardProps = {
   reference: ReferenceItem
@@ -11,4 +11,5 @@ export type ReferenceCardProps = {
   mediaWhiteReplacement: boolean
   mediaHeaderRatio: number
   mediaBadges: boolean
+  userBadges: Record<string, UserBadges>
 }

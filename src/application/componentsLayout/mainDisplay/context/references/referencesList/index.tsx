@@ -20,6 +20,7 @@ const ReferencesList = ({
   mediaWhiteReplacement,
   mediaHeaderRatio,
   mediaBadges,
+  userBadges,
 }: ReferenceListProps) => (
   <ReferencesBox>
     <LogoBox loaded={referencesLoaded.toString()}>
@@ -40,6 +41,7 @@ const ReferencesList = ({
             mediaWhiteReplacement={mediaWhiteReplacement}
             mediaHeaderRatio={mediaHeaderRatio}
             mediaBadges={mediaBadges}
+            userBadges={userBadges}
           />
         )}
       />

@@ -21,11 +21,13 @@ const MediaDisplay = () => {
     headerCellRatio,
     headerRatio,
     isBin,
+    userBadges,
     updateScrollRatio,
     updateCellMatrix,
     selectionHandler,
     openLightBox,
     forceUpdate,
+    setColorBadge,
   } = getContainerProps()
 
   return (
@@ -49,7 +51,9 @@ const MediaDisplay = () => {
         selectionHandler={selectionHandler}
         headerRatio={headerRatio}
         badges={badges}
+        userBadges={userBadges}
         forceUpdate={forceUpdate}
+        setColorBadge={setColorBadge}
       />
 
       <RightBar />

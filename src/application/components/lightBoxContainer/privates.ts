@@ -3,7 +3,7 @@ import { useState } from "react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
 import { getSelectedMedia } from "../../componentsLayout/mainDisplay/context/medias/privates"
-import { mediaDisplaySlice, mediaSelector } from "../../componentsLayout/mainDisplay/context/medias/reducers"
+import { mediasDisplaySlice, mediaSelector } from "../../componentsLayout/mainDisplay/context/medias/reducers"
 import { MediaItem } from "../../types"
 
 export const pickAdjacentMedia = (mediaIds: string[], lightBoxMediaId: string): [string, string] => {
@@ -27,7 +27,7 @@ export const getMediaIdByIndex =
     media[index]?.id ?? "lightBox-mediaId-error"
 
 export const getContainerProps = () => {
-  const { actions } = mediaDisplaySlice
+  const { actions } = mediasDisplaySlice
   const dispatch = useAppDispatch()
 
   const { lightBoxMediaId, selectedMediaIds, whiteReplacement } = getState(prop("mediasDisplay"))

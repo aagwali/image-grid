@@ -1,4 +1,4 @@
-import { MediaItem, ReferenceItem } from "../../../../../types"
+import { MediaItem, ReferenceItem, UserBadges } from "../../../../../types"
 
 export type ReferenceListProps = {
   referencesLoaded: boolean
@@ -13,4 +13,5 @@ export type ReferenceListProps = {
   mediaWhiteReplacement: boolean
   mediaHeaderRatio: number
   mediaBadges: boolean
+  userBadges: Record<string, UserBadges>
 }

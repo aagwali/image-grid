@@ -24,7 +24,9 @@ const MediasGrid = ({
   selectionHandler,
   headerRatio,
   badges,
+  userBadges,
   forceUpdate,
+  setColorBadge,
 }: MediaGridProps) => (
   <MediaBox bin={isBin.toString()}>
     <LogoBox bin={isBin.toString()} loaded={mediaLoaded.toString()}>
@@ -51,6 +53,8 @@ const MediasGrid = ({
             headerHeightRatio={headerRatio}
             controlId={media.controlId}
             badges={badges}
+            userBadge={userBadges[media.id]}
+            setColorBadge={setColorBadge(media.id)}
           />
         )}
         forceUpdate={forceUpdate}

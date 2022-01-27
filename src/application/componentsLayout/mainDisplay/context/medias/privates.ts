@@ -4,8 +4,8 @@ import React, { useReducer } from "react"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
-import { ControlStatus, MediaItem, RawMedia } from "../../../../types"
-import { mediaDisplaySlice, mediasFilteredByUrlSelector } from "./reducers"
+import { ColorBadges, ControlStatus, MediaItem, RawMedia, UserBadges } from "../../../../types"
+import { mediasDisplaySlice, mediasFilteredByUrlSelector } from "./reducers"
 
 export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
   response.map((x) => ({
@@ -82,13 +82,26 @@ export const getFilteredMedia = (media: MediaItem[], search: string): MediaItem[
   return filteredMedia
 }
 
+const setMultipleColorBadges = (ids: string[], colorBadge: ColorBadges, userBadges: Record<string, UserBadges>): {} =>
+  ids.reduce((acc, id) => ({ ...acc, [id]: { color: colorBadge, stars: userBadges[id]?.stars } }), {})
+
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaDisplaySlice
+
+  const actions = mediasDisplaySlice.actions
 
   const { loaded: mediaLoaded } = getState(prop("media"))
-  const { selectedMediaIds, transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges, whiteReplacement } =
-    getState(prop("mediasDisplay"))
+  const {
+    selectedMediaIds,
+    transparency,
+    contentSize,
+    scrollRatio,
+    cellMatrix,
+    cardHeader,
+    badges,
+    whiteReplacement,
+    userBadges,
+  } = getState(prop("mediasDisplay"))
 
   const filteredMedia = getState((x) => mediasFilteredByUrlSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
@@ -109,6 +122,28 @@ export const getContainerProps = () => {
     dispatch(actions.updateMediaDisplay({ lightBoxMediaId: mediaId }))
   }
 
+  const setColorBadge = (mediaId: string) => (colorBadge: ColorBadges) => (e: MouseEvent) => {
+    e.stopPropagation()
+
+    !isEmpty(selectedMediaIds) && selectedMediaIds.includes(mediaId)
+      ? dispatch(
+          actions.updateMediaDisplay({
+            userBadges: {
+              ...userBadges,
+              ...setMultipleColorBadges([...selectedMediaIds, mediaId], colorBadge, userBadges),
+            },
+          }),
+        )
+      : dispatch(
+          actions.updateMediaDisplay({
+            userBadges: {
+              ...userBadges,
+              ...setMultipleColorBadges([mediaId], colorBadge, userBadges),
+            },
+          }),
+        )
+  }
+
   const [, forceUpdate] = useReducer(add(1), 0)
 
   return {
@@ -124,10 +159,12 @@ export const getContainerProps = () => {
     headerCellRatio,
     headerRatio,
     isBin,
+    userBadges,
     updateScrollRatio,
     updateCellMatrix,
     selectionHandler,
     openLightBox,
     forceUpdate,
+    setColorBadge,
   }
 }

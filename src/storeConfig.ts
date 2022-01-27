@@ -2,7 +2,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
 import { configureStore } from "@reduxjs/toolkit"
 
-import { mediaDisplaySlice, mediaSlice } from "./application/componentsLayout/mainDisplay/context/medias/reducers"
+import { mediasDisplaySlice, mediaSlice } from "./application/componentsLayout/mainDisplay/context/medias/reducers"
 import { contextSlice } from "./application/componentsLayout/mainDisplay/context/reducers"
 import {
   referencesDisplaySlice,
@@ -15,7 +15,7 @@ const configureAppStore = () =>
   configureStore({
     reducer: {
       [contextSlice.name]: contextSlice.reducer,
-      [mediaDisplaySlice.name]: mediaDisplaySlice.reducer,
+      [mediasDisplaySlice.name]: mediasDisplaySlice.reducer,
       [referencesDisplaySlice.name]: referencesDisplaySlice.reducer,
       [mediaSlice.name]: mediaSlice.reducer,
       [referencesSlice.name]: referencesSlice.reducer,

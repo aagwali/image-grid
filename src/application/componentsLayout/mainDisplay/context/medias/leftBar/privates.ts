@@ -6,7 +6,7 @@ import { NavigateFunction, useLocation, useNavigate } from "react-router-dom"
 
 import { State, useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
 import { ControlStatus, QualityStatus } from "../../../../../types"
-import { mediaDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
+import { mediasDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
 import { LeftBarShortcuts } from "../types"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
@@ -96,7 +96,7 @@ export const updateFilter_ =
 
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaDisplaySlice
+  const { actions } = mediasDisplaySlice
   const { search } = useLocation()
   const navigate = useNavigate()
 

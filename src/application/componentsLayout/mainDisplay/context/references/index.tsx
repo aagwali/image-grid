@@ -19,6 +19,7 @@ const ReferencesDisplay = () => {
     mediaHeaderRatio,
     headerCellRatio,
     bodyCellRatio,
+    userBadges,
     selectionHandler,
     getMediaById,
     forceUpdate,
@@ -41,6 +42,7 @@ const ReferencesDisplay = () => {
         mediaWhiteReplacement={mediaWhiteReplacement}
         mediaHeaderRatio={mediaHeaderRatio}
         mediaBadges={mediaBadges}
+        userBadges={userBadges}
       />
 
       <RightBar />

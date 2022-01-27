@@ -1,4 +1,4 @@
-import { QualityStatus } from "../../types"
+import { ColorBadges, QualityStatus, UserBadges } from "../../types"
 
 export interface ImageCardProps {
   title: string
@@ -13,4 +13,6 @@ export interface ImageCardProps {
   headerHeightRatio?: number
   controlId?: string
   badges: boolean
+  userBadge: UserBadges
+  setColorBadge: (colorBadge: ColorBadges) => (e: MouseEvent) => void
 }

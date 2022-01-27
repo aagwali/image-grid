@@ -44,7 +44,7 @@ export const getContainerProps = () => {
 
   const { loaded: referencesLoaded } = getState(prop("references"))
   const { contentSize, selectedReferenceIds } = getState(prop("referencesDisplay"))
-  const { badges, transparency, whiteReplacement, cardHeader } = getState(prop("mediasDisplay"))
+  const { badges, transparency, whiteReplacement, cardHeader, userBadges } = getState(prop("mediasDisplay"))
   const references = getState(referencesSelector.selectAll)
   const state = getState(identity)
 
@@ -76,6 +76,7 @@ export const getContainerProps = () => {
     mediaHeaderRatio,
     headerCellRatio,
     bodyCellRatio,
+    userBadges,
     selectionHandler,
     getMediaById,
     forceUpdate,

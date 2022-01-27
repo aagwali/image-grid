@@ -24,6 +24,7 @@ const ReferenceCard = ({
   mediaWhiteReplacement,
   mediaHeaderRatio,
   mediaBadges,
+  userBadges,
 }: ReferenceCardProps) => (
   <ReferenceItemBox checked={selectedReferenceIds.includes(reference.id)} onClick={selectionHandler(reference.id)}>
     <ReferenceHeader className="referenceHeader">
@@ -51,6 +52,8 @@ const ReferenceCard = ({
               headerHeightRatio={mediaHeaderRatio}
               controlId={media.controlId}
               badges={mediaBadges}
+              userBadge={userBadges[media.id]}
+              setColorBadge={(x) => (z) => {}}
             />
           </Box>
         )

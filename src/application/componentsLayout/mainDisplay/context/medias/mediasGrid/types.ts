@@ -1,6 +1,6 @@
 import React from "react"
 
-import { MediaItem } from "../../../../../types"
+import { ColorBadges, MediaItem, UserBadges } from "../../../../../types"
 
 export type MediaGridProps = {
   isBin: boolean
@@ -22,5 +22,7 @@ export type MediaGridProps = {
   selectionHandler: (mediaId: string) => (e: MouseEvent) => any
   headerRatio: number
   badges: boolean
+  userBadges: Record<string, UserBadges>
   forceUpdate: React.DispatchWithoutAction
+  setColorBadge: (mediaId: string) => (colorBadge: ColorBadges) => (e: any) => void
 }

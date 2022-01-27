@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../../../../../storeConfig"
-import { MediaItem } from "../../../../types"
+import { MediaItem, UserBadges } from "../../../../types"
 import { contextSlice } from "../reducers"
 import { getContextByLabel } from "../services"
 import { getFilteredMedia, getMediaGroupedByFilter } from "./privates"
@@ -11,14 +11,12 @@ const mediaAdapter = createEntityAdapter<MediaItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })
 
+export const setChangeOnMany = (ids: any[], change: Record<any, any>): any => ids.map((id) => ({ id, change }))
+
 export const mediaSlice = createSlice({
   name: "media",
   initialState: mediaAdapter.getInitialState({ loaded: false }),
-  reducers: {
-    setLoaded: (media, { payload: loaded }: PayloadAction<boolean>) => {
-      media.loaded = loaded
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addMatcher(getContextByLabel.matchPending, (media, _) => {
@@ -75,9 +73,10 @@ const initialMediaDisplay = {
     columnCount: 10,
     cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
   },
+  userBadges: {} as Record<string, UserBadges>,
 }
 
-export const mediaDisplaySlice = createSlice({
+export const mediasDisplaySlice = createSlice({
   name: "mediasDisplay",
   initialState: initialMediaDisplay,
   reducers: {

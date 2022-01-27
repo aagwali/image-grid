@@ -3,7 +3,7 @@ import { omit, prop } from "rambda"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
-import { mediaDisplaySlice } from "../medias/reducers"
+import { mediasDisplaySlice } from "../medias/reducers"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
 
@@ -20,7 +20,7 @@ export const navigateWithFilter = (page: string, lastMediaFilter: string = "") =
 
 export const getPropContainer = () => {
   const dispatch = useAppDispatch()
-  const { actions } = mediaDisplaySlice
+  const { actions } = mediasDisplaySlice
 
   const { lastFilter: lastMediaFilter } = getState(prop("mediasDisplay"))
 

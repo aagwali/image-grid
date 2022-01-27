@@ -57,7 +57,13 @@ export const mediaStatusDictionarySelector = createSelector(
   getMediaGroupedByFilter,
 )
 export const mediasFilteredByUrlSelector = createSelector(
-  [mediaSelector.selectAll, (_: State, search: string) => search],
+  [
+    mediaSelector.selectAll,
+    ({ mediasDisplay: { userBadges } }: State, search: string) => ({
+      userBadges,
+      search,
+    }),
+  ],
   getFilteredMedia,
 )
 
@@ -83,13 +89,26 @@ export const mediasDisplaySlice = createSlice({
   name: "mediasDisplay",
   initialState: initialMediaDisplay,
   reducers: {
-    updateMediaDisplay: (mediasDisplay, { payload }: PayloadAction<Partial<typeof mediasDisplay>>) => ({
-      ...mediasDisplay,
-      ...payload,
-    }),
+    updateMediaDisplay: (mediasDisplay, { payload }: PayloadAction<Partial<typeof mediasDisplay>>) => {
+      console.time("reducer")
+
+      const temp = {
+        ...mediasDisplay,
+
+        ...Object.freeze(payload),
+      }
+
+      console.timeEnd("reducer")
+
+      return temp
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(contextSlice.actions.resetContext, (mediasDisplay) => ({
+      ...initialMediaDisplay,
+      uploadProgress: mediasDisplay.uploadProgress,
+    }))
+    builder.addCase(mediasDisplaySlice.actions.updateMediaDisplay, (mediasDisplay) => ({
       ...initialMediaDisplay,
       uploadProgress: mediasDisplay.uploadProgress,
     }))

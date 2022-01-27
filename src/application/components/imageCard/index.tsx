@@ -76,11 +76,6 @@ const ImageCard = ({
             <EnlargeBox className="enlargeImage" size={getBoundedSize(imageSize, 160)} onClick={openLightBox}>
               <Image src={EnlargeSvg} />
             </EnlargeBox>
-
-            {/* <EnlargeBox2 size={getBoundedSize(imageSize, 160)} onClick={setColorBadge(ColorBadges.Red)}>
-              <Image src={EnlargeSvg} />
-            </EnlargeBox2> */}
-
             <Image
               boxSize={`${paddedSize}`}
               objectFit="contain"

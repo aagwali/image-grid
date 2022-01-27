@@ -5,25 +5,31 @@ import { useState } from "react"
 import { NavigateFunction, useLocation, useNavigate } from "react-router-dom"
 
 import { State, useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
-import { ControlStatus, QualityStatus } from "../../../../../types"
+import { ColorBadges, ControlStatus, QualityStatus } from "../../../../../types"
 import { mediasDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
 import { LeftBarShortcuts } from "../types"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
 
-export const getStatusFilters = (search: string): string[] => {
+export const getFilters = (filterType: string, search: string): string[] => {
   const queryObjectParameters = parse(search, routerParseOptions)
-  const rawFilters = queryObjectParameters.status ?? []
+  const rawFilters = queryObjectParameters[filterType] ?? []
   const filters = Array.isArray(rawFilters) ? rawFilters : [rawFilters]
 
   return filters
 }
 
-export const isAllQualityFilterChecked = (search: string): boolean =>
-  getStatusFilters(search).length === Object.keys(QualityStatus).length
+export const isAllUserStarsFilterChecked = (search: string): boolean =>
+  getFilters("userStars", search).length === Object.keys(ColorBadges).length
 
-export const isStatusFilterActive = (search: string, status: string): boolean =>
-  getStatusFilters(search).includes(status)
+export const isAllColorBadgesFilterChecked = (search: string): boolean =>
+  getFilters("colorBadges", search).length === Object.keys(ColorBadges).length
+
+export const isAllQualityFilterChecked = (search: string): boolean =>
+  getFilters("status", search).length === Object.keys(QualityStatus).length
+
+export const isFilterActive = (requestedFilter: string, search: string, status: string): boolean =>
+  getFilters(requestedFilter, search).includes(status)
 
 export const toggleOffTextFilters = (search: string): string =>
   stringify(omit("textFilter", parse(search, routerParseOptions)), routerParseOptions)
@@ -38,24 +44,24 @@ export const setTextFilter = (textInput: string, search: string): string => {
   return stringify({ ...queryObjectParameters, textFilter: updateFilters }, routerParseOptions)
 }
 
-export const toggleStatusFilter = (status: string, search: string): string => {
+export const toggleFilter = (targetStatus: string, status: string, search: string): string => {
   const queryObjectParameters = parse(search, routerParseOptions)
-  const rawStatusFilters = queryObjectParameters.status ?? []
-  const statusFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
+  const rawStatusFilters = queryObjectParameters[targetStatus] ?? []
+  const targetFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
 
-  const updateFilters = statusFilters.includes(status)
-    ? statusFilters.filter((y) => y !== status)
-    : [...statusFilters, status]
+  const updateFilters = targetFilters.includes(status)
+    ? targetFilters.filter((y) => y !== status)
+    : [...targetFilters, status]
 
-  return stringify({ ...queryObjectParameters, status: updateFilters }, routerParseOptions)
+  return stringify({ ...queryObjectParameters, [targetStatus]: updateFilters }, routerParseOptions)
 }
 
-export const toggleAllQualityFilters = (checked: boolean, search: string): string => {
+export const toggleAllFilters = (target: string, statuses: string[], checked: boolean, search: string): string => {
   const queryObjectParameters = parse(search, routerParseOptions)
 
   const newQueryObjectParameters = checked
-    ? { ...queryObjectParameters, status: Object.values(QualityStatus) }
-    : (omit("status", queryObjectParameters) as ParsedQuery<string>)
+    ? { ...queryObjectParameters, [target]: statuses }
+    : (omit(target, queryObjectParameters) as ParsedQuery<string>)
 
   const newQueryParameters = stringify(newQueryObjectParameters, routerParseOptions)
 
@@ -110,7 +116,7 @@ export const getContainerProps = () => {
   const isIndeterminateDisplay =
     any(identity, [cardHeader, badges, transparency, whiteReplacement]) && !allCheckedDisplay
   const allCheckedQualityFilters = isAllQualityFilterChecked(search)
-  const isIndeterminateQualityFilters = !isEmpty(getStatusFilters(search)) && !allCheckedQualityFilters
+  const isIndeterminateQualityFilters = !isEmpty(getFilters("status", search)) && !allCheckedQualityFilters
   const controlIsIndeterminate =
     isControlFilterActive(search, ControlStatus.Validated) || isControlFilterActive(search, ControlStatus.Pending)
 
@@ -140,6 +146,11 @@ export const getContainerProps = () => {
       }),
     )
 
+  const allCheckedColorBadgesFilters = isAllColorBadgesFilterChecked(search)
+  const isIndeterminateColorBadge = !isEmpty(getFilters("colorBadges", search)) && !allCheckedColorBadgesFilters
+  const allCheckedUserStarsFilters = isAllUserStarsFilterChecked(search)
+  const isIndeterminateUserStars = !isEmpty(getFilters("userStars", search)) && !allCheckedColorBadgesFilters
+
   const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects, navigate)
 
   const [inputSearch, setInputSearch] = useState("")
@@ -166,6 +177,10 @@ export const getContainerProps = () => {
     isIndeterminateQualityFilters,
     controlIsIndeterminate,
     inputSearch,
+    allCheckedColorFilters: allCheckedColorBadgesFilters,
+    isIndeterminateColor: isIndeterminateColorBadge,
+    allCheckedStarsFilters: allCheckedUserStarsFilters,
+    isIndeterminateUserStars,
     toggleCardHeader,
     toggleCardBadges,
     toggleDisplayOptions,

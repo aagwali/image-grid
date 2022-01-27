@@ -8,7 +8,7 @@ export const getBadgeLabel = (status: any): any => {
   if (status === ControlStatus.Validated) return "Validated"
   if (status === ControlStatus.Pending) return "Pending"
 
-  return "Badge label error"
+  return ""
 }
 
 export const getBoundedSize = (size: number, minBound: number): number => (size <= minBound ? minBound : size)

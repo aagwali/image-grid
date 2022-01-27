@@ -7,6 +7,7 @@ import PanelItems from "../../../../../components/accordionItem"
 import { getHotkeys } from "../../../../../privates"
 import { Separator, SideBar } from "../../styles"
 import { LeftBarShortcuts } from "../types"
+import ColorBadgeFilters from "./colorBadgeFilter"
 import { ControlFilters } from "./controlFilter"
 import { ImagesInformations } from "./ImagesInformations"
 import { ImagesSize } from "./imagesSize"
@@ -39,6 +40,10 @@ const MediaLeftBar = ({ forceUpdate }: any) => {
     updateFilter,
     setInputSearch,
     handleHotkey,
+    allCheckedColorFilters,
+    isIndeterminateColor,
+    allCheckedStarsFilters,
+    isIndeterminateUserStars,
   } = getContainerProps()
 
   return (
@@ -95,6 +100,22 @@ const MediaLeftBar = ({ forceUpdate }: any) => {
               itemsByFilterData={itemsByFilterData}
               updateFilter={updateFilter}
             />
+
+            <ColorBadgeFilters
+              allCheckedColorFilters={allCheckedColorFilters}
+              isIndeterminateColor={isIndeterminateColor}
+              updateFilter={updateFilter}
+              search={search}
+              itemsByFilterData={itemsByFilterData}
+            />
+
+            {/* <StarsFilters
+              allCheckedStarsFilters={allCheckedStarsFilters}
+              starsIsIndeterminate={isIndeterminateUserStars}
+              updateFilter={updateFilter}
+              search={search}
+              itemsByFilterData={itemsByFilterData}
+            /> */}
           </Stack>
         </PanelItems>
       </Accordion>

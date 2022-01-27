@@ -37,13 +37,30 @@ export const getSelectedMedia = (
     : [...selectedMediaIds, mediaId]
 }
 
-export const getMediaGroupedByFilter = (media: MediaItem[]): Record<string, MediaItem[]> => {
-  const mediaGroupedByStatus = groupBy(prop("status"), media)
+export const getMediaGroupedByFilter = (
+  medias: MediaItem[],
+  userBadges: Record<string, UserBadges>,
+): Record<string, MediaItem[]> => {
+  const mediasWithUserBadges = medias.map((media) => ({
+    ...media,
+    colorBadge: userBadges[media.id]?.color ?? ColorBadges.Grey,
+    starBadge: userBadges[media.id]?.stars ?? UserStars.None,
+  }))
+
+  const mediaGroupedByStatus = groupBy(prop("status"), mediasWithUserBadges)
   const mediaGroupedByControlStatus = groupBy(
     (media) => (isNil(media.controlId) ? ControlStatus.Pending : ControlStatus.Validated),
-    media,
+    mediasWithUserBadges,
   )
-  return { ...mediaGroupedByStatus, ...mediaGroupedByControlStatus }
+  const mediasGroupedByColorBadge = groupBy(prop("colorBadge"), mediasWithUserBadges)
+  const mediasGroupedByUserStars = groupBy(prop("colorBadge"), mediasWithUserBadges)
+
+  return {
+    ...mediaGroupedByStatus,
+    ...mediaGroupedByControlStatus,
+    ...mediasGroupedByColorBadge,
+    ...mediasGroupedByUserStars,
+  }
 }
 
 export const getFilteredMedia = (media: MediaItem[], search: string): MediaItem[] => {

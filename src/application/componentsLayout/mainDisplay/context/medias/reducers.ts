@@ -52,7 +52,10 @@ export const mediaSlice = createSlice({
 })
 
 export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
-export const mediaStatusDictionarySelector = createSelector(mediaSelector.selectAll, getMediaGroupedByFilter)
+export const mediaStatusDictionarySelector = createSelector(
+  [mediaSelector.selectAll, ({ mediasDisplay }: State) => mediasDisplay.userBadges],
+  getMediaGroupedByFilter,
+)
 export const mediasFilteredByUrlSelector = createSelector(
   [mediaSelector.selectAll, (_: State, search: string) => search],
   getFilteredMedia,

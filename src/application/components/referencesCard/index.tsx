@@ -53,8 +53,7 @@ const ReferenceCard = ({
               controlId={media.controlId}
               badges={mediaBadges}
               userBadge={userBadges[media.id]}
-              setColorBadge={(x) => (z) => {}}
-              setUserStars={(x) => (z) => {}}
+              setUserBadge={(x, y) => (z) => {}}
             />
           </Box>
         )

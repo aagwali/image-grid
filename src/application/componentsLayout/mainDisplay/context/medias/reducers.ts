@@ -89,26 +89,13 @@ export const mediasDisplaySlice = createSlice({
   name: "mediasDisplay",
   initialState: initialMediaDisplay,
   reducers: {
-    updateMediaDisplay: (mediasDisplay, { payload }: PayloadAction<Partial<typeof mediasDisplay>>) => {
-      console.time("reducer")
-
-      const temp = {
-        ...mediasDisplay,
-
-        ...Object.freeze(payload),
-      }
-
-      console.timeEnd("reducer")
-
-      return temp
-    },
+    updateMediaDisplay: (mediasDisplay, { payload }: PayloadAction<Partial<typeof mediasDisplay>>) => ({
+      ...mediasDisplay,
+      ...payload,
+    }),
   },
   extraReducers: (builder) => {
     builder.addCase(contextSlice.actions.resetContext, (mediasDisplay) => ({
-      ...initialMediaDisplay,
-      uploadProgress: mediasDisplay.uploadProgress,
-    }))
-    builder.addCase(mediasDisplaySlice.actions.updateMediaDisplay, (mediasDisplay) => ({
       ...initialMediaDisplay,
       uploadProgress: mediasDisplay.uploadProgress,
     }))

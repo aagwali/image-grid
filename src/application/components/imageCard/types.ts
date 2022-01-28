@@ -14,6 +14,5 @@ export interface ImageCardProps {
   controlId?: string
   badges: boolean
   userBadge: UserBadges
-  setColorBadge: (colorBadge: ColorBadges) => (e: MouseEvent) => void
-  setUserStars: (colorBadge: UserStars) => (e: MouseEvent) => void
+  setUserBadge: (badgeType: "stars" | "color", value: ColorBadges | UserStars) => (e: MouseEvent) => void
 }

@@ -1,4 +1,4 @@
-import { parse } from "query-string"
+import { parse, ParsedQuery } from "query-string"
 import { add, any, groupBy, indexOf, isEmpty, isNil, last, map, prop, sort, uniq } from "rambda"
 import React, { useReducer } from "react"
 import { useLocation } from "react-router-dom"
@@ -53,7 +53,7 @@ export const getMediaGroupedByFilter = (
     mediasWithUserBadges,
   )
   const mediasGroupedByColorBadge = groupBy(prop("colorBadge"), mediasWithUserBadges)
-  const mediasGroupedByUserStars = groupBy(prop("colorBadge"), mediasWithUserBadges)
+  const mediasGroupedByUserStars = groupBy(prop("starBadge"), mediasWithUserBadges)
 
   return {
     ...mediaGroupedByStatus,
@@ -63,24 +63,23 @@ export const getMediaGroupedByFilter = (
   }
 }
 
+const getActiveFilters = (query: ParsedQuery<string>, filterType: string): string[] => {
+  const rawStatusFilters = query[filterType] ?? []
+  const activeFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
+  return activeFilters
+}
+
 export const getFilteredMedia = (
   medias: MediaItem[],
   { userBadges, search }: { userBadges: Record<string, UserBadges>; search: string },
 ): MediaItem[] => {
-  const queryObjectParameters = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+  const query = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
 
-  const rawStatusFilters = queryObjectParameters.status ?? []
-  const statusFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
-
-  const rawColorBadgesFilters = queryObjectParameters.colorBadges ?? []
-  const colorBadgesFilters = Array.isArray(rawColorBadgesFilters) ? rawColorBadgesFilters : [rawColorBadgesFilters]
-
-  const controlFilter = queryObjectParameters.control as string | null
-
-  const rawTextFilter = queryObjectParameters.textFilter ?? []
-  const textFilters = Array.isArray(rawTextFilter) ? rawTextFilter : [rawTextFilter]
-
-  const binDisplay = queryObjectParameters.bin
+  const statusFilters = getActiveFilters(query, "status")
+  const colorBadgesFilters = getActiveFilters(query, "colorBadges")
+  const textFilters = getActiveFilters(query, "textFilter")
+  const controlFilter = query.control as string | null
+  const binDisplay = query.bin
 
   const filteredMedia = medias.filter((media) => {
     const binFilterKeep = binDisplay ? media.trashed : !media.trashed
@@ -110,20 +109,22 @@ export const getFilteredMedia = (
   return filteredMedia
 }
 
-const setMultipleColorBadges = (ids: string[], colorBadge: ColorBadges, userBadges: Record<string, UserBadges>) => {
+const setMultipleBadges = (
+  badgeType: "color" | "stars",
+  ids: string[],
+  value: ColorBadges | UserStars,
+  userBadges: Record<string, UserBadges>,
+) => {
   const newUserBadges = { ...userBadges }
 
   ids.forEach((id) => {
     newUserBadges[id]
-      ? (newUserBadges[id] = { color: colorBadge, stars: newUserBadges[id].stars })
-      : (newUserBadges[id] = { color: colorBadge })
+      ? (newUserBadges[id] = { ...newUserBadges[id], [badgeType]: value })
+      : (newUserBadges[id] = { [badgeType]: value })
   })
 
   return newUserBadges
 }
-
-const setMultipleUserStars = (ids: string[], userStars: UserStars, userBadges: Record<string, UserBadges>): {} =>
-  ids.reduce((acc, id) => ({ ...acc, [id]: { stars: userStars, color: userBadges[id]?.color } }), {})
 
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
@@ -146,7 +147,8 @@ export const getContainerProps = () => {
   const filteredMedia = getState((x) => mediasFilteredByUrlSelector(x, location.search))
   const filteredMediaIds = filteredMedia.map(prop("id"))
   const [headerCellRatio, headerRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
-  const isBin = useLocation().search.includes("bin")
+  const search = useLocation().search
+  const isBin = search.includes("bin")
 
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
 
@@ -162,43 +164,31 @@ export const getContainerProps = () => {
     dispatch(actions.updateMediaDisplay({ lightBoxMediaId: mediaId }))
   }
 
-  const setColorBadge = (mediaId: string) => (colorBadge: ColorBadges) => (e: MouseEvent) => {
-    e.stopPropagation()
+  const setUserBadge =
+    (mediaId: string) => (badgeType: "color" | "stars", value: ColorBadges | UserStars) => (e: MouseEvent) => {
+      e.stopPropagation()
+      const targets = selectedMediaIds.includes(mediaId) ? [...selectedMediaIds, mediaId] : [mediaId]
+      const newUserBadges = setMultipleBadges(badgeType, targets, value, userBadges)
+      dispatch(
+        actions.updateMediaDisplay({
+          userBadges: newUserBadges,
+        }),
+      )
 
-    !isEmpty(selectedMediaIds) && selectedMediaIds.includes(mediaId)
-      ? dispatch(
-          actions.updateMediaDisplay({
-            userBadges: setMultipleColorBadges([...selectedMediaIds, mediaId], colorBadge, userBadges),
-          }),
-        )
-      : dispatch(
-          actions.updateMediaDisplay({
-            userBadges: setMultipleColorBadges([...selectedMediaIds, mediaId], colorBadge, userBadges),
-          }),
-        )
-  }
+      // exclude items if not in active selection anymore :
+      const currentQuery = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+      const activeFilterValues =
+        badgeType === "color"
+          ? getActiveFilters(currentQuery, "colorBadges")
+          : getActiveFilters(currentQuery, "userStars")
 
-  const setUserStars = (mediaId: string) => (userStars: UserStars) => (e: MouseEvent) => {
-    e.stopPropagation()
-
-    !isEmpty(selectedMediaIds) && selectedMediaIds.includes(mediaId)
-      ? dispatch(
+      if (!activeFilterValues.includes(value))
+        dispatch(
           actions.updateMediaDisplay({
-            userBadges: {
-              ...userBadges,
-              ...setMultipleUserStars([...selectedMediaIds, mediaId], userStars, userBadges),
-            },
+            selectedMediaIds: selectedMediaIds.filter((id) => !targets.includes(id)),
           }),
         )
-      : dispatch(
-          actions.updateMediaDisplay({
-            userBadges: {
-              ...userBadges,
-              ...setMultipleUserStars([mediaId], userStars, userBadges),
-            },
-          }),
-        )
-  }
+    }
 
   const [, forceUpdate] = useReducer(add(1), 0)
 
@@ -221,7 +211,6 @@ export const getContainerProps = () => {
     selectionHandler,
     openLightBox,
     forceUpdate,
-    setColorBadge,
-    setUserStars,
+    setUserBadge,
   }
 }

@@ -39,8 +39,7 @@ const ImageCard = ({
   controlId,
   badges,
   userBadge,
-  setColorBadge,
-  setUserStars,
+  setUserBadge,
 }: ImageCardProps) => {
   const [error, setError] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -76,6 +75,7 @@ const ImageCard = ({
             <EnlargeBox className="enlargeImage" size={getBoundedSize(imageSize, 160)} onClick={openLightBox}>
               <Image src={EnlargeSvg} />
             </EnlargeBox>
+
             <Image
               boxSize={`${paddedSize}`}
               objectFit="contain"
@@ -97,7 +97,7 @@ const ImageCard = ({
                       size={boundedSize}
                       badge={userBadge?.color ?? ColorBadges.Grey}
                       onClick={(e: any) => {
-                        setColorBadge(ColorBadges.Grey)(e)
+                        setUserBadge("color", ColorBadges.Grey)(e)
                         onClose()
                       }}
                       style={{ cursor: "pointer" }}
@@ -112,7 +112,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={ColorBadges.Red}
                           onClick={(e: any) => {
-                            setColorBadge(ColorBadges.Red)(e)
+                            setUserBadge("color", ColorBadges.Red)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -121,7 +121,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={ColorBadges.Green}
                           onClick={(e: any) => {
-                            setColorBadge(ColorBadges.Green)(e)
+                            setUserBadge("color", ColorBadges.Green)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -130,7 +130,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={ColorBadges.Blue}
                           onClick={(e: any) => {
-                            setColorBadge(ColorBadges.Blue)(e)
+                            setUserBadge("color", ColorBadges.Blue)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -139,7 +139,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={ColorBadges.Yellow}
                           onClick={(e: any) => {
-                            setColorBadge(ColorBadges.Yellow)(e)
+                            setUserBadge("color", ColorBadges.Yellow)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -159,7 +159,7 @@ const ImageCard = ({
                       size={boundedSize}
                       badge={userBadge?.stars ?? UserStars.None}
                       onClick={(e: any) => {
-                        setUserStars(UserStars.None)(e)
+                        setUserBadge("stars", UserStars.None)(e)
                         onClose()
                       }}
                       style={{ cursor: "pointer" }}
@@ -176,7 +176,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={UserStars.One}
                           onClick={(e: any) => {
-                            setUserStars(UserStars.One)(e)
+                            setUserBadge("stars", UserStars.One)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -187,7 +187,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={UserStars.Two}
                           onClick={(e: any) => {
-                            setUserStars(UserStars.Two)(e)
+                            setUserBadge("stars", UserStars.Two)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -198,7 +198,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={UserStars.Three}
                           onClick={(e: any) => {
-                            setUserStars(UserStars.Three)(e)
+                            setUserBadge("stars", UserStars.Three)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -209,7 +209,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={UserStars.Four}
                           onClick={(e: any) => {
-                            setUserStars(UserStars.Four)(e)
+                            setUserBadge("stars", UserStars.Four)(e)
                             onClose()
                           }}
                           ref={initRef}
@@ -220,7 +220,7 @@ const ImageCard = ({
                           size={boundedSize}
                           badge={UserStars.Five}
                           onClick={(e: any) => {
-                            setUserStars(UserStars.Five)(e)
+                            setUserBadge("stars", UserStars.Five)(e)
                             onClose()
                           }}
                           ref={initRef}

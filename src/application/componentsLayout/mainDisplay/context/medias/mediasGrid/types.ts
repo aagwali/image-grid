@@ -24,6 +24,5 @@ export type MediaGridProps = {
   badges: boolean
   userBadges: Record<string, UserBadges>
   forceUpdate: React.DispatchWithoutAction
-  setColorBadge: (mediaId: string) => (colorBadge: ColorBadges) => (e: any) => void
-  setUserStars: (mediaId: string) => (colorBadge: UserStars) => (e: any) => void
+  setUserBadge: (mediaId: string) => (badgeType: "stars" | "color", value: ColorBadges | UserStars) => (e: any) => void
 }

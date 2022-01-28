@@ -27,8 +27,7 @@ const MediaDisplay = () => {
     selectionHandler,
     openLightBox,
     forceUpdate,
-    setColorBadge,
-    setUserStars,
+    setUserBadge,
   } = getContainerProps()
 
   return (
@@ -54,8 +53,7 @@ const MediaDisplay = () => {
         badges={badges}
         userBadges={userBadges}
         forceUpdate={forceUpdate}
-        setColorBadge={setColorBadge}
-        setUserStars={setUserStars}
+        setUserBadge={setUserBadge}
       />
 
       <RightBar />

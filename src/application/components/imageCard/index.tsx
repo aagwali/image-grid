@@ -4,9 +4,11 @@ import { Center, HStack, Image, Popover, PopoverArrow, PopoverBody, PopoverTrigg
 
 import EnlargeSvg from "../../../assets/images/enlarge.svg"
 import { ColorBadges, ControlStatus, UserStars } from "../../types"
+import ProgressiveRender from "../progressiveRender"
 import ToolTip from "../tooltip"
 import { getBadgeLabel, getBoundedSize } from "./privates"
 import {
+  BadgesBox,
   CardBadge,
   CardBadgesBox,
   CardBox,
@@ -24,6 +26,187 @@ import {
   PopoverContentStars,
 } from "./styles"
 import { ImageCardProps } from "./types"
+
+const Badges = ({
+  headerHeightRatio,
+  imageSize,
+  boundedSize,
+  userBadge,
+  setUserBadge,
+  initRef,
+  status,
+  controlId,
+}: any) => (
+  <BadgesBox>
+    <CardUserBadgesBox spacing={0.5} data-header={headerHeightRatio !== 0} size={imageSize}>
+      <Popover trigger="hover" placement="bottom-start" autoFocus={false}>
+        {({ onClose }) => (
+          <>
+            <PopoverTrigger>
+              <CardBadge
+                size={boundedSize}
+                badge={userBadge?.color ?? ColorBadges.Grey}
+                onClick={(e: any) => {
+                  setUserBadge("color", ColorBadges.Grey)(e)
+                  onClose()
+                }}
+                style={{ cursor: "pointer" }}
+                ref={initRef}
+              ></CardBadge>
+            </PopoverTrigger>
+            <PopoverContentColors size={boundedSize}>
+              <PopoverArrow />
+              <PopoverBody>
+                <HStack style={{ cursor: "pointer" }}>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={ColorBadges.Red}
+                    onClick={(e: any) => {
+                      setUserBadge("color", ColorBadges.Red)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  ></CardBadge>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={ColorBadges.Green}
+                    onClick={(e: any) => {
+                      setUserBadge("color", ColorBadges.Green)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  ></CardBadge>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={ColorBadges.Blue}
+                    onClick={(e: any) => {
+                      setUserBadge("color", ColorBadges.Blue)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  ></CardBadge>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={ColorBadges.Yellow}
+                    onClick={(e: any) => {
+                      setUserBadge("color", ColorBadges.Yellow)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  ></CardBadge>
+                </HStack>
+              </PopoverBody>
+            </PopoverContentColors>
+          </>
+        )}
+      </Popover>
+
+      <Popover trigger="hover" autoFocus={false}>
+        {({ onClose }) => (
+          <>
+            <PopoverTrigger>
+              <CardBadge
+                size={boundedSize}
+                badge={userBadge?.stars ?? UserStars.None}
+                onClick={(e: any) => {
+                  setUserBadge("stars", UserStars.None)(e)
+                  onClose()
+                }}
+                style={{ cursor: "pointer" }}
+                ref={initRef}
+              >
+                {`${userBadge?.stars ?? ""}★`}
+              </CardBadge>
+            </PopoverTrigger>
+            <PopoverContentStars size={boundedSize}>
+              <PopoverArrow />
+              <PopoverBody>
+                <HStack style={{ cursor: "pointer" }}>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={UserStars.One}
+                    onClick={(e: any) => {
+                      setUserBadge("stars", UserStars.One)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  >
+                    ★
+                  </CardBadge>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={UserStars.Two}
+                    onClick={(e: any) => {
+                      setUserBadge("stars", UserStars.Two)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  >
+                    ★
+                  </CardBadge>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={UserStars.Three}
+                    onClick={(e: any) => {
+                      setUserBadge("stars", UserStars.Three)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  >
+                    ★
+                  </CardBadge>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={UserStars.Four}
+                    onClick={(e: any) => {
+                      setUserBadge("stars", UserStars.Four)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  >
+                    ★
+                  </CardBadge>
+                  <CardBadge
+                    size={boundedSize}
+                    badge={UserStars.Five}
+                    onClick={(e: any) => {
+                      setUserBadge("stars", UserStars.Five)(e)
+                      onClose()
+                    }}
+                    ref={initRef}
+                  >
+                    ★
+                  </CardBadge>
+                </HStack>
+              </PopoverBody>
+            </PopoverContentStars>
+          </>
+        )}
+      </Popover>
+    </CardUserBadgesBox>
+    <CardBadgesBox spacing={0.5}>
+      <ToolTip tooltip={status}>
+        <CardBadge size={getBoundedSize(imageSize, 160)} badge={status}>
+          <Ellipsis size={boundedSize}>{getBadgeLabel(status)} </Ellipsis>
+        </CardBadge>
+      </ToolTip>
+
+      {controlId ? (
+        <ToolTip tooltip={ControlStatus.Validated}>
+          <CardBadge size={getBoundedSize(imageSize, 160)} badge={ControlStatus.Validated}>
+            <Ellipsis size={boundedSize}>{getBadgeLabel(ControlStatus.Validated)}</Ellipsis>
+          </CardBadge>
+        </ToolTip>
+      ) : (
+        <ToolTip tooltip={ControlStatus.Pending}>
+          <CardBadge size={getBoundedSize(imageSize, 160)} badge={ControlStatus.Pending}>
+            <Ellipsis size={boundedSize}> {getBadgeLabel(ControlStatus.Pending)} </Ellipsis>
+          </CardBadge>
+        </ToolTip>
+      )}
+    </CardBadgesBox>
+  </BadgesBox>
+)
 
 const ImageCard = ({
   title,
@@ -72,9 +255,12 @@ const ImageCard = ({
           <CardImageErrorBox boxSize={paddedSize} />
         ) : (
           <CardImageBox>
-            <EnlargeBox className="enlargeImage" size={getBoundedSize(imageSize, 160)} onClick={openLightBox}>
-              <Image src={EnlargeSvg} />
-            </EnlargeBox>
+            <EnlargeBox
+              className="enlargeImage"
+              size={getBoundedSize(imageSize, 160)}
+              onClick={openLightBox}
+              children={<Image src={EnlargeSvg} />}
+            />
 
             <Image
               boxSize={`${paddedSize}`}
@@ -88,176 +274,18 @@ const ImageCard = ({
         )}
 
         {badges && (
-          <CardUserBadgesBox spacing={0.5} data-header={headerHeightRatio !== 0} size={imageSize}>
-            <Popover trigger="hover" placement="bottom-start" autoFocus={false}>
-              {({ onClose }) => (
-                <>
-                  <PopoverTrigger>
-                    <CardBadge
-                      size={boundedSize}
-                      badge={userBadge?.color ?? ColorBadges.Grey}
-                      onClick={(e: any) => {
-                        setUserBadge("color", ColorBadges.Grey)(e)
-                        onClose()
-                      }}
-                      style={{ cursor: "pointer" }}
-                      ref={initRef}
-                    ></CardBadge>
-                  </PopoverTrigger>
-                  <PopoverContentColors size={boundedSize}>
-                    <PopoverArrow />
-                    <PopoverBody>
-                      <HStack style={{ cursor: "pointer" }}>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={ColorBadges.Red}
-                          onClick={(e: any) => {
-                            setUserBadge("color", ColorBadges.Red)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        ></CardBadge>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={ColorBadges.Green}
-                          onClick={(e: any) => {
-                            setUserBadge("color", ColorBadges.Green)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        ></CardBadge>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={ColorBadges.Blue}
-                          onClick={(e: any) => {
-                            setUserBadge("color", ColorBadges.Blue)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        ></CardBadge>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={ColorBadges.Yellow}
-                          onClick={(e: any) => {
-                            setUserBadge("color", ColorBadges.Yellow)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        ></CardBadge>
-                      </HStack>
-                    </PopoverBody>
-                  </PopoverContentColors>
-                </>
-              )}
-            </Popover>
-
-            <Popover trigger="hover" autoFocus={false}>
-              {({ onClose }) => (
-                <>
-                  <PopoverTrigger>
-                    <CardBadge
-                      size={boundedSize}
-                      badge={userBadge?.stars ?? UserStars.None}
-                      onClick={(e: any) => {
-                        setUserBadge("stars", UserStars.None)(e)
-                        onClose()
-                      }}
-                      style={{ cursor: "pointer" }}
-                      ref={initRef}
-                    >
-                      {`${userBadge?.stars ?? ""}★`}
-                    </CardBadge>
-                  </PopoverTrigger>
-                  <PopoverContentStars size={boundedSize}>
-                    <PopoverArrow />
-                    <PopoverBody>
-                      <HStack style={{ cursor: "pointer" }}>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={UserStars.One}
-                          onClick={(e: any) => {
-                            setUserBadge("stars", UserStars.One)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        >
-                          ★
-                        </CardBadge>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={UserStars.Two}
-                          onClick={(e: any) => {
-                            setUserBadge("stars", UserStars.Two)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        >
-                          ★
-                        </CardBadge>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={UserStars.Three}
-                          onClick={(e: any) => {
-                            setUserBadge("stars", UserStars.Three)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        >
-                          ★
-                        </CardBadge>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={UserStars.Four}
-                          onClick={(e: any) => {
-                            setUserBadge("stars", UserStars.Four)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        >
-                          ★
-                        </CardBadge>
-                        <CardBadge
-                          size={boundedSize}
-                          badge={UserStars.Five}
-                          onClick={(e: any) => {
-                            setUserBadge("stars", UserStars.Five)(e)
-                            onClose()
-                          }}
-                          ref={initRef}
-                        >
-                          ★
-                        </CardBadge>
-                      </HStack>
-                    </PopoverBody>
-                  </PopoverContentStars>
-                </>
-              )}
-            </Popover>
-          </CardUserBadgesBox>
-        )}
-
-        {badges && (
-          <CardBadgesBox spacing={0.5}>
-            <ToolTip tooltip={status}>
-              <CardBadge size={getBoundedSize(imageSize, 160)} badge={status}>
-                <Ellipsis size={boundedSize}>{getBadgeLabel(status)} </Ellipsis>
-              </CardBadge>
-            </ToolTip>
-
-            {controlId ? (
-              <ToolTip tooltip={ControlStatus.Validated}>
-                <CardBadge size={getBoundedSize(imageSize, 160)} badge={ControlStatus.Validated}>
-                  <Ellipsis size={boundedSize}>{getBadgeLabel(ControlStatus.Validated)}</Ellipsis>
-                </CardBadge>
-              </ToolTip>
-            ) : (
-              <ToolTip tooltip={ControlStatus.Pending}>
-                <CardBadge size={getBoundedSize(imageSize, 160)} badge={ControlStatus.Pending}>
-                  <Ellipsis size={boundedSize}> {getBadgeLabel(ControlStatus.Pending)} </Ellipsis>
-                </CardBadge>
-              </ToolTip>
-            )}
-          </CardBadgesBox>
+          <ProgressiveRender>
+            <Badges
+              headerHeightRatio={headerHeightRatio}
+              imageSize={imageSize}
+              boundedSize={boundedSize}
+              userBadge={userBadge}
+              setUserBadge={setUserBadge}
+              initRef={initRef}
+              status={status}
+              controlId={controlId}
+            />
+          </ProgressiveRender>
         )}
       </CardBox>
     </PaddingBox>

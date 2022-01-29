@@ -152,34 +152,8 @@ export const EnlargeBox = styled(Center)<{ size: number }>`
   }
 `
 
-export const EnlargeBox2 = styled(Center)<{ size: number }>`
-  position: absolute;
-
-  width: ${({ size }) => `${Math.round(size / 8 / 2) * 2}px`};
-  height: ${({ size }) => `${Math.round(size / 8 / 2) * 2}px`};
-  top: ${({ size }) => `${size / 25}px`};
-  left: ${({ size }) => `${size / 25}px`};
-
-  background-color: ${theme.colors.gray[200]};
-  border-radius: 3px;
-  border-width: ${theme.sizes["0.5"]};
-  border-color: ${theme.colors.white};
-  cursor: pointer;
-  opacity: 0;
-  -webkit-transition: opacity ease 500ms;
-  transition: opacity ease 500ms;
-
-  img {
-    -webkit-transition: all ease 400ms;
-    transition: all ease 400ms;
-    transform: scale(0.5);
-  }
-
-  :hover {
-    img {
-      transform: scale(0.65);
-    }
-  }
+export const BadgesBox = styled(Box)`
+  animation: ${fadeIn} 1.5s;
 `
 export const CardUserBadgesBox = styled(HStack)`
   position: absolute;

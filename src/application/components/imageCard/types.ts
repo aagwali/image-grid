@@ -1,18 +1,24 @@
 import { ColorBadges, QualityStatus, UserBadges, UserStars } from "../../types"
 
 export interface ImageCardProps {
+  mediaId: string
   title: string
   subtitle: string
   imageSize: number
   transparency: boolean
-  openLightBox: (e: MouseEvent) => void
-  selectionHandler: (e: any) => void
   checked: boolean
-  getUrlBySize: (size: number) => string
   status: QualityStatus
   headerHeightRatio?: number
+  whiteReplacement: boolean
   controlId?: string
   badges: boolean
   userBadge: UserBadges
-  setUserBadge: (badgeType: "stars" | "color", value: ColorBadges | UserStars) => (e: MouseEvent) => void
+  getUrlBySize: (whiteReplacement: boolean, size: number) => string
+  openLightBox: (mediaId: string) => (mouseEvent: MouseEvent) => void
+  setSelection: (mediaId: string) => (mouseEvent: MouseEvent) => void
+  setUserBadge: (
+    mediaId: string,
+    badgeType: "stars" | "color",
+    value: ColorBadges | UserStars,
+  ) => (mouseEvent: MouseEvent) => void
 }

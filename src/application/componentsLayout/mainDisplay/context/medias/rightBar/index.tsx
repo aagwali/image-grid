@@ -3,24 +3,24 @@ import Hotkeys from "react-hot-keys"
 
 import { Accordion, Stack } from "@chakra-ui/react"
 
-import PanelItems from "../../../../../components/accordionItem"
+import AccordionItem from "../../../../../components/accordionItem"
 import DeselectAllItem from "../../../../../components/deselectAllItem"
 import SelectAllItem from "../../../../../components/selectAllItem"
 import { getHotkeys } from "../../../../../privates"
 import { Separator, SideBar } from "../../styles"
-import { RightBarShortcuts } from "../types"
 import DownloadItem from "./download"
 import DropZone from "./dropzone"
 import { getContainerProps } from "./privates"
 import RestoreItem from "./restore"
 import TrashItem from "./trash"
+import { RightBarShortcuts } from "./types"
 
 const MediaRightBar = () => {
   const {
     label,
     selectionExists,
     selectedMediaIds,
-    filteredMediaIds,
+    displayedMediaIds,
     pendingIdsInSelection,
     isBin,
     selectAll,
@@ -38,16 +38,16 @@ const MediaRightBar = () => {
 
       <Separator />
       <Accordion defaultIndex={[1]} allowMultiple>
-        <PanelItems title={`Selection ${selectedMediaIds.length} / ${filteredMediaIds.length}`}>
+        <AccordionItem title={`Selection ${selectedMediaIds.length} / ${displayedMediaIds.length}`}>
           <Stack mt={0} spacing={4}>
             <SelectAllItem selectAll={selectAll} entity={"medias"} />
 
             <DeselectAllItem selectionExists={selectionExists} deselectAll={deselectAll} entity={"media"} />
           </Stack>
-        </PanelItems>
+        </AccordionItem>
 
         {selectionExists && (
-          <PanelItems title={"Actions"}>
+          <AccordionItem title={"Actions"}>
             <Stack mt={0} spacing={4}>
               {!isBin && <DownloadItem selectedMediaIds={selectedMediaIds} label={label} deselectAll={deselectAll} />}
 
@@ -68,7 +68,7 @@ const MediaRightBar = () => {
                 />
               )}
             </Stack>
-          </PanelItems>
+          </AccordionItem>
         )}
       </Accordion>
 

@@ -28,6 +28,7 @@ import {
 import { ImageCardProps } from "./types"
 
 const Badges = ({
+  mediaId,
   headerHeightRatio,
   imageSize,
   boundedSize,
@@ -46,8 +47,8 @@ const Badges = ({
               <CardBadge
                 size={boundedSize}
                 badge={userBadge?.color ?? ColorBadges.Grey}
-                onClick={(e: any) => {
-                  setUserBadge("color", ColorBadges.Grey)(e)
+                onClick={(mouseEvent: MouseEvent) => {
+                  setUserBadge(mediaId, "color", ColorBadges.Grey)(mouseEvent)
                   onClose()
                 }}
                 style={{ cursor: "pointer" }}
@@ -61,8 +62,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={ColorBadges.Red}
-                    onClick={(e: any) => {
-                      setUserBadge("color", ColorBadges.Red)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "color", ColorBadges.Red)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -70,8 +71,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={ColorBadges.Green}
-                    onClick={(e: any) => {
-                      setUserBadge("color", ColorBadges.Green)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "color", ColorBadges.Green)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -79,8 +80,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={ColorBadges.Blue}
-                    onClick={(e: any) => {
-                      setUserBadge("color", ColorBadges.Blue)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "color", ColorBadges.Blue)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -88,8 +89,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={ColorBadges.Yellow}
-                    onClick={(e: any) => {
-                      setUserBadge("color", ColorBadges.Yellow)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "color", ColorBadges.Yellow)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -108,8 +109,8 @@ const Badges = ({
               <CardBadge
                 size={boundedSize}
                 badge={userBadge?.stars ?? UserStars.None}
-                onClick={(e: any) => {
-                  setUserBadge("stars", UserStars.None)(e)
+                onClick={(mouseEvent: MouseEvent) => {
+                  setUserBadge(mediaId, "stars", UserStars.None)(mouseEvent)
                   onClose()
                 }}
                 style={{ cursor: "pointer" }}
@@ -125,8 +126,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={UserStars.One}
-                    onClick={(e: any) => {
-                      setUserBadge("stars", UserStars.One)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "stars", UserStars.One)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -136,8 +137,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={UserStars.Two}
-                    onClick={(e: any) => {
-                      setUserBadge("stars", UserStars.Two)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "stars", UserStars.Two)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -147,8 +148,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={UserStars.Three}
-                    onClick={(e: any) => {
-                      setUserBadge("stars", UserStars.Three)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "stars", UserStars.Three)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -158,8 +159,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={UserStars.Four}
-                    onClick={(e: any) => {
-                      setUserBadge("stars", UserStars.Four)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "stars", UserStars.Four)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -169,8 +170,8 @@ const Badges = ({
                   <CardBadge
                     size={boundedSize}
                     badge={UserStars.Five}
-                    onClick={(e: any) => {
-                      setUserBadge("stars", UserStars.Five)(e)
+                    onClick={(mouseEvent: MouseEvent) => {
+                      setUserBadge(mediaId, "stars", UserStars.Five)(mouseEvent)
                       onClose()
                     }}
                     ref={initRef}
@@ -209,20 +210,22 @@ const Badges = ({
 )
 
 const ImageCard = ({
+  mediaId,
   title,
   subtitle,
   imageSize,
   transparency,
   checked,
-  openLightBox,
-  selectionHandler,
-  getUrlBySize,
   status,
   headerHeightRatio = 0,
   controlId,
   badges,
   userBadge,
+  whiteReplacement,
+  getUrlBySize,
+  openLightBox,
   setUserBadge,
+  setSelection,
 }: ImageCardProps) => {
   const [error, setError] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -234,7 +237,7 @@ const ImageCard = ({
   const initRef = React.useRef()
 
   return (
-    <PaddingBox onClick={selectionHandler} padding={5}>
+    <PaddingBox onClick={setSelection(mediaId)} padding={5}>
       <CardBox checked={checked} data-loaded={loaded} data-transparency={transparency}>
         {headerHeightRatio !== 0 && (
           <ToolTip tooltip={title}>
@@ -258,14 +261,14 @@ const ImageCard = ({
             <EnlargeBox
               className="enlargeImage"
               size={getBoundedSize(imageSize, 160)}
-              onClick={openLightBox}
+              onClick={openLightBox(mediaId)}
               children={<Image src={EnlargeSvg} />}
             />
 
             <Image
               boxSize={`${paddedSize}`}
               objectFit="contain"
-              src={getUrlBySize(paddedSize)}
+              src={getUrlBySize(whiteReplacement, paddedSize)}
               fallback={<CardImageLoading boxSize={paddedSize} />}
               onError={() => setError(true)}
               onLoad={() => setLoaded(true)}
@@ -276,6 +279,7 @@ const ImageCard = ({
         {badges && (
           <ProgressiveRender>
             <Badges
+              mediaId={mediaId}
               headerHeightRatio={headerHeightRatio}
               imageSize={imageSize}
               boundedSize={boundedSize}
@@ -292,4 +296,41 @@ const ImageCard = ({
   )
 }
 
-export default ImageCard
+function is(x: any, y: any) {
+  if (typeof x === "function") {
+    return x.toString() === y.toString()
+  }
+
+  return (
+    (x === y && (x !== 0 || 1 / x === 1 / y)) || (x !== x && y !== y) // eslint-disable-line no-self-compare
+  )
+}
+
+const hasOwnProperty = Object.prototype.hasOwnProperty
+
+export default React.memo(ImageCard, function (objA: any, objB: any) {
+  if (is(objA, objB)) {
+    return true
+  }
+
+  if (typeof objA !== "object" || objA === null || typeof objB !== "object" || objB === null) {
+    return false
+  }
+
+  const keysA = Object.keys(objA)
+  const keysB = Object.keys(objB)
+
+  if (keysA.length !== keysB.length) {
+    return false
+  }
+
+  // Test for A's keys different from B.
+  for (let i = 0; i < keysA.length; i++) {
+    if (!hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+      console.log("not equal =====> ", keysA[i])
+      return false
+    }
+  }
+
+  return true
+})

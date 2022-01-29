@@ -13,7 +13,7 @@ const ReferencesList = ({
   contentSize,
   headerCellRatio,
   selectedReferenceIds,
-  selectionHandler,
+  setSelection,
   bodyCellRatio,
   getMediaById,
   mediaTransparency,
@@ -33,7 +33,7 @@ const ReferencesList = ({
           <ReferenceCard
             selectedReferenceIds={selectedReferenceIds}
             reference={reference}
-            selectionHandler={selectionHandler}
+            setSelection={setSelection}
             contentSize={contentSize}
             bodyCellRatio={bodyCellRatio}
             getMediaById={getMediaById}

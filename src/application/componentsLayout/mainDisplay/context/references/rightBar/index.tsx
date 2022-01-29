@@ -3,7 +3,7 @@ import Hotkeys from "react-hot-keys"
 
 import { Accordion, Stack } from "@chakra-ui/react"
 
-import PanelItems from "../../../../../components/accordionItem"
+import AccordionItem from "../../../../../components/accordionItem"
 import DeselectAllItem from "../../../../../components/deselectAllItem"
 import SelectAllItem from "../../../../../components/selectAllItem"
 import { getHotkeys } from "../../../../../privates"
@@ -29,20 +29,20 @@ const ReferenceRightBar = () => {
 
       <SeparatorBox />
       <Accordion defaultIndex={[1]} allowMultiple>
-        <PanelItems title={`Selection ${selectedReferenceIds.length} / ${filteredReferencesIds.length}`}>
+        <AccordionItem title={`Selection ${selectedReferenceIds.length} / ${filteredReferencesIds.length}`}>
           <Stack mt={0} spacing={4}>
             <SelectAllItem selectAll={selectAll} entity={"references"} />
 
             <DeselectAllItem selectionExists={selectionExists} deselectAll={deselectAll} entity={"references"} />
           </Stack>
-        </PanelItems>
+        </AccordionItem>
 
         {selectionExists && (
-          <PanelItems title={"Actions"}>
+          <AccordionItem title={"Actions"}>
             <Stack mt={0} spacing={4}>
               <Dissociate dissociate={dissociate} deselectAll={deselectAll} />
             </Stack>
-          </PanelItems>
+          </AccordionItem>
         )}
       </Accordion>
     </SideBarBox>

@@ -4,7 +4,7 @@ export type ReferenceCardProps = {
   reference: ReferenceItem
   contentSize: number
   selectedReferenceIds: string[]
-  selectionHandler: (mediaId: string) => (e: MouseEvent) => any
+  setSelection: (mediaId: string) => (mouseEvent: MouseEvent) => any
   bodyCellRatio: number
   getMediaById: (mediaId: string) => MediaItem | undefined
   mediaTransparency: boolean

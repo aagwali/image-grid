@@ -3,12 +3,11 @@ import "react-toastify/dist/ReactToastify.css"
 import React from "react"
 import { ToastContainer } from "react-toastify"
 
-import LightBoxContainer from "./components/lightBoxContainer"
+import LightBox from "./components/lightBox"
 import ComponentsLayout from "./componentsLayout"
 
 const Application = () => (
   <React.Fragment>
-    <LightBoxContainer />
     <ToastContainer />
     <ComponentsLayout />
   </React.Fragment>

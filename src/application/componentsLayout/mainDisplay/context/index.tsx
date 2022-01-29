@@ -3,6 +3,7 @@ import { Navigate, Route, useParams } from "react-router-dom"
 
 import { Stack } from "@chakra-ui/react"
 
+import LightBox from "../../../components/lightBox"
 import Router from "../../../components/router"
 import { Header } from "./header"
 import MediasDisplay from "./medias"
@@ -23,6 +24,7 @@ const Context = ({ routeParams: { contextLabel } }: any) => {
   return (
     <Stack spacing={0}>
       <Header contextLabel={contextLabel} />
+      <LightBox />
       <NavigationTabs />
       <Router>
         <Route path="medias" element={<MediasDisplay />} />

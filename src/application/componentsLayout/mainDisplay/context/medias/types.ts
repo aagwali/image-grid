@@ -1,13 +1,14 @@
-export enum LeftBarShortcuts {
-  Transparency = "ctrl+y",
-  Clipping = "ctrl+p",
-  DisplayInfos = "ctrl+i",
-  DisplayBadges = "ctrl+b",
+import { ColorBadges, UserStars } from "../../../../types"
+
+export type SelectionAction = {
+  mediaId: string
+  isShiftKey: boolean
+  displayedMediaIds: string[]
 }
 
-export enum RightBarShortcuts {
-  Deselect = "ctrl+d",
-  SelectAll = "ctrl+a",
-  Download = "ctrl+shift+d",
-  Restore = "ctrl+r",
+export type UpdateUserBadgesAction = {
+  mediaId: string
+  badgeType: "color" | "stars"
+  value: ColorBadges | UserStars
+  search: string
 }

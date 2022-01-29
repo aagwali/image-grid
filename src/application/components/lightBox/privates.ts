@@ -2,8 +2,11 @@ import { equals, findIndex, prop } from "rambda"
 import { useState } from "react"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../storeConfig"
-import { getSelectedMedia } from "../../componentsLayout/mainDisplay/context/medias/privates"
-import { mediasDisplaySlice, mediaSelector } from "../../componentsLayout/mainDisplay/context/medias/reducers"
+import {
+  mediasDisplaySlice,
+  mediaSelector,
+  mediasFilteredByUrlSelector,
+} from "../../componentsLayout/mainDisplay/context/medias/reducers"
 import { MediaItem } from "../../types"
 
 export const pickAdjacentMedia = (mediaIds: string[], lightBoxMediaId: string): [string, string] => {
@@ -32,18 +35,21 @@ export const getContainerProps = () => {
 
   const { lightBoxMediaId, selectedMediaIds, whiteReplacement } = getState(prop("mediasDisplay"))
   const media = getState((s) => mediaSelector.selectById(s, lightBoxMediaId))
-
+  const displayedMedias = getState((x) => mediasFilteredByUrlSelector(x, location.search))
   const [lightBoxItemSize, updateLightBoxItemSize] = useState(Number(process.env.LIGHTBOX_ITEM_SIZE) / 2.5 ?? 500)
-  const lightBoxThumbnailSize = Math.floor(lightBoxItemSize / 10)
-
   const [isHd, updateIsHd] = useState(false)
 
-  const mediaIds = getState(mediaSelector.selectIds) as string[]
-  const [previousMediaId, nextMediaId] = pickAdjacentMedia(mediaIds, lightBoxMediaId)
+  const lightBoxThumbnailSize = Math.floor(lightBoxItemSize / 10)
+  const displayedMediaIds = displayedMedias.map(prop("id"))
+  const [previousMediaId, nextMediaId] = pickAdjacentMedia(displayedMediaIds, lightBoxMediaId)
 
-  const selectMedia = (media: typeof selectedMediaIds[0]) => (event: MouseEvent | KeyboardEvent) =>
+  const setSelection = (mediaId: typeof selectedMediaIds[0]) => (mouseEvent: MouseEvent) =>
     dispatch(
-      actions.updateMediaDisplay({ selectedMediaIds: getSelectedMedia(selectedMediaIds, mediaIds, media, event) }),
+      actions.updateMediaDisplaySelection({
+        mediaId,
+        isShiftKey: mouseEvent.shiftKey,
+        displayedMediaIds,
+      }),
     )
   const closeLightbox = () => dispatch(actions.updateMediaDisplay({ lightBoxMediaId: "none" }))
   const setPrevious = () => dispatch(actions.updateMediaDisplay({ lightBoxMediaId: previousMediaId }))
@@ -61,7 +67,7 @@ export const getContainerProps = () => {
     updateIsHd,
     previousMediaId,
     nextMediaId,
-    selectMedia,
+    setSelection,
     closeLightbox,
     setPrevious,
     setNext,

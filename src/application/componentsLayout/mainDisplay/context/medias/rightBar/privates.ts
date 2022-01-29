@@ -4,8 +4,8 @@ import { useLocation } from "react-router-dom"
 import { useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
 import { mediasDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
 import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../services"
-import { RightBarShortcuts } from "../types"
 import { downloadMedia } from "./download/privates"
+import { RightBarShortcuts } from "./types"
 
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
@@ -15,16 +15,14 @@ export const getContainerProps = () => {
   const { selectedMediaIds } = getState(prop("mediasDisplay"))
   const { label } = getState(prop("context"))
   const itemsByFilterData = getState(mediaStatusDictionarySelector)
+  const displayedMedias = getState((x) => mediasFilteredByUrlSelector(x, location.search))
 
-  const filteredMedia = getState((x) => mediasFilteredByUrlSelector(x, location.search))
-  const filteredMediaIds = filteredMedia.map(prop("id"))
-
+  const displayedMediaIds = displayedMedias.map(prop("id"))
   const selectionExists = !isEmpty(selectedMediaIds)
   const isBin = location.search.includes("bin")
-
   const pendingIdsInSelection = intersection(itemsByFilterData.pending?.map(prop("id")) ?? [], selectedMediaIds)
 
-  const selectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: filteredMediaIds }))
+  const selectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: displayedMediaIds }))
   const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: [] }))
   const updateUploadProgress = (uploadProgress: number) => dispatch(actions.updateMediaDisplay({ uploadProgress }))
 
@@ -50,7 +48,7 @@ export const getContainerProps = () => {
   return {
     selectedMediaIds,
     label,
-    filteredMediaIds,
+    displayedMediaIds,
     selectionExists,
     isBin,
     pendingIdsInSelection,

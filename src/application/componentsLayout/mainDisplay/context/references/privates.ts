@@ -54,7 +54,7 @@ export const getContainerProps = () => {
 
   const filteredReferencesIds = references.map(prop("id"))
 
-  const selectionHandler = (referenceId: typeof selectedReferenceIds[0]) => (event: MouseEvent) =>
+  const setSelection = (referenceId: typeof selectedReferenceIds[0]) => (event: MouseEvent) =>
     dispatch(
       actions.updateReferencesDisplay({
         selectedReferenceIds: getSelectedReferences(selectedReferenceIds, filteredReferencesIds, referenceId, event),
@@ -77,7 +77,7 @@ export const getContainerProps = () => {
     headerCellRatio,
     bodyCellRatio,
     userBadges,
-    selectionHandler,
+    setSelection,
     getMediaById,
     forceUpdate,
   }

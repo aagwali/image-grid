@@ -16,7 +16,7 @@ const ToolBarButtons = ({
   lightBoxItemSize,
   updateLightBoxItemSize,
   checked,
-  selectMedia,
+  setSelection,
 }: any): JSX.Element => {
   return (
     <ToolBarBox>
@@ -26,7 +26,7 @@ const ToolBarButtons = ({
           size="sm"
           children={"Selected"}
           item-checked={`${checked}`}
-          onClick={selectMedia}
+          onClick={setSelection}
         />
         <HStack>
           <QualityText children={"SD"} />
@@ -46,8 +46,8 @@ const ToolBarButtons = ({
   )
 }
 
-// depends on navigator cache
-const LightBoxContainer = () => {
+// perfs depends on navigator cache
+const LightBox = () => {
   const {
     lightBoxMediaId,
     selectedMediaIds,
@@ -60,7 +60,7 @@ const LightBoxContainer = () => {
     updateIsHd,
     previousMediaId,
     nextMediaId,
-    selectMedia,
+    setSelection,
     closeLightbox,
     setPrevious,
     setNext,
@@ -91,7 +91,7 @@ const LightBoxContainer = () => {
             lightBoxItemSize={lightBoxItemSize}
             updateLightBoxItemSize={updateLightBoxItemSize}
             checked={selectedMediaIds.includes(lightBoxMediaId)}
-            selectMedia={selectMedia(lightBoxMediaId)}
+            setSelection={setSelection(lightBoxMediaId)}
           />,
         ]}
       />
@@ -99,4 +99,4 @@ const LightBoxContainer = () => {
   )
 }
 
-export default LightBoxContainer
+export default LightBox

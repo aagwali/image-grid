@@ -16,7 +16,7 @@ import { ReferenceCardProps } from "./types"
 const ReferenceCard = ({
   selectedReferenceIds,
   reference,
-  selectionHandler,
+  setSelection,
   contentSize,
   bodyCellRatio,
   getMediaById,
@@ -26,7 +26,7 @@ const ReferenceCard = ({
   mediaBadges,
   userBadges,
 }: ReferenceCardProps) => (
-  <ReferenceItemBox checked={selectedReferenceIds.includes(reference.id)} onClick={selectionHandler(reference.id)}>
+  <ReferenceItemBox checked={selectedReferenceIds.includes(reference.id)} onClick={setSelection(reference.id)}>
     <ReferenceHeader className="referenceHeader">
       <ReferenceDisplayTitle children={reference.familyId} />
     </ReferenceHeader>
@@ -38,14 +38,18 @@ const ReferenceCard = ({
         return (
           <Box w="100px" key={association.msMediaId}>
             <ImageCard
+              mediaId={media.id}
               title={media.fileName}
               subtitle={`${media.width} x ${media.height}`}
               transparency={mediaTransparency}
               imageSize={contentSize}
               checked={false}
-              getUrlBySize={(size: number) => getImageServerUrl(media.id, size, mediaWhiteReplacement)} // cf. paddedSize
-              openLightBox={() => {}}
-              selectionHandler={(e) => {
+              whiteReplacement={mediaWhiteReplacement}
+              getUrlBySize={(mediaWhiteReplacement: boolean, size: number) =>
+                getImageServerUrl(media.id, size, mediaWhiteReplacement)
+              } // cf. paddedSize
+              openLightBox={(_) => (_) => {}}
+              setSelection={(mediaId: string) => (e) => {
                 e.stopPropagation()
               }}
               status={media.status}

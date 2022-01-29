@@ -21,20 +21,22 @@ export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
 
 export const getSelectedMedia = (
   selectedMediaIds: string[],
-  mediaIds: string[],
+  displayedMediaIds: string[],
   mediaId: string,
-  event: MouseEvent | KeyboardEvent,
+  isShiftKey: boolean,
 ) => {
-  const selectedIndex = indexOf(mediaId, mediaIds)
-  const lastSelectedIndex = indexOf(last(selectedMediaIds), mediaIds)
+  const selectedIndex = indexOf(mediaId, displayedMediaIds)
+  const lastSelectedIndex = indexOf(last(selectedMediaIds), displayedMediaIds)
 
   const sortedIndexes = sort((a, b) => a - b, [selectedIndex, lastSelectedIndex])
 
-  if (event.shiftKey) return uniq([...selectedMediaIds, ...mediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
+  if (isShiftKey) return uniq([...selectedMediaIds, ...displayedMediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
 
-  return selectedMediaIds.includes(mediaId)
+  const selectedMedia = selectedMediaIds.includes(mediaId)
     ? selectedMediaIds.filter((selectedId) => selectedId !== mediaId)
     : [...selectedMediaIds, mediaId]
+
+  return selectedMedia
 }
 
 export const getMediaGroupedByFilter = (
@@ -63,7 +65,7 @@ export const getMediaGroupedByFilter = (
   }
 }
 
-const getActiveFilters = (query: ParsedQuery<string>, filterType: string): string[] => {
+export const getActiveFilters = (query: ParsedQuery<string>, filterType: string): string[] => {
   const rawStatusFilters = query[filterType] ?? []
   const activeFilters = Array.isArray(rawStatusFilters) ? rawStatusFilters : [rawStatusFilters]
   return activeFilters
@@ -109,13 +111,17 @@ export const getFilteredMedia = (
   return filteredMedia
 }
 
-const setMultipleBadges = (
+export const setMultipleBadges = (
   badgeType: "color" | "stars",
-  ids: string[],
   value: ColorBadges | UserStars,
+  mediaId: string,
+  selectedMediaIds: string[],
   userBadges: Record<string, UserBadges>,
+  search: string,
 ) => {
   const newUserBadges = { ...userBadges }
+
+  const ids = selectedMediaIds.includes(mediaId) ? [...selectedMediaIds, mediaId] : [mediaId]
 
   ids.forEach((id) => {
     newUserBadges[id]
@@ -123,15 +129,22 @@ const setMultipleBadges = (
       : (newUserBadges[id] = { [badgeType]: value })
   })
 
-  return newUserBadges
+  const currentQuery = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+  const activeFilterValues =
+    badgeType === "color" ? getActiveFilters(currentQuery, "colorBadges") : getActiveFilters(currentQuery, "userStars")
+
+  const newSelectedMediaIds = !activeFilterValues.includes(value)
+    ? selectedMediaIds.filter((id) => !ids.includes(id))
+    : selectedMediaIds
+
+  return { userBadges: newUserBadges, selectedMediaIds: newSelectedMediaIds }
 }
 
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
-
   const actions = mediasDisplaySlice.actions
+  const location = useLocation()
 
-  const { loaded: mediaLoaded } = getState(prop("media"))
   const {
     selectedMediaIds,
     transparency,
@@ -143,52 +156,43 @@ export const getContainerProps = () => {
     whiteReplacement,
     userBadges,
   } = getState(prop("mediasDisplay"))
+  const { loaded: mediaLoaded } = getState(prop("media"))
+  const displayedMedias = getState((x) => mediasFilteredByUrlSelector(x, location.search))
+  const isBin = location.search.includes("bin")
 
-  const filteredMedia = getState((x) => mediasFilteredByUrlSelector(x, location.search))
-  const filteredMediaIds = filteredMedia.map(prop("id"))
+  const displayedMediaIds = displayedMedias.map(prop("id"))
   const [headerCellRatio, headerRatio] = cardHeader ? [1.25, 0.25] : [1, 0]
-  const search = useLocation().search
-  const isBin = search.includes("bin")
 
   const updateScrollRatio = (x: typeof scrollRatio) => dispatch(actions.updateMediaDisplay({ scrollRatio: x }))
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
-  const selectionHandler = (media: typeof selectedMediaIds[0]) => (event: MouseEvent) =>
+
+  const setSelection = (mediaId: typeof selectedMediaIds[0]) => (mouseEvent: MouseEvent) =>
     dispatch(
-      actions.updateMediaDisplay({
-        selectedMediaIds: getSelectedMedia(selectedMediaIds, filteredMediaIds, media, event),
+      actions.updateMediaDisplaySelection({
+        mediaId,
+        isShiftKey: mouseEvent.shiftKey,
+        displayedMediaIds,
       }),
     )
-  const openLightBox = (mediaId: string) => (e: MouseEvent) => {
-    e.stopPropagation()
-    dispatch(actions.updateMediaDisplay({ lightBoxMediaId: mediaId }))
-  }
 
   const setUserBadge =
-    (mediaId: string) => (badgeType: "color" | "stars", value: ColorBadges | UserStars) => (e: MouseEvent) => {
-      e.stopPropagation()
-      const targets = selectedMediaIds.includes(mediaId) ? [...selectedMediaIds, mediaId] : [mediaId]
-      const newUserBadges = setMultipleBadges(badgeType, targets, value, userBadges)
+    (mediaId: string, badgeType: "color" | "stars", value: ColorBadges | UserStars) => (mouseEvent: MouseEvent) => {
+      mouseEvent.stopPropagation()
       dispatch(
-        actions.updateMediaDisplay({
-          userBadges: newUserBadges,
+        actions.updateUserBadges({
+          badgeType,
+          value,
+          mediaId,
+          search: location.search,
         }),
       )
-
-      // exclude items if not in active selection anymore :
-      const currentQuery = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
-      const activeFilterValues =
-        badgeType === "color"
-          ? getActiveFilters(currentQuery, "colorBadges")
-          : getActiveFilters(currentQuery, "userStars")
-
-      if (!activeFilterValues.includes(value))
-        dispatch(
-          actions.updateMediaDisplay({
-            selectedMediaIds: selectedMediaIds.filter((id) => !targets.includes(id)),
-          }),
-        )
     }
+
+  const openLightBox = (mediaId: string) => (mouseEvent: MouseEvent) => {
+    mouseEvent.stopPropagation()
+    dispatch(actions.updateMediaDisplay({ lightBoxMediaId: mediaId }))
+  }
 
   const [, forceUpdate] = useReducer(add(1), 0)
 
@@ -201,14 +205,14 @@ export const getContainerProps = () => {
     cellMatrix,
     badges,
     whiteReplacement,
-    filteredMedia,
+    filteredMedia: displayedMedias,
     headerCellRatio,
     headerRatio,
     isBin,
     userBadges,
     updateScrollRatio,
     updateCellMatrix,
-    selectionHandler,
+    setSelection,
     openLightBox,
     forceUpdate,
     setUserBadge,

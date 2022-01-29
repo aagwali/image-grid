@@ -22,7 +22,7 @@ const MediasGrid = ({
   selectedMediaIds,
   whiteReplacement,
   openLightBox,
-  selectionHandler,
+  setSelection,
   headerRatio,
   badges,
   userBadges,
@@ -43,20 +43,25 @@ const MediasGrid = ({
         renderItem={(media: MediaItem) => (
           <ProgressiveRender>
             <ImageCard
+              mediaId={media.id}
               title={media.fileName}
               subtitle={`${media.width} x ${media.height}`}
               transparency={transparency}
               imageSize={contentSize}
               checked={selectedMediaIds.includes(media.id)}
-              getUrlBySize={(size: number) => getImageServerUrl(media.id, size, whiteReplacement)} // cf. paddedSize
-              openLightBox={openLightBox(media.id)}
-              selectionHandler={selectionHandler(media.id)}
               status={media.status}
               headerHeightRatio={headerRatio}
               controlId={media.controlId}
               badges={badges}
               userBadge={userBadges[media.id]}
-              setUserBadge={setUserBadge(media.id)}
+              whiteReplacement={whiteReplacement}
+              //
+              getUrlBySize={(whiteReplacement: boolean, size: number) =>
+                getImageServerUrl(media.id, size, whiteReplacement)
+              } // cf. paddedSize
+              openLightBox={openLightBox}
+              setSelection={setSelection}
+              setUserBadge={setUserBadge}
             />
           </ProgressiveRender>
         )}

@@ -1,4 +1,3 @@
-import debounce from "debounce"
 import { parse, ParsedQuery, ParseOptions, stringify } from "query-string"
 import { all, any, identity, intersection, isEmpty, omit, prop, trim, uniq } from "rambda"
 import { useState } from "react"
@@ -7,7 +6,7 @@ import { NavigateFunction, useLocation, useNavigate } from "react-router-dom"
 import { State, useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
 import { ColorBadges, ControlStatus, QualityStatus } from "../../../../../types"
 import { mediasDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
-import { LeftBarShortcuts } from "../types"
+import { LeftBarShortcuts } from "./types"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
 

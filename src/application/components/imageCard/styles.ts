@@ -153,7 +153,7 @@ export const EnlargeBox = styled(Center)<{ size: number }>`
 `
 
 export const BadgesBox = styled(Box)`
-  animation: ${fadeIn} 1.5s;
+  animation: ${fadeIn} 1s;
 `
 export const CardUserBadgesBox = styled(HStack)`
   position: absolute;

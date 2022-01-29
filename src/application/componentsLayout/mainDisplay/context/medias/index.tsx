@@ -24,7 +24,7 @@ const MediaDisplay = () => {
     userBadges,
     updateScrollRatio,
     updateCellMatrix,
-    selectionHandler,
+    setSelection,
     openLightBox,
     forceUpdate,
     setUserBadge,
@@ -48,7 +48,7 @@ const MediaDisplay = () => {
         selectedMediaIds={selectedMediaIds}
         whiteReplacement={whiteReplacement}
         openLightBox={openLightBox}
-        selectionHandler={selectionHandler}
+        setSelection={setSelection}
         headerRatio={headerRatio}
         badges={badges}
         userBadges={userBadges}

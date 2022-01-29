@@ -6,7 +6,6 @@ import { Accordion, Stack } from "@chakra-ui/react"
 import PanelItems from "../../../../../components/accordionItem"
 import { getHotkeys } from "../../../../../privates"
 import { Separator, SideBar } from "../../styles"
-import { LeftBarShortcuts } from "../types"
 import ColorBadgeFilters from "./colorBadgeFilter"
 import { ControlFilters } from "./controlFilter"
 import { ImagesInformations } from "./ImagesInformations"
@@ -14,6 +13,7 @@ import { ImagesSize } from "./imagesSize"
 import { getContainerProps } from "./privates"
 import { QualityFilters } from "./qualityFilter"
 import { TextFilter } from "./textFilter"
+import { LeftBarShortcuts } from "./types"
 
 const MediaLeftBar = ({ forceUpdate }: any) => {
   const {

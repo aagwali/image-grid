@@ -6,7 +6,7 @@ export type ReferenceListProps = {
   contentSize: number
   headerCellRatio: number
   selectedReferenceIds: string[]
-  selectionHandler: (mediaId: string) => (e: MouseEvent) => any
+  setSelection: (mediaId: string) => (mouseEvent: MouseEvent) => any
   bodyCellRatio: number
   getMediaById: (mediaId: string) => MediaItem | undefined
   mediaTransparency: boolean

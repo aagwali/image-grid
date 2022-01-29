@@ -4,14 +4,37 @@ import { State } from "../../../../../storeConfig"
 import { MediaItem, UserBadges } from "../../../../types"
 import { contextSlice } from "../reducers"
 import { getContextByLabel } from "../services"
-import { getFilteredMedia, getMediaGroupedByFilter } from "./privates"
+import { getFilteredMedia, getMediaGroupedByFilter, getSelectedMedia, setMultipleBadges } from "./privates"
 import { getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "./services"
+import { SelectionAction, UpdateUserBadgesAction } from "./types"
+
+//#region Medias
 
 const mediaAdapter = createEntityAdapter<MediaItem>({
   sortComparer: (a, b) => a.fileName.localeCompare(b.fileName),
 })
 
-export const setChangeOnMany = (ids: any[], change: Record<any, any>): any => ids.map((id) => ({ id, change }))
+//#region Selectors
+
+export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
+
+export const mediaStatusDictionarySelector = createSelector(
+  [mediaSelector.selectAll, ({ mediasDisplay }: State) => mediasDisplay.userBadges],
+  getMediaGroupedByFilter,
+)
+
+export const mediasFilteredByUrlSelector = createSelector(
+  [
+    mediaSelector.selectAll,
+    ({ mediasDisplay: { userBadges } }: State, search: string) => ({
+      userBadges,
+      search,
+    }),
+  ],
+  getFilteredMedia,
+)
+
+//#endregion
 
 export const mediaSlice = createSlice({
   name: "media",
@@ -50,22 +73,9 @@ export const mediaSlice = createSlice({
       })
   },
 })
+//#endregion
 
-export const mediaSelector = mediaAdapter.getSelectors((state: State) => state.media)
-export const mediaStatusDictionarySelector = createSelector(
-  [mediaSelector.selectAll, ({ mediasDisplay }: State) => mediasDisplay.userBadges],
-  getMediaGroupedByFilter,
-)
-export const mediasFilteredByUrlSelector = createSelector(
-  [
-    mediaSelector.selectAll,
-    ({ mediasDisplay: { userBadges } }: State, search: string) => ({
-      userBadges,
-      search,
-    }),
-  ],
-  getFilteredMedia,
-)
+//#region Media display
 
 const initialMediaDisplay = {
   selectedMediaIds: [] as string[],
@@ -93,6 +103,20 @@ export const mediasDisplaySlice = createSlice({
       ...mediasDisplay,
       ...payload,
     }),
+    updateMediaDisplaySelection: (
+      mediasDisplay,
+      { payload: { mediaId, isShiftKey, displayedMediaIds } }: PayloadAction<SelectionAction>,
+    ) => ({
+      ...mediasDisplay,
+      selectedMediaIds: getSelectedMedia(mediasDisplay.selectedMediaIds, displayedMediaIds, mediaId, isShiftKey),
+    }),
+    updateUserBadges: (
+      mediasDisplay,
+      { payload: { mediaId, badgeType, value, search } }: PayloadAction<UpdateUserBadgesAction>,
+    ) => ({
+      ...mediasDisplay,
+      ...setMultipleBadges(badgeType, value, mediaId, mediasDisplay.selectedMediaIds, mediasDisplay.userBadges, search),
+    }),
   },
   extraReducers: (builder) => {
     builder.addCase(contextSlice.actions.resetContext, (mediasDisplay) => ({
@@ -101,3 +125,5 @@ export const mediasDisplaySlice = createSlice({
     }))
   },
 })
+
+//#endregion

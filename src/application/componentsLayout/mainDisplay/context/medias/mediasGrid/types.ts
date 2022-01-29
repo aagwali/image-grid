@@ -18,11 +18,15 @@ export type MediaGridProps = {
   transparency: boolean
   selectedMediaIds: string[]
   whiteReplacement: boolean
-  openLightBox: (mediaId: string) => (e: MouseEvent) => void
-  selectionHandler: (mediaId: string) => (e: MouseEvent) => any
   headerRatio: number
   badges: boolean
   userBadges: Record<string, UserBadges>
   forceUpdate: React.DispatchWithoutAction
-  setUserBadge: (mediaId: string) => (badgeType: "stars" | "color", value: ColorBadges | UserStars) => (e: any) => void
+  openLightBox: (mediaId: string) => (mouseEvent: MouseEvent) => void
+  setSelection: (mediaId: string) => (mouseEvent: MouseEvent) => any
+  setUserBadge: (
+    mediaId: string,
+    badgeType: "stars" | "color",
+    value: ColorBadges | UserStars,
+  ) => (mouseEvent: MouseEvent) => void
 }

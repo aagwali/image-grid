@@ -20,7 +20,7 @@ const ReferencesDisplay = () => {
     headerCellRatio,
     bodyCellRatio,
     userBadges,
-    selectionHandler,
+    setSelection,
     getMediaById,
     forceUpdate,
   } = getContainerProps()
@@ -35,7 +35,7 @@ const ReferencesDisplay = () => {
         contentSize={contentSize}
         headerCellRatio={headerCellRatio}
         selectedReferenceIds={selectedReferenceIds}
-        selectionHandler={selectionHandler}
+        setSelection={setSelection}
         bodyCellRatio={bodyCellRatio}
         getMediaById={getMediaById}
         mediaTransparency={mediaTransparency}

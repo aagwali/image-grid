@@ -1,4 +1,4 @@
-import { ColorBadges, QualityStatus, UserBadges, UserStars } from "../../types"
+import { ColorBadges, QualityStatus, UserBadgesProps, UserStars } from "../../types"
 
 export interface ImageCardProps {
   mediaId: string
@@ -12,7 +12,7 @@ export interface ImageCardProps {
   whiteReplacement: boolean
   controlId?: string
   badges: boolean
-  userBadge: UserBadges
+  userBadge: UserBadgesProps
   getUrlBySize: (whiteReplacement: boolean, size: number) => string
   openLightBox: (mediaId: string) => (mouseEvent: MouseEvent) => void
   setSelection: (mediaId: string) => (mouseEvent: MouseEvent) => void

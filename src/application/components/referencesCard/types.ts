@@ -11,5 +11,5 @@ export type ReferenceCardProps = {
   mediaWhiteReplacement: boolean
   mediaHeaderRatio: number
   mediaBadges: boolean
-  userBadges: Record<string, UserBadges>
+  userBadges: UserBadges
 }

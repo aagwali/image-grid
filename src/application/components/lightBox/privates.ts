@@ -45,7 +45,7 @@ export const getContainerProps = () => {
 
   const setSelection = (mediaId: typeof selectedMediaIds[0]) => (mouseEvent: MouseEvent) =>
     dispatch(
-      actions.updateMediaDisplaySelection({
+      actions.updateUserBadgesSelection({
         mediaId,
         isShiftKey: mouseEvent.shiftKey,
         displayedMediaIds,

@@ -1,10 +1,10 @@
 import { parse, ParsedQuery } from "query-string"
-import { add, any, groupBy, indexOf, isEmpty, isNil, last, map, prop, sort, uniq } from "rambda"
+import { add, any, filter, groupBy, head, indexOf, isEmpty, isNil, last, map, prop, sort, uniq } from "rambda"
 import React, { useReducer } from "react"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
-import { ColorBadges, ControlStatus, MediaItem, RawMedia, UserBadges, UserStars } from "../../../../types"
+import { ColorBadges, ControlStatus, MediaDisplay, MediaItem, RawMedia, UserBadges, UserStars } from "../../../../types"
 import { mediasDisplaySlice, mediasFilteredByUrlSelector } from "./reducers"
 
 export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
@@ -19,6 +19,7 @@ export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
     isAssociable: x.isAssociable,
   }))
 
+// deprecated
 export const getSelectedMedia = (
   selectedMediaIds: string[],
   displayedMediaIds: string[],
@@ -39,10 +40,66 @@ export const getSelectedMedia = (
   return selectedMedia
 }
 
-export const getMediaGroupedByFilter = (
-  medias: MediaItem[],
-  userBadges: Record<string, UserBadges>,
-): Record<string, MediaItem[]> => {
+export const getSelectionBadges = (
+  mediaId: string,
+  isShiftKey: boolean,
+  displayedMediaIds: string[],
+  lastSelectedMediaId: string,
+  userBadges: UserBadges,
+): Partial<MediaDisplay> => {
+  const selectedIndex = indexOf(mediaId, displayedMediaIds)
+  const lastSelectedIndex = indexOf(lastSelectedMediaId, displayedMediaIds)
+  const isReverseShift = selectedIndex < lastSelectedIndex
+  const adjustement = isReverseShift ? 0 : 1
+  const sortedIndexes = sort((a, b) => a - b, [selectedIndex + adjustement, lastSelectedIndex + adjustement])
+
+  const targetMediaIds = isShiftKey ? displayedMediaIds.slice(sortedIndexes[0], sortedIndexes[1]) : [mediaId]
+
+  const _lastSelectedMediaId = isReverseShift ? head(targetMediaIds) : last(targetMediaIds)
+
+  let _userBadges = { ...userBadges }
+
+  targetMediaIds.forEach((id) => {
+    if (_userBadges[id]?.selected) {
+      if (!isShiftKey) {
+        _userBadges[id] = { ..._userBadges[id], selected: false }
+      }
+    } else {
+      _userBadges[id] = { ...(_userBadges[id] ?? {}), selected: true }
+    }
+  })
+
+  return { lastSelectedMediaId: _lastSelectedMediaId ?? "", userBadges: _userBadges }
+}
+
+export const setMultipleBadges = (
+  badgeType: "color" | "stars",
+  value: ColorBadges | UserStars,
+  mediaId: string,
+  userBadges: UserBadges,
+  search: string,
+) => {
+  const _userBadges = { ...userBadges }
+
+  const _selectedMediaIds = Object.keys(filter((badge) => badge.selected ?? false, userBadges))
+
+  const targetMediaIds = _userBadges[mediaId]?.selected ? [..._selectedMediaIds, mediaId] : [mediaId]
+
+  const currentQuery = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+  const activeFilterValues =
+    badgeType === "color" ? getActiveFilters(currentQuery, "colorBadges") : getActiveFilters(currentQuery, "userStars")
+
+  targetMediaIds.forEach((id) => {
+    _userBadges[id] = { ...(_userBadges[id] ?? {}), [badgeType]: value }
+    if (!activeFilterValues.includes(value)) {
+      _userBadges[id] = { ..._userBadges[id], selected: false }
+    }
+  })
+
+  return _userBadges
+}
+
+export const getMediaGroupedByFilter = (medias: MediaItem[], userBadges: UserBadges): Record<string, MediaItem[]> => {
   const mediasWithUserBadges = medias.map((media) => ({
     ...media,
     colorBadge: userBadges[media.id]?.color ?? ColorBadges.Grey,
@@ -73,7 +130,7 @@ export const getActiveFilters = (query: ParsedQuery<string>, filterType: string)
 
 export const getFilteredMedia = (
   medias: MediaItem[],
-  { userBadges, search }: { userBadges: Record<string, UserBadges>; search: string },
+  { userBadges, search }: { userBadges: UserBadges; search: string },
 ): MediaItem[] => {
   const query = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
 
@@ -111,35 +168,6 @@ export const getFilteredMedia = (
   return filteredMedia
 }
 
-export const setMultipleBadges = (
-  badgeType: "color" | "stars",
-  value: ColorBadges | UserStars,
-  mediaId: string,
-  selectedMediaIds: string[],
-  userBadges: Record<string, UserBadges>,
-  search: string,
-) => {
-  const newUserBadges = { ...userBadges }
-
-  const ids = selectedMediaIds.includes(mediaId) ? [...selectedMediaIds, mediaId] : [mediaId]
-
-  ids.forEach((id) => {
-    newUserBadges[id]
-      ? (newUserBadges[id] = { ...newUserBadges[id], [badgeType]: value })
-      : (newUserBadges[id] = { [badgeType]: value })
-  })
-
-  const currentQuery = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
-  const activeFilterValues =
-    badgeType === "color" ? getActiveFilters(currentQuery, "colorBadges") : getActiveFilters(currentQuery, "userStars")
-
-  const newSelectedMediaIds = !activeFilterValues.includes(value)
-    ? selectedMediaIds.filter((id) => !ids.includes(id))
-    : selectedMediaIds
-
-  return { userBadges: newUserBadges, selectedMediaIds: newSelectedMediaIds }
-}
-
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
   const actions = mediasDisplaySlice.actions
@@ -169,7 +197,7 @@ export const getContainerProps = () => {
 
   const setSelection = (mediaId: typeof selectedMediaIds[0]) => (mouseEvent: MouseEvent) =>
     dispatch(
-      actions.updateMediaDisplaySelection({
+      actions.updateUserBadgesSelection({
         mediaId,
         isShiftKey: mouseEvent.shiftKey,
         displayedMediaIds,

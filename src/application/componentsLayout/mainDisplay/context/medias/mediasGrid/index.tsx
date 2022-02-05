@@ -48,17 +48,16 @@ const MediasGrid = ({
               subtitle={`${media.width} x ${media.height}`}
               transparency={transparency}
               imageSize={contentSize}
-              checked={selectedMediaIds.includes(media.id)}
+              checked={userBadges[media.id]?.selected ?? false}
               status={media.status}
               headerHeightRatio={headerRatio}
               controlId={media.controlId}
               badges={badges}
               userBadge={userBadges[media.id]}
               whiteReplacement={whiteReplacement}
-              //
               getUrlBySize={(whiteReplacement: boolean, size: number) =>
                 getImageServerUrl(media.id, size, whiteReplacement)
-              } // cf. paddedSize
+              }
               openLightBox={openLightBox}
               setSelection={setSelection}
               setUserBadge={setUserBadge}

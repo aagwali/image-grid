@@ -52,10 +52,13 @@ export enum ColorBadges {
   Yellow = "yellow",
 }
 
-export type UserBadges = {
+export type UserBadgesProps = {
   color?: ColorBadges
   stars?: UserStars
+  selected?: boolean
 }
+
+export type UserBadges = Record<string, UserBadgesProps>
 
 export type MediaItem = {
   id: string
@@ -66,6 +69,25 @@ export type MediaItem = {
   controlId?: string
   trashed: boolean
   isAssociable: boolean
+}
+
+export type MediaDisplay = {
+  selectedMediaIds: string[]
+  contentSize: number
+  transparency: boolean
+  cardHeader: boolean
+  badges: boolean
+  lightBoxMediaId: string
+  scrollRatio: number
+  whiteReplacement: boolean
+  lastFilter: string
+  lastSelectedMediaId: string
+  uploadProgress: number
+  cellMatrix: {
+    columnCount: number
+    cellSize: number
+  }
+  userBadges: UserBadges
 }
 
 export type RawReference = {

@@ -20,7 +20,7 @@ export type MediaGridProps = {
   whiteReplacement: boolean
   headerRatio: number
   badges: boolean
-  userBadges: Record<string, UserBadges>
+  userBadges: UserBadges
   forceUpdate: React.DispatchWithoutAction
   openLightBox: (mediaId: string) => (mouseEvent: MouseEvent) => void
   setSelection: (mediaId: string) => (mouseEvent: MouseEvent) => any

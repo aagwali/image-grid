@@ -1,10 +1,10 @@
 import { createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { State } from "../../../../../storeConfig"
-import { MediaItem, UserBadges } from "../../../../types"
+import { MediaDisplay, MediaItem } from "../../../../types"
 import { contextSlice } from "../reducers"
 import { getContextByLabel } from "../services"
-import { getFilteredMedia, getMediaGroupedByFilter, getSelectedMedia, setMultipleBadges } from "./privates"
+import { getFilteredMedia, getMediaGroupedByFilter, getSelectionBadges, setMultipleBadges } from "./privates"
 import { getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "./services"
 import { SelectionAction, UpdateUserBadgesAction } from "./types"
 
@@ -77,8 +77,8 @@ export const mediaSlice = createSlice({
 
 //#region Media display
 
-const initialMediaDisplay = {
-  selectedMediaIds: [] as string[],
+const initialMediaDisplay: MediaDisplay = {
+  selectedMediaIds: [],
   contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
   transparency: false,
   cardHeader: false,
@@ -87,12 +87,13 @@ const initialMediaDisplay = {
   scrollRatio: 0,
   whiteReplacement: false,
   lastFilter: "",
+  lastSelectedMediaId: "",
   uploadProgress: 0,
   cellMatrix: {
     columnCount: 10,
     cellSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
   },
-  userBadges: {} as Record<string, UserBadges>,
+  userBadges: {},
 }
 
 export const mediasDisplaySlice = createSlice({
@@ -103,19 +104,25 @@ export const mediasDisplaySlice = createSlice({
       ...mediasDisplay,
       ...payload,
     }),
-    updateMediaDisplaySelection: (
-      mediasDisplay,
-      { payload: { mediaId, isShiftKey, displayedMediaIds } }: PayloadAction<SelectionAction>,
-    ) => ({
-      ...mediasDisplay,
-      selectedMediaIds: getSelectedMedia(mediasDisplay.selectedMediaIds, displayedMediaIds, mediaId, isShiftKey),
-    }),
     updateUserBadges: (
       mediasDisplay,
       { payload: { mediaId, badgeType, value, search } }: PayloadAction<UpdateUserBadgesAction>,
     ) => ({
       ...mediasDisplay,
-      ...setMultipleBadges(badgeType, value, mediaId, mediasDisplay.selectedMediaIds, mediasDisplay.userBadges, search),
+      userBadges: setMultipleBadges(badgeType, value, mediaId, mediasDisplay.userBadges, search),
+    }),
+    updateUserBadgesSelection: (
+      mediasDisplay,
+      { payload: { mediaId, isShiftKey, displayedMediaIds } }: PayloadAction<SelectionAction>,
+    ) => ({
+      ...mediasDisplay,
+      ...getSelectionBadges(
+        mediaId,
+        isShiftKey,
+        displayedMediaIds,
+        mediasDisplay.lastSelectedMediaId,
+        mediasDisplay.userBadges,
+      ),
     }),
   },
   extraReducers: (builder) => {

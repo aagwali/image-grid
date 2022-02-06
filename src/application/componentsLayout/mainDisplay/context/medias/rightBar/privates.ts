@@ -1,4 +1,4 @@
-import { intersection, isEmpty, prop } from "rambda"
+import { filter, isEmpty, prop } from "rambda"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
@@ -7,12 +7,17 @@ import { triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "../s
 import { downloadMedia } from "./download/privates"
 import { RightBarShortcuts } from "./types"
 
+export const myIntersect = (list1: string[], list2: string[]) => {}
+
 export const getContainerProps = () => {
   const dispatch = useAppDispatch()
   const { actions } = mediasDisplaySlice
   const location = useLocation()
 
-  const { selectedMediaIds } = getState(prop("mediasDisplay"))
+  const { userBadges } = getState(prop("mediasDisplay"))
+
+  const selectedMediaIds = Object.keys(filter((badge) => badge.selected ?? false, userBadges))
+
   const { label } = getState(prop("context"))
   const itemsByFilterData = getState(mediaStatusDictionarySelector)
   const displayedMedias = getState((x) => mediasFilteredByUrlSelector(x, location.search))
@@ -20,10 +25,17 @@ export const getContainerProps = () => {
   const displayedMediaIds = displayedMedias.map(prop("id"))
   const selectionExists = !isEmpty(selectedMediaIds)
   const isBin = location.search.includes("bin")
-  const pendingIdsInSelection = intersection(itemsByFilterData.pending?.map(prop("id")) ?? [], selectedMediaIds)
 
-  const selectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: displayedMediaIds }))
-  const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: [] }))
+  const pendingIdsInSelection = (itemsByFilterData.pending?.map(prop("id")) ?? []).filter(
+    (id) => userBadges[id]?.selected,
+  )
+
+  const selectAll = () =>
+    dispatch(actions.updateUserBadgesCompleteSelection({ selectionType: "select", displayedMediaIds }))
+
+  const deselectAll = () =>
+    dispatch(actions.updateUserBadgesCompleteSelection({ selectionType: "deselect", displayedMediaIds }))
+
   const updateUploadProgress = (uploadProgress: number) => dispatch(actions.updateMediaDisplay({ uploadProgress }))
 
   const [trashMedia] = triggerTrashMedia.useMutation()

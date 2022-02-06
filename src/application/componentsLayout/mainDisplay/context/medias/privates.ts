@@ -1,5 +1,5 @@
 import { parse, ParsedQuery } from "query-string"
-import { add, any, filter, groupBy, head, indexOf, isEmpty, isNil, last, map, prop, sort, uniq } from "rambda"
+import { add, any, filter, groupBy, head, indexOf, isEmpty, isNil, last, map, prop, sort } from "rambda"
 import React, { useReducer } from "react"
 import { useLocation } from "react-router-dom"
 
@@ -19,25 +19,20 @@ export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
     isAssociable: x.isAssociable,
   }))
 
-// deprecated
-export const getSelectedMedia = (
-  selectedMediaIds: string[],
+export const setCompleteSelection = (
+  selectionType: "select" | "deselect",
   displayedMediaIds: string[],
-  mediaId: string,
-  isShiftKey: boolean,
-) => {
-  const selectedIndex = indexOf(mediaId, displayedMediaIds)
-  const lastSelectedIndex = indexOf(last(selectedMediaIds), displayedMediaIds)
+  userBadges: UserBadges,
+): UserBadges => {
+  const _userBadges = { ...userBadges }
 
-  const sortedIndexes = sort((a, b) => a - b, [selectedIndex, lastSelectedIndex])
+  const selected = selectionType === "select"
 
-  if (isShiftKey) return uniq([...selectedMediaIds, ...displayedMediaIds.slice(sortedIndexes[0], sortedIndexes[1] + 1)])
+  displayedMediaIds.forEach((id) => {
+    _userBadges[id] = { ...(_userBadges[id] ?? {}), selected }
+  })
 
-  const selectedMedia = selectedMediaIds.includes(mediaId)
-    ? selectedMediaIds.filter((selectedId) => selectedId !== mediaId)
-    : [...selectedMediaIds, mediaId]
-
-  return selectedMedia
+  return _userBadges
 }
 
 export const getSelectionBadges = (
@@ -57,7 +52,7 @@ export const getSelectionBadges = (
 
   const _lastSelectedMediaId = isReverseShift ? head(targetMediaIds) : last(targetMediaIds)
 
-  let _userBadges = { ...userBadges }
+  const _userBadges = { ...userBadges }
 
   targetMediaIds.forEach((id) => {
     if (_userBadges[id]?.selected) {
@@ -78,7 +73,7 @@ export const setMultipleBadges = (
   value: ColorBadges | UserStars,
   lastFilter: string,
   userBadges: UserBadges,
-) => {
+): UserBadges => {
   const _userBadges = { ...userBadges }
 
   const _selectedMediaIds = Object.keys(filter((badge) => badge.selected ?? false, userBadges))

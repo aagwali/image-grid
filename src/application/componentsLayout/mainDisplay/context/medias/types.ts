@@ -11,3 +11,8 @@ export type UpdateUserBadgesAction = {
   badgeType: "color" | "stars"
   value: ColorBadges | UserStars
 }
+
+export type SetCompleteSelectionAction = {
+  selectionType: "select" | "deselect"
+  displayedMediaIds: string[]
+}

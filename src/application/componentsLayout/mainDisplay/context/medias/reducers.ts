@@ -4,9 +4,15 @@ import { State } from "../../../../../storeConfig"
 import { MediaDisplay, MediaItem } from "../../../../types"
 import { contextSlice } from "../reducers"
 import { getContextByLabel } from "../services"
-import { getFilteredMedia, getMediaGroupedByFilter, getSelectionBadges, setMultipleBadges } from "./privates"
+import {
+  getFilteredMedia,
+  getMediaGroupedByFilter,
+  getSelectionBadges,
+  setCompleteSelection,
+  setMultipleBadges,
+} from "./privates"
 import { getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "./services"
-import { SelectionAction, UpdateUserBadgesAction } from "./types"
+import { SelectionAction, SetCompleteSelectionAction, UpdateUserBadgesAction } from "./types"
 
 //#region Medias
 
@@ -126,6 +132,13 @@ export const mediasDisplaySlice = createSlice({
         mediasDisplay.lastSelectedMediaId,
         mediasDisplay.userBadges,
       ),
+    }),
+    updateUserBadgesCompleteSelection: (
+      mediasDisplay,
+      { payload: { selectionType, displayedMediaIds } }: PayloadAction<SetCompleteSelectionAction>,
+    ) => ({
+      ...mediasDisplay,
+      userBadges: setCompleteSelection(selectionType, displayedMediaIds, mediasDisplay.userBadges),
     }),
   },
   extraReducers: (builder) => {

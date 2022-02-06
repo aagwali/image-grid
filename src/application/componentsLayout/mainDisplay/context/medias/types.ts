@@ -10,5 +10,4 @@ export type UpdateUserBadgesAction = {
   mediaId: string
   badgeType: "color" | "stars"
   value: ColorBadges | UserStars
-  search: string
 }

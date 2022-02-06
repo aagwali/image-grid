@@ -100,16 +100,19 @@ export const mediasDisplaySlice = createSlice({
   name: "mediasDisplay",
   initialState: initialMediaDisplay,
   reducers: {
-    updateMediaDisplay: (mediasDisplay, { payload }: PayloadAction<Partial<typeof mediasDisplay>>) => ({
+    updateMediaDisplay: (
+      mediasDisplay,
+      { payload: anyMediaDisplayProps }: PayloadAction<Partial<typeof mediasDisplay>>,
+    ) => ({
       ...mediasDisplay,
-      ...payload,
+      ...anyMediaDisplayProps,
     }),
     updateUserBadges: (
       mediasDisplay,
-      { payload: { mediaId, badgeType, value, search } }: PayloadAction<UpdateUserBadgesAction>,
+      { payload: { mediaId, badgeType, value } }: PayloadAction<UpdateUserBadgesAction>,
     ) => ({
       ...mediasDisplay,
-      userBadges: setMultipleBadges(badgeType, value, mediaId, mediasDisplay.userBadges, search),
+      userBadges: setMultipleBadges(mediaId, badgeType, value, mediasDisplay.lastFilter, mediasDisplay.userBadges),
     }),
     updateUserBadgesSelection: (
       mediasDisplay,

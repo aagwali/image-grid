@@ -73,11 +73,11 @@ export const getSelectionBadges = (
 }
 
 export const setMultipleBadges = (
+  mediaId: string,
   badgeType: "color" | "stars",
   value: ColorBadges | UserStars,
-  mediaId: string,
+  lastFilter: string,
   userBadges: UserBadges,
-  search: string,
 ) => {
   const _userBadges = { ...userBadges }
 
@@ -85,13 +85,13 @@ export const setMultipleBadges = (
 
   const targetMediaIds = _userBadges[mediaId]?.selected ? [..._selectedMediaIds, mediaId] : [mediaId]
 
-  const currentQuery = parse(search, { arrayFormat: "separator", arrayFormatSeparator: "|" })
+  const currentQuery = parse(lastFilter, { arrayFormat: "separator", arrayFormatSeparator: "|" })
   const activeFilterValues =
     badgeType === "color" ? getActiveFilters(currentQuery, "colorBadges") : getActiveFilters(currentQuery, "userStars")
 
   targetMediaIds.forEach((id) => {
     _userBadges[id] = { ...(_userBadges[id] ?? {}), [badgeType]: value }
-    if (!activeFilterValues.includes(value)) {
+    if (!activeFilterValues.includes(value) && !isEmpty(activeFilterValues)) {
       _userBadges[id] = { ..._userBadges[id], selected: false }
     }
   })
@@ -212,7 +212,6 @@ export const getContainerProps = () => {
           badgeType,
           value,
           mediaId,
-          search: location.search,
         }),
       )
     }

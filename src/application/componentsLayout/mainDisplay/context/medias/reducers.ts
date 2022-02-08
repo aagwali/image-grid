@@ -12,7 +12,7 @@ import {
   setMultipleBadges,
 } from "./privates"
 import { getMediaByContextLabel, triggerRestoreMedia, triggerTrashMedia, triggerUploadMedia } from "./services"
-import { SelectionAction, SetCompleteSelectionAction, UpdateUserBadgesAction } from "./types"
+import { SetCompleteSelectionAction, UpdateSelectionAction, UpdateUserBadgesAction } from "./types"
 
 //#region Medias
 
@@ -84,7 +84,6 @@ export const mediaSlice = createSlice({
 //#region Media display
 
 const initialMediaDisplay: MediaDisplay = {
-  selectedMediaIds: [],
   contentSize: Number(process.env.GRID_ITEM_DEFAULT_SIZE) || 230,
   transparency: false,
   cardHeader: false,
@@ -122,11 +121,11 @@ export const mediasDisplaySlice = createSlice({
     }),
     updateUserBadgesSelection: (
       mediasDisplay,
-      { payload: { mediaId, isShiftKey, displayedMediaIds } }: PayloadAction<SelectionAction>,
+      { payload: { mediaIds, isShiftKey, displayedMediaIds } }: PayloadAction<UpdateSelectionAction>,
     ) => ({
       ...mediasDisplay,
       ...getSelectionBadges(
-        mediaId,
+        mediaIds,
         isShiftKey,
         displayedMediaIds,
         mediasDisplay.lastSelectedMediaId,

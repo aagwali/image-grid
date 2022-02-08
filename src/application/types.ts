@@ -5,7 +5,7 @@ export enum ExitType {
 
 export enum QualityStatus {
   High = "OK",
-  Media = "NO_ZOOM",
+  Medium = "NO_ZOOM",
   Low = "KO",
   Manual = "TO_BE_CHECKED",
 }
@@ -72,7 +72,6 @@ export type MediaItem = {
 }
 
 export type MediaDisplay = {
-  selectedMediaIds: string[]
   contentSize: number
   transparency: boolean
   cardHeader: boolean

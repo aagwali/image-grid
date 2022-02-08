@@ -50,20 +50,20 @@ const ToolBarButtons = ({
 const LightBox = () => {
   const {
     lightBoxMediaId,
-    selectedMediaIds,
     whiteReplacement,
     media,
     lightBoxItemSize,
-    updateLightBoxItemSize,
     lightBoxThumbnailSize,
     isHd,
-    updateIsHd,
     previousMediaId,
     nextMediaId,
+    userBadges,
+    setNext,
+    updateIsHd,
     setSelection,
     closeLightbox,
     setPrevious,
-    setNext,
+    updateLightBoxItemSize,
   } = getContainerProps()
 
   if (lightBoxMediaId === "none") return <React.Fragment />
@@ -90,7 +90,7 @@ const LightBox = () => {
             updateIsHd={updateIsHd}
             lightBoxItemSize={lightBoxItemSize}
             updateLightBoxItemSize={updateLightBoxItemSize}
-            checked={selectedMediaIds.includes(lightBoxMediaId)}
+            checked={userBadges[media?.id]?.selected ?? false}
             setSelection={setSelection(lightBoxMediaId)}
           />,
         ]}

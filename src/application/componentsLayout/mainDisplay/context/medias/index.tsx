@@ -10,7 +10,6 @@ import RightBar from "./rightBar"
 const MediaDisplay = () => {
   const {
     mediaLoaded,
-    selectedMediaIds,
     transparency,
     contentSize,
     scrollRatio,
@@ -45,7 +44,6 @@ const MediaDisplay = () => {
         filteredMedia={filteredMedia}
         headerCellRatio={headerCellRatio}
         transparency={transparency}
-        selectedMediaIds={selectedMediaIds}
         whiteReplacement={whiteReplacement}
         openLightBox={openLightBox}
         setSelection={setSelection}

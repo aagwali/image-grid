@@ -1,7 +1,7 @@
 import { ColorBadges, UserStars } from "../../../../types"
 
-export type SelectionAction = {
-  mediaId: string
+export type UpdateSelectionAction = {
+  mediaIds: string[]
   isShiftKey: boolean
   displayedMediaIds: string[]
 }

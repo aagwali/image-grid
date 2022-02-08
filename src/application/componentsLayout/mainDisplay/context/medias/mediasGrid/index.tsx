@@ -19,7 +19,6 @@ const MediasGrid = ({
   filteredMedia,
   headerCellRatio,
   transparency,
-  selectedMediaIds,
   whiteReplacement,
   openLightBox,
   setSelection,

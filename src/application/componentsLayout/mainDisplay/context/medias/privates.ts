@@ -1,5 +1,5 @@
 import { parse, ParsedQuery } from "query-string"
-import { add, any, filter, groupBy, head, indexOf, isEmpty, isNil, last, map, prop, sort } from "rambda"
+import { add, any, filter, groupBy, head, indexOf, isEmpty, isNil, last, prop, sort } from "rambda"
 import React, { useReducer } from "react"
 import { useLocation } from "react-router-dom"
 
@@ -36,19 +36,19 @@ export const setCompleteSelection = (
 }
 
 export const getSelectionBadges = (
-  mediaId: string,
+  mediaIds: string[],
   isShiftKey: boolean,
   displayedMediaIds: string[],
   lastSelectedMediaId: string,
   userBadges: UserBadges,
 ): Partial<MediaDisplay> => {
-  const selectedIndex = indexOf(mediaId, displayedMediaIds)
+  const selectedIndex = indexOf(mediaIds[0], displayedMediaIds)
   const lastSelectedIndex = indexOf(lastSelectedMediaId, displayedMediaIds)
   const isReverseShift = selectedIndex < lastSelectedIndex
   const adjustement = isReverseShift ? 0 : 1
   const sortedIndexes = sort((a, b) => a - b, [selectedIndex + adjustement, lastSelectedIndex + adjustement])
 
-  const targetMediaIds = isShiftKey ? displayedMediaIds.slice(sortedIndexes[0], sortedIndexes[1]) : [mediaId]
+  const targetMediaIds = isShiftKey ? displayedMediaIds.slice(sortedIndexes[0], sortedIndexes[1]) : mediaIds
 
   const _lastSelectedMediaId = isReverseShift ? head(targetMediaIds) : last(targetMediaIds)
 
@@ -76,9 +76,9 @@ export const setMultipleBadges = (
 ): UserBadges => {
   const _userBadges = { ...userBadges }
 
-  const _selectedMediaIds = Object.keys(filter((badge) => badge.selected ?? false, userBadges))
+  const selectedMediaIds = Object.keys(filter((badge) => badge.selected ?? false, userBadges))
 
-  const targetMediaIds = _userBadges[mediaId]?.selected ? [..._selectedMediaIds, mediaId] : [mediaId]
+  const targetMediaIds = _userBadges[mediaId]?.selected ? [...selectedMediaIds, mediaId] : [mediaId]
 
   const currentQuery = parse(lastFilter, { arrayFormat: "separator", arrayFormatSeparator: "|" })
   const activeFilterValues =
@@ -168,17 +168,8 @@ export const getContainerProps = () => {
   const actions = mediasDisplaySlice.actions
   const location = useLocation()
 
-  const {
-    selectedMediaIds,
-    transparency,
-    contentSize,
-    scrollRatio,
-    cellMatrix,
-    cardHeader,
-    badges,
-    whiteReplacement,
-    userBadges,
-  } = getState(prop("mediasDisplay"))
+  const { transparency, contentSize, scrollRatio, cellMatrix, cardHeader, badges, whiteReplacement, userBadges } =
+    getState(prop("mediasDisplay"))
   const { loaded: mediaLoaded } = getState(prop("media"))
   const displayedMedias = getState((x) => mediasFilteredByUrlSelector(x, location.search))
   const isBin = location.search.includes("bin")
@@ -190,10 +181,10 @@ export const getContainerProps = () => {
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
 
-  const setSelection = (mediaId: typeof selectedMediaIds[0]) => (mouseEvent: MouseEvent) =>
+  const setSelection = (mediaId: string) => (mouseEvent: MouseEvent) =>
     dispatch(
       actions.updateUserBadgesSelection({
-        mediaId,
+        mediaIds: [mediaId],
         isShiftKey: mouseEvent.shiftKey,
         displayedMediaIds,
       }),
@@ -220,7 +211,6 @@ export const getContainerProps = () => {
 
   return {
     mediaLoaded,
-    selectedMediaIds,
     transparency,
     contentSize,
     scrollRatio,

@@ -16,7 +16,6 @@ export type MediaGridProps = {
   filteredMedia: MediaItem[]
   headerCellRatio: number
   transparency: boolean
-  selectedMediaIds: string[]
   whiteReplacement: boolean
   headerRatio: number
   badges: boolean

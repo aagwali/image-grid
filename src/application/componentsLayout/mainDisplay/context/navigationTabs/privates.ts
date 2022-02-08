@@ -3,7 +3,7 @@ import { omit, prop } from "rambda"
 import { useLocation } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector as getState } from "../../../../../storeConfig"
-import { mediasDisplaySlice } from "../medias/reducers"
+import { mediasDisplaySlice, mediasFilteredByUrlSelector } from "../medias/reducers"
 
 const routerParseOptions = { arrayFormat: "separator", arrayFormatSeparator: "|" } as ParseOptions
 
@@ -21,12 +21,19 @@ export const navigateWithFilter = (page: string, lastMediaFilter: string = "") =
 export const getPropContainer = () => {
   const dispatch = useAppDispatch()
   const { actions } = mediasDisplaySlice
+  const location = useLocation()
 
   const { lastFilter: lastMediaFilter } = getState(prop("mediasDisplay"))
 
-  const isBin = useLocation().search.includes("bin")
+  const isBin = location.search.includes("bin")
   const isActive = (x: string) => (!isBin && location.pathname.includes(x) ? "true" : "false")
 
-  const deselectAll = () => dispatch(actions.updateMediaDisplay({ selectedMediaIds: [] }))
+  const displayedMedias = getState((x) => mediasFilteredByUrlSelector(x, location.search))
+
+  const displayedMediaIds = displayedMedias.map(prop("id"))
+
+  const deselectAll = () =>
+    dispatch(actions.updateUserBadgesCompleteSelection({ selectionType: "deselect", displayedMediaIds }))
+
   return { lastMediaFilter, isBin, isActive, deselectAll }
 }

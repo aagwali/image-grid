@@ -1,10 +1,10 @@
 import { parse, ParsedQuery, ParseOptions, stringify } from "query-string"
-import { all, any, identity, intersection, isEmpty, omit, prop, trim, uniq } from "rambda"
+import { all, any, filter, identity, isEmpty, omit, prop, trim, uniq } from "rambda"
 import { useState } from "react"
 import { NavigateFunction, useLocation, useNavigate } from "react-router-dom"
 
 import { State, useAppDispatch, useAppSelector as getState } from "../../../../../../storeConfig"
-import { ColorBadges, ControlStatus, QualityStatus } from "../../../../../types"
+import { ColorBadges, ControlStatus, QualityStatus, UserBadges } from "../../../../../types"
 import { mediasDisplaySlice, mediasFilteredByUrlSelector, mediaStatusDictionarySelector } from "../reducers"
 import { LeftBarShortcuts } from "./types"
 
@@ -84,16 +84,27 @@ export const toggleControlFilter = (controlFilter: ControlStatus, search: string
   return stringify(newQueryObjectParameters, routerParseOptions)
 }
 
-export const updateFilter_ =
+export const _updateFilter =
   (
     state: State,
-    updateFilterSideEffects: (newSearch: string, filteredMediaIds: string[]) => void,
+    updateFilterSideEffects: (
+      newSearch: string,
+      filteredMediaIds: string[],
+      remainingSelectedMediaIds: string[],
+    ) => void,
+    userBadges: UserBadges,
     navigate: NavigateFunction,
   ) =>
   (newSearch: string) => {
-    const filteredMedia = mediasFilteredByUrlSelector(state, newSearch)
-    const filteredMediaIds = filteredMedia.map(prop("id"))
-    updateFilterSideEffects(newSearch, filteredMediaIds)
+    const displayedMedias = mediasFilteredByUrlSelector(state, newSearch)
+    const displayedMediaIds = displayedMedias.map(prop("id"))
+
+    const displayedMediaDictionary = {} as Record<string, string>
+    displayedMediaIds.forEach((id) => (displayedMediaDictionary[id] = id))
+    const selectedMediaIds = Object.keys(filter((badge) => badge.selected ?? false, userBadges))
+    const mediaIdsToToggleOutOfSelection = selectedMediaIds.filter((id) => !displayedMediaDictionary[id])
+
+    updateFilterSideEffects(newSearch, displayedMediaIds, mediaIdsToToggleOutOfSelection)
     const searchToken = isEmpty(newSearch) ? "" : "?"
 
     navigate(`${searchToken}${newSearch}`)
@@ -105,7 +116,7 @@ export const getContainerProps = () => {
   const { search } = useLocation()
   const navigate = useNavigate()
 
-  const { transparency, contentSize, cellMatrix, cardHeader, badges, selectedMediaIds, whiteReplacement } = getState(
+  const { transparency, contentSize, cellMatrix, cardHeader, badges, whiteReplacement, userBadges } = getState(
     prop("mediasDisplay"),
   )
 
@@ -136,21 +147,32 @@ export const getContainerProps = () => {
 
   const updateCellMatrix = (x: typeof cellMatrix) => dispatch(actions.updateMediaDisplay({ cellMatrix: x }))
 
-  const updateFilterSideEffects = (newSearch: string, filteredMediaIds: string[]) =>
+  const updateFilterSideEffects = (
+    newSearch: string,
+    displayedMediaIds: string[],
+    mediaIdsToToggleOutOfSelection: string[],
+  ) => {
     dispatch(
       actions.updateMediaDisplay({
-        selectedMediaIds: intersection(filteredMediaIds, selectedMediaIds),
         scrollRatio: 0,
         lastFilter: newSearch,
       }),
     )
+    dispatch(
+      actions.updateUserBadgesSelection({
+        mediaIds: mediaIdsToToggleOutOfSelection,
+        isShiftKey: false,
+        displayedMediaIds,
+      }),
+    )
+  }
 
   const allCheckedColorBadgesFilters = isAllColorBadgesFilterChecked(search)
   const isIndeterminateColorBadge = !isEmpty(getFilters("colorBadges", search)) && !allCheckedColorBadgesFilters
   const allCheckedUserStarsFilters = isAllUserStarsFilterChecked(search)
   const isIndeterminateUserStars = !isEmpty(getFilters("userStars", search)) && !allCheckedColorBadgesFilters
 
-  const updateFilter = updateFilter_(getState(identity), updateFilterSideEffects, navigate)
+  const updateFilter = _updateFilter(getState(identity), updateFilterSideEffects, userBadges, navigate)
 
   const [inputSearch, setInputSearch] = useState("")
 

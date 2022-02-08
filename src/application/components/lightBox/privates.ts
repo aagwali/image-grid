@@ -33,7 +33,7 @@ export const getContainerProps = () => {
   const { actions } = mediasDisplaySlice
   const dispatch = useAppDispatch()
 
-  const { lightBoxMediaId, selectedMediaIds, whiteReplacement } = getState(prop("mediasDisplay"))
+  const { lightBoxMediaId, whiteReplacement, userBadges } = getState(prop("mediasDisplay"))
   const media = getState((s) => mediaSelector.selectById(s, lightBoxMediaId))
   const displayedMedias = getState((x) => mediasFilteredByUrlSelector(x, location.search))
   const [lightBoxItemSize, updateLightBoxItemSize] = useState(Number(process.env.LIGHTBOX_ITEM_SIZE) / 2.5 ?? 500)
@@ -43,10 +43,10 @@ export const getContainerProps = () => {
   const displayedMediaIds = displayedMedias.map(prop("id"))
   const [previousMediaId, nextMediaId] = pickAdjacentMedia(displayedMediaIds, lightBoxMediaId)
 
-  const setSelection = (mediaId: typeof selectedMediaIds[0]) => (mouseEvent: MouseEvent) =>
+  const setSelection = (mediaId: string) => (mouseEvent: MouseEvent) =>
     dispatch(
       actions.updateUserBadgesSelection({
-        mediaId,
+        mediaIds: [mediaId],
         isShiftKey: mouseEvent.shiftKey,
         displayedMediaIds,
       }),
@@ -57,16 +57,16 @@ export const getContainerProps = () => {
 
   return {
     lightBoxMediaId,
-    selectedMediaIds,
     whiteReplacement,
-    media,
+    media: media ?? ({} as MediaItem),
     lightBoxItemSize,
-    updateLightBoxItemSize,
     lightBoxThumbnailSize,
     isHd,
-    updateIsHd,
     previousMediaId,
     nextMediaId,
+    userBadges,
+    updateLightBoxItemSize,
+    updateIsHd,
     setSelection,
     closeLightbox,
     setPrevious,

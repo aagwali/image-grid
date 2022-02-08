@@ -2,7 +2,7 @@ import { ControlStatus, QualityStatus } from "../../types"
 
 export const getBadgeLabel = (status: any): any => {
   if (status === QualityStatus.High) return "Good"
-  if (status === QualityStatus.Media) return "Media"
+  if (status === QualityStatus.Medium) return "Medium"
   if (status === QualityStatus.Low) return "Low"
   if (status === QualityStatus.Manual) return "Check"
   if (status === ControlStatus.Validated) return "Validated"

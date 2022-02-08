@@ -199,7 +199,7 @@ export const CardBadge = styled(Center)`
         border-color: ${theme.colors.green[300]};
         color: ${theme.colors.green[300]};
       `
-    if (badge === QualityStatus.Media)
+    if (badge === QualityStatus.Medium)
       return css`
         border-color: ${theme.colors.orange[300]};
         color: ${theme.colors.orange[300]};

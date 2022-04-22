@@ -4,8 +4,10 @@ import { theme } from "@chakra-ui/react"
 
 export const getImageServerUrl = (id: string, size: number, whiteReplacement: boolean) => {
   const replaceColor = whiteReplacement ? "/rc:ffffff-FF0000/" : ""
+  // return `${process.env.IMAGE_SERVER_MEDIA_URL}${replaceColor}/r:${size}x${size}/${process.env.MEDIASHARE_API_IMAGE_URL}/media/${id}/blob`
 
-  return `${process.env.IMAGE_SERVER_MEDIA_URL}${replaceColor}/r:${size}x${size}/${process.env.MEDIASHARE_API_IMAGE_URL}/media/${id}/blob`
+  // mocked image
+  return `https://picsum.photos/id/${id}/${size}`
 }
 
 export const getHotkeys = (shortcuts: Record<string, string>): string =>

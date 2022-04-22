@@ -9,6 +9,7 @@ import {
   ControlStatus,
   MediaDisplay,
   MediaItem,
+  QualityStatus,
   RawMedia,
   UserBadges,
   UserStars,
@@ -26,6 +27,21 @@ export const toMediaItem = (response: RawMedia[]): MediaItem[] =>
     trashed: x.trashed,
     isAssociable: x.isAssociable,
   }))
+
+export const mockedMedias = (_: any): MediaItem[] => {
+  const items = Array.from(Array(Number(process.env.IMAGE_QUANTITY) ?? 10).keys()).map(add(151))
+
+  return items.map((x) => ({
+    id: `${x}`,
+    fileName: `fake-fileName${x}`,
+    width: 2000,
+    height: 2000,
+    status: QualityStatus.High,
+    controlId: `fake-controlId${x}`,
+    trashed: false,
+    isAssociable: true,
+  }))
+}
 
 export const setCompleteSelection = (
   selectionType: "select" | "deselect",

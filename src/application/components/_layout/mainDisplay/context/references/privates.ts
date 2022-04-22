@@ -14,6 +14,30 @@ export const rawToReferenceItem = (rawReference: Partial<RawReference>): Partial
   })
 }
 
+let count = 151
+export const mockReferences = (_: any): ReferenceItem[] => {
+  const items = Array.from(Array(10).keys())
+
+  return items.map((x) => ({
+    id: `fake-id${x}`,
+    familyId: `fake-familyId${x}${x}${x}`,
+    mediaAssociations: [
+      {
+        msMediaId: String(count++),
+        slot: x + 1,
+      },
+      {
+        msMediaId: String(count++),
+        slot: x + 2,
+      },
+      {
+        msMediaId: String(count++),
+        slot: x + 3,
+      },
+    ],
+  }))
+}
+
 export const paginatedToReferenceItem = (response: PaginatedResponse<RawReference>): ReferenceItem[] =>
   response.items.map((x) => ({
     id: x.id,

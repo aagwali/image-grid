@@ -1,13 +1,14 @@
 import { mediashareApi } from "../../../../../services"
 import { MediaItem, MediashareEndpoints } from "../../../../../types"
-import { toMediaItem } from "./privates"
+import { mockedMedias } from "./privates"
 
 export const mediasEndpoints = mediashareApi.injectEndpoints({
   endpoints: (build) => ({
     [MediashareEndpoints.GetMediaByContextLabel]: build.query<MediaItem[], string>({
-      query: (label) => ({ url: `context/${label}/media`, cache: "no-cache" }),
+      // query: (label) => ({ url: `context/${label}/media`, cache: "no-cache" }),
+      query: (label) => ({ url: ``, cache: "no-cache" }), // temporary fake url
       providesTags: ["Media"],
-      transformResponse: toMediaItem,
+      transformResponse: mockedMedias, // temporary fake response
     }),
 
     [MediashareEndpoints.PutInTrash]: build.mutation<MediaItem[], string[]>({

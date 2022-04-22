@@ -1,13 +1,14 @@
 import { mediashareApi } from "../../../../services"
 import { MediashareEndpoints } from "../../../../types"
-import { toAppContext } from "./privates"
+import { mockContext } from "./privates"
 
 export const contextEndpoints = mediashareApi.injectEndpoints({
   endpoints: (build) => ({
     [MediashareEndpoints.GetContextByLabel]: build.query<any, string>({
-      query: (label) => ({ url: `context/${label}`, cache: "no-cache" }),
+      // query: (label) => ({ url: `context/${label}`, cache: "no-cache" }),
+      query: (label) => ({ url: ``, cache: "no-cache" }), // temporary fake url
       providesTags: ["Context"],
-      transformResponse: toAppContext,
+      transformResponse: mockContext, // temporary fake response
     }),
   }),
 })

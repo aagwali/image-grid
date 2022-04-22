@@ -1,13 +1,14 @@
 import { mediashareApi } from "../../../../../services"
 import { MediashareEndpoints, RawReference, ReferenceItem } from "../../../../../types"
-import { paginatedToReferenceItem } from "./privates"
+import { mockReferences, paginatedToReferenceItem } from "./privates"
 
 export const referencesEndpoints = mediashareApi.injectEndpoints({
   endpoints: (build) => ({
     [MediashareEndpoints.GetReferencesByContextLabel]: build.query<ReferenceItem[], string>({
-      query: (label) => ({ url: `context/${label}/references?page=1&size=50000`, cache: "no-cache" }),
+      query: (label) => ({ url: ``, cache: "no-cache" }), // temporary fake url
+      // query: (label) => ({ url: `context/${label}/references?page=1&size=50000`, cache: "no-cache" }),
       providesTags: ["References"],
-      transformResponse: paginatedToReferenceItem,
+      transformResponse: mockReferences, // temporary fake response
     }),
 
     [MediashareEndpoints.PatchReference]: build.mutation<

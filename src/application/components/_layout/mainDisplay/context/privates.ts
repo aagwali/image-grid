@@ -7,6 +7,8 @@ import { getContextByLabel } from "./services"
 
 export const toAppContext = (response: RawContext): Context => ({ id: response.id, label: response.label })
 
+export const mockContext = (_: RawContext): Context => ({ id: "MOCKED_ID", label: "MOCKED_CONTEXT" })
+
 export const getContainerProps = (contextLabel: string) => {
   const { isFetching: getContextIsFetching } = getContextByLabel.useQuery(contextLabel ?? skipToken)
   const [getMedias, getMediasHook] = getMediaByContextLabel.useLazyQuery()

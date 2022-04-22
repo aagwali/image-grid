@@ -1,7 +1,7 @@
 export const downloadMedia = (mediaIds: string[], label: string) => {
   const xhttp = new XMLHttpRequest()
 
-  const baseUrl = process.env.MEDIASHARE_API_URL ?? ""
+  const baseUrl = process.env.ORIGIN_API_URL ?? ""
 
   xhttp.onreadystatechange = function () {
     let a

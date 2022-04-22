@@ -1,42 +1,28 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
-import { configureStore, isRejectedWithValue, Middleware, MiddlewareAPI } from "@reduxjs/toolkit"
+import { configureStore } from "@reduxjs/toolkit"
 
-import { authSlice, baseMsApi, displaySlice, errorSlice } from "./application/reducers"
+import { mediasDisplaySlice, mediaSlice } from "./application/components/_layout/mainDisplay/context/medias/reducers"
+import { contextSlice } from "./application/components/_layout/mainDisplay/context/reducers"
+import {
+  referencesDisplaySlice,
+  referencesSlice,
+} from "./application/components/_layout/mainDisplay/context/references/reducers"
+import { apiErrorsMiddleware } from "./application/exits"
+import { mediashareApi } from "./application/services"
 
-const rootReducer = {
-  [errorSlice.name]: errorSlice.reducer,
-  [authSlice.name]: authSlice.reducer,
-  [displaySlice.name]: displaySlice.reducer,
-  [baseMsApi.reducerPath]: baseMsApi.reducer,
-}
-
-/*
-  Middleware catching any api action failure
-  Set a "errorAction" store key with failed action object
-  Application component is plugged on store key to handle behavior
-*/
-const handleApiErrors: Middleware = (_api: MiddlewareAPI) => (next: any) => async (action: any) => {
-  if (isRejectedWithValue(action)) {
-    next(
-      errorSlice.actions.setErrorAction({
-        type: action.meta.arg.endpointName,
-        payload: action.payload,
-      }),
-    )
-  }
-  return next(action)
-}
-
-/* 
-"configureStore" from @reduxjs/toolkit :
-- Combine reducers is applied on root reducer
-- Store has redux-thunk added and the Redux DevTools Extension is turned on
-*/
 const configureAppStore = () =>
   configureStore({
-    reducer: rootReducer,
-    middleware: (getDefault: any) => getDefault().concat(baseMsApi.middleware).concat(handleApiErrors),
+    reducer: {
+      [contextSlice.name]: contextSlice.reducer,
+      [mediasDisplaySlice.name]: mediasDisplaySlice.reducer,
+      [referencesDisplaySlice.name]: referencesDisplaySlice.reducer,
+      [mediaSlice.name]: mediaSlice.reducer,
+      [referencesSlice.name]: referencesSlice.reducer,
+      [mediashareApi.reducerPath]: mediashareApi.reducer,
+    },
+    middleware: (getDefault) => getDefault().concat(mediashareApi.middleware).concat(apiErrorsMiddleware),
+    devTools: false, // true : low performances with large store
   })
 
 export const store = configureAppStore()

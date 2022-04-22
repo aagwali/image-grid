@@ -13,6 +13,9 @@ module.exports = (_env, options) => {
       port: "3000",
       historyApiFallback: true, // needed for react routing
     },
+    output: {
+      publicPath: "/", // needed for react routing
+    },
     resolve: { extensions: [".tsx", ".ts", ".js"] },
     module: {
       rules: [
@@ -58,7 +61,7 @@ module.exports = (_env, options) => {
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({ filename: "css/app.min.css" }),
       new CopyPlugin({
-        patterns: [{ from: "./src/application/assets/images", to: "images" }],
+        patterns: [{ from: "./src/assets/images", to: "images" }],
       }),
       new HtmlWebpackPlugin({
         template: "./index.html",
